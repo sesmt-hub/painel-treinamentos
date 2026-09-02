@@ -385,9 +385,9 @@ footer{margin-top:26px; padding-top:14px; border-top:1px solid var(--hair); font
       <h2>Colaboradores com treinamento pendente</h2>
       <p class="hint">Lista nominal para cobrança do gerente da filial</p>
       <div class="listhead">
-        <input type="search" id="busca" placeholder="Buscar por nome…" aria-label="Buscar colaborador por nome">
+        <input type="search" id="busca" placeholder="Buscar por empresa…" aria-label="Buscar por empresa (filial)">
         <span class="count" id="cnt"></span>
-        <button class="btn" id="btnCopy" type="button">Copiar lista</button>
+        <button class="btn" id="btnCopy" type="button">Baixar lista filtrada</button>
       </div>
       <div class="tablewrap">
         <table class="list" id="tbl">
@@ -514,7 +514,12 @@ footer{margin-top:26px; padding-top:14px; border-top:1px solid var(--hair); font
   }
   selFil.onchange = function(){ st.fil = +this.value; st.limit=150; render(); };
   selCur.onchange = function(){ st.cur = +this.value; st.limit=150; render(); };
-  document.getElementById('busca').oninput = function(){ st.q = this.value.trim().toUpperCase(); st.limit=150; renderPend(); };
+  function normTxt(s){
+    s = (s == null ? '' : String(s)).toUpperCase();
+    try { s = s.normalize('NFD').replace(new RegExp('[\\u0300-\\u036f]', 'g'), ''); } catch(e){}
+    return s;
+  }
+  document.getElementById('busca').oninput = function(){ st.q = normTxt(this.value.trim()); st.limit=150; renderPend(); };
 
   var panes = {vg:'p-vg', mx:'p-mx', pd:'p-pd', up:'p-up'};
   function abrir(p){
@@ -688,7 +693,7 @@ footer{margin-top:26px; padding-top:14px; border-top:1px solid var(--hair); font
       a.cur.push(d[2]);
     });
     var lista = Object.keys(byP).map(function(k){ return {nome:PART[k], fil:byP[k].fil, cur:byP[k].cur}; })
-      .filter(function(x){ return !st.q || x.nome.indexOf(st.q) >= 0; })
+      .filter(function(x){ return !st.q || normTxt(FIL[x.fil].n).indexOf(st.q) >= 0; })
       .sort(function(a,b){ return b.cur.length - a.cur.length || a.nome.localeCompare(b.nome,'pt-BR'); });
     pendCache = lista;
 
@@ -720,22 +725,46 @@ footer{margin-top:26px; padding-top:14px; border-top:1px solid var(--hair); font
   }
 
   document.getElementById('btnCopy').onclick = function(){
-    var b = this, linhas = ['Colaborador\tFilial\tRegional\tPendentes\tCursos pendentes'];
-    pendCache.forEach(function(x){
-      linhas.push([x.nome, FIL[x.fil].n, REG[FIL[x.fil].r], x.cur.length,
-        x.cur.slice().sort(function(a,b){return a-b;}).map(function(c){return CUR[c];}).join('; ')].join('\t'));
-    });
-    var txt = linhas.join('\n');
-    var done = function(){ b.textContent = 'Lista copiada'; setTimeout(function(){ b.textContent='Copiar lista'; }, 1800); };
-    function fallback(){
-      var ta = document.createElement('textarea');
-      ta.value = txt; ta.style.position='fixed'; ta.style.opacity='0';
-      document.body.appendChild(ta); ta.select();
-      try { document.execCommand('copy'); done(); }
-      catch(e2){ b.textContent = 'Não foi possível copiar'; setTimeout(function(){ b.textContent='Copiar lista'; },1800); }
-      document.body.removeChild(ta);
+    var b = this;
+    if (!pendCache.length){
+      b.textContent = 'Nada para baixar';
+      setTimeout(function(){ b.textContent = 'Baixar lista filtrada'; }, 1800);
+      return;
     }
-    try { navigator.clipboard.writeText(txt).then(done, fallback); } catch(e){ fallback(); }
+    function cel(v){ return '"' + String(v == null ? '' : v).replace(/"/g, '""') + '"'; }
+    var linhas = [['Colaborador','Empresa (filial)','Regional','Pendentes','Cursos pendentes'].map(cel).join(';')];
+    pendCache.forEach(function(x){
+      linhas.push([
+        x.nome,
+        FIL[x.fil].n,
+        REG[FIL[x.fil].r],
+        x.cur.length,
+        x.cur.slice().sort(function(a,b){ return a-b; }).map(function(c){ return (c+1)+'. '+CUR[c]; }).join('; ')
+      ].map(cel).join(';'));
+    });
+
+    function slug(s){ return normTxt(s).replace(/[^A-Z0-9]+/g,'-').replace(/^-+|-+$/g,'').toLowerCase(); }
+    var partes = ['pendentes'];
+    if (st.fil >= 0) partes.push(slug(FIL[st.fil].n));
+    else if (st.q) partes.push(slug(st.q));
+    else if (st.reg >= 0) partes.push(slug(REG[st.reg]));
+    if (st.cur >= 0) partes.push(slug(CUR[st.cur]));
+    var d = new Date(), p2 = function(n){ return (n<10?'0':'')+n; };
+    partes.push(d.getFullYear() + p2(d.getMonth()+1) + p2(d.getDate()));
+
+    var csv = '\uFEFF' + linhas.join('\r\n');
+    try {
+      var blob = new Blob([csv], {type:'text/csv;charset=utf-8;'});
+      var url = URL.createObjectURL(blob);
+      var a = document.createElement('a');
+      a.href = url; a.download = partes.join('_') + '.csv';
+      document.body.appendChild(a); a.click(); document.body.removeChild(a);
+      setTimeout(function(){ URL.revokeObjectURL(url); }, 4000);
+      b.textContent = 'Lista baixada';
+    } catch(e){
+      b.textContent = 'Não foi possível baixar';
+    }
+    setTimeout(function(){ b.textContent = 'Baixar lista filtrada'; }, 1800);
   };
 
   /* ================= atualização da base ================= */
