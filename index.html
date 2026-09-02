@@ -637,8 +637,15 @@ footer{margin-top:26px; padding-top:14px; border-top:1px solid var(--hair); font
       var k = d[1]+'|'+d[2], a = m[k] || (m[k]={ok:0,tot:0});
       a.tot++; if (d[3]) a.ok++;
     });
+    var totFil = {};
+    Object.keys(filSet).map(Number).forEach(function(f){
+      var o=0,t=0;
+      cursosVis.forEach(function(c){ var a=m[f+'|'+c]; if(a){ o+=a.ok; t+=a.tot; } });
+      totFil[f] = t ? o/t : -1;
+    });
     var fils = Object.keys(filSet).map(Number).sort(function(a,b){
-      return FIL[a].r - FIL[b].r || FIL[a].n.localeCompare(FIL[b].n,'pt-BR');
+      if (st.reg < 0 && FIL[a].r !== FIL[b].r) return FIL[a].r - FIL[b].r;
+      return totFil[b] - totFil[a] || FIL[a].n.localeCompare(FIL[b].n,'pt-BR');
     });
     var h = '<thead><tr><th>Filial</th>';
     cursosVis.forEach(function(c){ h += '<th scope="col"><span class="ord">'+(c+1)+'</span>'+esc(CUR[c])+'</th>'; });
