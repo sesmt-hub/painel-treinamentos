@@ -1,406 +1,188 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Painel de Treinamentos Rede HG</title>
 <style>
 :root{
-  color-scheme: light;
-  --canvas:#eaeef3; --card:#ffffff; --card-2:#f4f7fa; --pane:#fafbfd;
-  --ink:#12161c; --ink-2:#4c545e; --muted:#7a828c;
-  --line:#e0e5ec; --line-2:#ccd4de;
-  --brand:#164D8C; --brand-ink:#123f73; --brand-soft:#e6eefa; --brand-bar:#2a62a5;
-  --ribbon:#164D8C; --ribbon-ink:#ffffff; --ribbon-line:#0f3c70; --ribbon-soft:rgba(255,255,255,.16);
-  --gold:#FECA03; --green:#026938;
-  --good:#026938; --good-soft:#e3f2e8;
-  --warn:#8a5f00; --warn-soft:#fdf4dc;
-  --crit:#b8322c; --crit-soft:#fbecec;
-  --track:#e0e5ec;
-  --h0:#ffffff; --h1:#dbe7f6; --h2:#c0d5ee; --h3:#9dbde3; --h4:#75a0d3; --h5:#4b7fbf; --h6:#2a62a5; --h7:#164D8C;
-  --h0f:#8b929b; --h1f:#12161c; --h2f:#12161c; --h3f:#12161c; --h4f:#0b1a2e; --h5f:#fff; --h6f:#fff; --h7f:#fff;
-  --sh:0 1px 2px rgba(18,22,28,.07), 0 2px 10px -6px rgba(18,22,28,.18);
-}
-@media (prefers-color-scheme: dark){
-  :root:not([data-theme="light"]){
-    color-scheme: dark;
-    --canvas:#080b0f; --card:#161b22; --card-2:#1c222b; --pane:#11161d;
-    --ink:#eef2f7; --ink-2:#a6b0bc; --muted:#79838f;
-    --line:#242c36; --line-2:#303a46;
-    --brand:#7fb3ea; --brand-ink:#a5cbf3; --brand-soft:#14263f; --brand-bar:#3d81c9;
-    --ribbon:#123f73; --ribbon-ink:#ffffff; --ribbon-line:#0c2f57; --ribbon-soft:rgba(255,255,255,.14);
-    --gold:#FECA03; --green:#34b563;
-    --good:#34b563; --good-soft:#112a1a;
-    --warn:#e8b21f; --warn-soft:#2c2510;
-    --crit:#e66767; --crit-soft:#2e1618;
-    --track:#242c36;
-    --h0:#161b22; --h1:#132a45; --h2:#16375c; --h3:#1a4e86; --h4:#2263a8; --h5:#3d81c9; --h6:#6da7e4; --h7:#9dc5f0;
-    --h0f:#79838f; --h1f:#dbe8f8; --h2f:#dbe8f8; --h3f:#eaf2fd; --h4f:#eef2f7; --h5f:#08111d; --h6f:#08111d; --h7f:#08111d;
-    --sh:0 1px 2px rgba(0,0,0,.5), 0 2px 10px -6px rgba(0,0,0,.8);
-  }
-}
-:root[data-theme="dark"]{
-  color-scheme: dark;
-  --canvas:#080b0f; --card:#161b22; --card-2:#1c222b; --pane:#11161d;
-  --ink:#eef2f7; --ink-2:#a6b0bc; --muted:#79838f;
-  --line:#242c36; --line-2:#303a46;
-  --brand:#7fb3ea; --brand-ink:#a5cbf3; --brand-soft:#14263f; --brand-bar:#3d81c9;
-  --ribbon:#123f73; --ribbon-ink:#ffffff; --ribbon-line:#0c2f57; --ribbon-soft:rgba(255,255,255,.14);
-  --gold:#FECA03; --green:#34b563;
-  --good:#34b563; --good-soft:#112a1a;
-  --warn:#e8b21f; --warn-soft:#2c2510;
-  --crit:#e66767; --crit-soft:#2e1618;
-  --track:#242c36;
-  --h0:#161b22; --h1:#132a45; --h2:#16375c; --h3:#1a4e86; --h4:#2263a8; --h5:#3d81c9; --h6:#6da7e4; --h7:#9dc5f0;
-  --h0f:#79838f; --h1f:#dbe8f8; --h2f:#dbe8f8; --h3f:#eaf2fd; --h4f:#eef2f7; --h5f:#08111d; --h6f:#08111d; --h7f:#08111d;
-  --sh:0 1px 2px rgba(0,0,0,.5), 0 2px 10px -6px rgba(0,0,0,.8);
+  --bg:#eaeef4; --card:#fff; --ink:#132330; --muted:#64748b; --line:#e3e8ef;
+  --blue:#1a6ad4; --blue-dk:#12529f; --blue-soft:#dde9fa; --green:#17a34a;
+  --amber:#d97706; --red:#dc2626;
+  --mono:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,monospace;
 }
 *{box-sizing:border-box}
-body{
-  margin:0;background:var(--canvas);color:var(--ink);
-  font-family:"Segoe UI","Segoe UI Web (West European)",system-ui,-apple-system,"Helvetica Neue",Arial,sans-serif;
-  font-size:14px;line-height:1.45;-webkit-font-smoothing:antialiased;
-}
-.tnum,.kv,td.c,.big{font-variant-numeric:tabular-nums}
-button{font:inherit;cursor:pointer}
-:focus-visible{outline:2px solid var(--brand);outline-offset:1px}
+body{margin:0;background:var(--bg);color:var(--ink);
+  font:15px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1200px;margin:0 auto;padding:18px 16px 60px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px}
+.mono{font-family:var(--mono)}
 
-/* ================= app shell ================= */
-.app{display:flex;flex-direction:column;min-height:100vh}
-.ribbon{
-  display:flex;align-items:center;gap:14px;flex-wrap:wrap;
-  background:var(--ribbon);color:var(--ribbon-ink);border-bottom:3px solid var(--gold);padding:9px 18px}
-.brandmark{display:flex;align-items:center;gap:11px;min-width:0}
-.brandmark .mark{width:34px;height:34px;flex:none;object-fit:contain;display:block}
-.brandmark .wm{font-size:16px;font-weight:800;letter-spacing:.02em;line-height:1;white-space:nowrap;
-  padding-right:12px;margin-right:1px;border-right:1px solid var(--ribbon-soft)}
-.brandmark h1{margin:0;font-size:14.5px;font-weight:600;letter-spacing:-.005em;white-space:nowrap;
-  overflow:hidden;text-overflow:ellipsis}
-.brandmark .fname{font-size:11.5px;color:rgba(255,255,255,.72);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.ribbon .sp{flex:1}
-.btn{
-  display:inline-flex;align-items:center;gap:7px;border:1px solid var(--line-2);background:var(--card);
-  color:var(--ink);border-radius:4px;padding:7px 12px;font-size:13px;font-weight:600;white-space:nowrap}
-.btn:hover{background:var(--card-2)}
-.btn.primary{background:var(--brand);border-color:var(--brand);color:#fff}
-.btn.primary:hover{filter:brightness(1.12)}
-.btn.ghost{border-color:transparent;font-weight:400;color:var(--ink-2)}
-.btn.ghost:hover{background:var(--card-2);color:var(--ink)}
-/* botoes dentro da faixa azul */
-.ribbon .btn{background:var(--ribbon-soft);border-color:rgba(255,255,255,.28);color:#fff}
-.ribbon .btn:hover{background:rgba(255,255,255,.26)}
-.ribbon .btn.primary{background:var(--gold);border-color:var(--gold);color:#12161c}
-.ribbon .btn.primary:hover{filter:brightness(1.06)}
-.ribbon .btn.ghost{background:transparent;border-color:transparent;color:rgba(255,255,255,.82)}
-.ribbon .btn.ghost:hover{background:var(--ribbon-soft);color:#fff}
-.ribbon :focus-visible{outline-color:var(--gold)}
-.btn svg{width:14px;height:14px;flex:none}
-.srcnote{font-size:11.5px;color:var(--muted);max-width:280px;line-height:1.3}
+/* cabeçalho */
+.head{display:flex;flex-wrap:wrap;gap:16px;align-items:center;justify-content:space-between;
+  padding:16px 20px;border-top:3px solid var(--blue);margin-bottom:14px}
+.brand{display:flex;align-items:center;gap:14px;min-width:0}
+.brand img{width:46px;height:46px;object-fit:contain;flex:none}
+.brand h1{margin:0;font-size:22px;font-weight:700;letter-spacing:-.01em}
+.brand p{margin:3px 0 0;font-size:12.5px;color:var(--muted)}
+.scope{text-align:right;font-family:var(--mono);font-size:11.5px;color:var(--muted);line-height:1.8}
+.scope b{color:var(--ink);font-weight:600}
 
-.body{display:flex;flex:1;min-height:0;align-items:stretch}
+/* filtros */
+.filters{padding:14px 18px 16px;margin-bottom:14px}
+.flab{font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);
+  font-weight:600;margin:0 0 8px}
+.pills{display:flex;flex-wrap:wrap;gap:7px}
+.pill{font:inherit;font-size:12.5px;padding:7px 14px;border-radius:7px;border:1px solid var(--line);
+  background:#f7f9fc;color:#41526a;cursor:pointer;transition:.12s}
+.pill:hover{border-color:#b9cbe4;color:var(--blue-dk)}
+.pill.on{background:var(--blue);border-color:var(--blue);color:#fff;font-weight:600}
+.selrow{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;margin-top:14px;max-width:720px}
+select{width:100%;font:inherit;font-size:13.5px;padding:8px 10px;border:1px solid var(--line);
+  border-radius:7px;background:#fff;color:var(--ink)}
+select:focus,.pill:focus-visible,button:focus-visible{outline:2px solid var(--blue);outline-offset:1px}
 
-/* ================= slicer pane ================= */
-.pane{
-  width:250px;flex:none;background:var(--pane);border-right:1px solid var(--line);
-  padding:14px 0 24px;overflow-y:auto}
-.pane h2{margin:0;padding:0 14px 8px;font-size:11px;font-weight:700;letter-spacing:.08em;
-  text-transform:uppercase;color:var(--muted)}
-.slicer{padding:0 14px 16px;border-bottom:1px solid var(--line);margin-bottom:14px}
-.slicer:last-child{border-bottom:0}
-.slicer > .lab{display:flex;align-items:baseline;justify-content:space-between;gap:8px;
-  font-size:12px;font-weight:700;color:var(--ink-2);margin-bottom:7px;letter-spacing:.01em}
-.slicer .clr{font-size:11px;font-weight:600;color:var(--brand);background:none;border:0;padding:2px 0}
-.slicer .clr:hover{text-decoration:underline}
-.opt{
-  display:flex;align-items:center;gap:8px;width:100%;text-align:left;background:none;border:0;
-  padding:5px 7px;border-radius:3px;color:var(--ink);font-size:12.5px;line-height:1.3}
-.opt:hover{background:var(--brand-soft)}
-.opt .bx{width:13px;height:13px;border:1.5px solid var(--line-2);border-radius:2px;flex:none;
-  display:grid;place-items:center;background:var(--card)}
-.opt .bx svg{width:9px;height:9px;opacity:0;color:#fff}
-.opt[aria-pressed="true"] .bx{background:var(--brand);border-color:var(--brand)}
-.opt[aria-pressed="true"] .bx svg{opacity:1}
-.opt[aria-pressed="true"]{font-weight:600}
-.opt .n{margin-left:auto;font-size:11px;color:var(--muted);font-variant-numeric:tabular-nums}
-.opt .t{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.pane input[type=search]{
-  width:100%;font:inherit;font-size:12.5px;padding:6px 9px;border:1px solid var(--line-2);
-  border-radius:3px;background:var(--card);color:var(--ink)}
-.pane input[type=search]::placeholder{color:var(--muted)}
+/* abas */
+.tabs{display:flex;gap:4px;padding:0 10px;margin-bottom:14px;overflow-x:auto}
+.tab{font:inherit;font-size:13.5px;padding:12px 14px;border:0;background:transparent;color:var(--muted);
+  cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap}
+.tab:hover{color:var(--ink)}
+.tab.on{color:var(--blue);font-weight:600;border-bottom-color:var(--blue)}
 
-/* ================= canvas ================= */
-.canvas{flex:1;min-width:0;display:flex;flex-direction:column}
-.report{flex:1;padding:16px 18px 8px;min-width:0}
-.crumb{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-bottom:12px;font-size:12px;color:var(--muted)}
-.chip{display:inline-flex;align-items:center;gap:6px;background:var(--brand-soft);color:var(--brand-ink);
-  border:1px solid transparent;border-radius:12px;padding:3px 10px;font-size:11.5px;font-weight:600}
-.chip button{background:none;border:0;color:inherit;padding:0;font-size:13px;line-height:1;opacity:.7}
-.chip button:hover{opacity:1}
+/* kpis */
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(215px,1fr));gap:12px;margin-bottom:14px}
+.kpi{padding:14px 16px 16px}
+.kpi .t{font-size:10px;letter-spacing:.13em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.kpi .v{font-size:32px;font-weight:700;letter-spacing:-.02em;margin:8px 0 4px}
+.kpi .s{font-size:11.5px;color:var(--muted)}
+.meter{height:6px;border-radius:4px;background:#e9eef5;margin-top:10px;overflow:hidden}
+.meter i{display:block;height:100%;background:var(--green);border-radius:4px;transition:width .6s ease}
 
-.grid{display:grid;gap:12px}
-.kpis{grid-template-columns:repeat(auto-fit,minmax(160px,1fr))}
-.tile{background:var(--card);border:1px solid var(--line);border-radius:5px;box-shadow:var(--sh);
-  padding:13px 15px 12px;display:flex;flex-direction:column;gap:2px;min-width:0}
-.tile .t{font-size:11.5px;font-weight:600;color:var(--muted);letter-spacing:.02em;text-transform:uppercase}
-.tile .v{font-size:27px;font-weight:600;letter-spacing:-.022em;line-height:1.15}
-.tile .s{font-size:11.5px;color:var(--ink-2)}
-.tile.crit .v{color:var(--crit)} .tile.good .v{color:var(--good)} .tile.brand .v{color:var(--brand)}
-.tile.warn .v{color:var(--warn)}
+/* painéis de barras */
+.cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(330px,1fr));gap:12px}
+.panel{padding:16px 18px 10px}
+.panel h2{margin:0;font-size:14.5px;font-weight:700}
+.panel .sub{margin:3px 0 14px;font-size:11.5px;color:var(--muted)}
+.scrolly{max-height:420px;overflow-y:auto;padding-right:6px;margin-right:-6px}
+.row{margin-bottom:13px}
+.row .l{display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin-bottom:5px}
+.row .n{font-size:12.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.row .c{font-family:var(--mono);font-size:11px;color:var(--muted);flex:none}
+.bar{display:flex;align-items:center;gap:9px}
+.track{flex:1;height:7px;border-radius:4px;background:#e9eef5;overflow:hidden}
+.track i{display:block;height:100%;border-radius:4px;background:var(--blue);transition:width .6s ease}
+.bar .p{font-family:var(--mono);font-size:11.5px;color:var(--muted);width:38px;text-align:right;flex:none}
+.rank{display:inline-block;width:17px;color:var(--muted);font-family:var(--mono);font-size:11px}
 
-.panel{background:var(--card);border:1px solid var(--line);border-radius:5px;box-shadow:var(--sh);
-  display:flex;flex-direction:column;min-width:0;overflow:hidden}
-.panel > header{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;
-  padding:12px 15px 10px;border-bottom:1px solid var(--line)}
-.panel > header h3{margin:0;font-size:13.5px;font-weight:600;letter-spacing:-.003em}
-.panel > header .sub{font-size:11.5px;color:var(--muted);margin-left:auto}
-.pbody{padding:12px 15px 14px;min-width:0}
-
-/* bar list */
-.bars{display:flex;flex-direction:column}
-.bar{display:grid;grid-template-columns:minmax(130px,215px) 1fr 62px;gap:12px;align-items:center;
-  padding:8px 0;border-bottom:1px solid var(--line);width:100%;background:none;border-left:0;border-right:0;
-  border-top:0;text-align:left;color:inherit;border-radius:0}
-.bars .bar:last-child{border-bottom:0}
-.bar:hover{background:var(--card-2)}
-.bar[aria-pressed="true"]{background:var(--brand-soft)}
-.bar .nm{font-size:12.5px;font-weight:600;line-height:1.25;overflow:hidden}
-.bar .nm small{display:block;font-weight:400;color:var(--muted);font-size:11px}
-.bar .tk{height:11px;background:var(--track);border-radius:2px;position:relative;overflow:hidden}
-.bar .fl{position:absolute;inset:0 auto 0 0;background:var(--brand-bar);border-radius:0 3px 3px 0}
-.bar .avg{position:absolute;top:-3px;bottom:-3px;width:2px;background:var(--ink);opacity:.4}
-.bar .vv{font-size:13px;font-weight:600;text-align:right}
-
-/* matrix */
-.scroller{overflow:auto;max-height:66vh}
+/* matriz */
+.scroller{overflow:auto;max-height:560px}
 table{border-collapse:separate;border-spacing:0;width:100%;font-size:12.5px}
-th,td{padding:0;text-align:center;white-space:nowrap}
-thead th{position:sticky;top:0;z-index:3;background:var(--card-2);color:var(--ink-2);
-  font-size:11px;font-weight:600;vertical-align:bottom;padding:9px 6px 8px;
-  border-bottom:1px solid var(--line-2);white-space:normal;line-height:1.22;min-width:78px;max-width:100px}
-thead th button{background:none;border:0;color:inherit;font:inherit;padding:0;width:100%}
-thead th button:hover{color:var(--brand)}
-thead th.on{background:var(--brand-soft);color:var(--brand-ink)}
-thead th.lbl{left:0;z-index:4;text-align:left;min-width:150px;padding-left:14px;
-  font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);position:sticky}
-thead th.tot{right:0;z-index:4;position:sticky;min-width:80px;background:var(--brand-soft);color:var(--brand-ink);
-  border-left:1px solid var(--line-2);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase}
-tbody td.lbl{position:sticky;left:0;z-index:2;background:var(--card);text-align:left;
-  padding:0 9px 0 14px;font-size:12.5px;border-right:1px solid var(--line)}
-tbody tr.reg td{background:var(--card-2);font-weight:700;font-size:10.5px;letter-spacing:.07em;
-  text-transform:uppercase;color:var(--ink-2);padding:9px 6px 8px;
-  border-top:1px solid var(--line-2);border-bottom:1px solid var(--line-2)}
-tbody tr.reg td.lbl{background:var(--card-2);z-index:2}
-tbody tr.reg td.rt{color:var(--ink);font-size:12px;letter-spacing:0;text-transform:none;font-weight:600}
-tbody tr.reg td.rt.tot{position:sticky;right:0;z-index:2;border-left:1px solid var(--line-2)}
-tbody td.c{height:31px;border-bottom:1px solid var(--card);border-right:1px solid var(--card);font-weight:500}
-tbody td.tot{position:sticky;right:0;z-index:2;font-weight:700;border-left:1px solid var(--line-2)}
-tbody tr:hover td.lbl{background:var(--card-2)}
-tbody tr.hide{display:none}
-td.c[data-h="0"]{background:var(--h0);color:var(--h0f)}
-td.c[data-h="1"]{background:var(--h1);color:var(--h1f)}
-td.c[data-h="2"]{background:var(--h2);color:var(--h2f)}
-td.c[data-h="3"]{background:var(--h3);color:var(--h3f)}
-td.c[data-h="4"]{background:var(--h4);color:var(--h4f)}
-td.c[data-h="5"]{background:var(--h5);color:var(--h5f)}
-td.c[data-h="6"]{background:var(--h6);color:var(--h6f)}
-td.c[data-h="7"]{background:var(--h7);color:var(--h7f)}
-td.c[data-h="na"]{background:var(--card);color:var(--muted)}
-td.dimc{opacity:.32}
-.legend{display:flex;flex-wrap:wrap;align-items:center;gap:12px;padding:10px 15px;
-  border-top:1px solid var(--line);background:var(--card-2);font-size:11.5px;color:var(--ink-2)}
-.ramp{display:flex;align-items:center}
-.ramp i{width:22px;height:12px;display:block}
-.ramp span{font-size:11px;color:var(--muted);padding:0 6px}
+th,td{padding:7px 9px;text-align:left;white-space:nowrap}
+thead th{position:sticky;top:0;z-index:3;background:#fff;border-bottom:1px solid var(--line);
+  font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);vertical-align:bottom}
+tbody th{position:sticky;left:0;z-index:2;background:#fff;font-weight:600;border-bottom:1px solid #f1f5f9}
+tbody td{border-bottom:1px solid #f1f5f9;text-align:center;font-family:var(--mono);font-size:11.5px}
+thead th:first-child{left:0;z-index:4}
+.cellv{display:block;padding:4px 0;border-radius:5px}
+tr.grp th,tr.grp td{background:#f7f9fc;font-size:11px;letter-spacing:.06em;text-transform:uppercase;
+  color:var(--muted);font-weight:600}
 
-/* pendencias */
-.pend-head{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:12px}
-.pillrow{display:flex;flex-wrap:wrap;gap:8px}
-.pill{display:inline-flex;align-items:center;gap:7px;border-radius:4px;padding:6px 11px;
-  font-size:12px;font-weight:600;border:1px solid var(--line)}
-.pill b{font-size:14px;font-variant-numeric:tabular-nums}
-button.pill{cursor:pointer}
-button.pill:hover{filter:brightness(.96)}
-button.pill[aria-pressed="true"]{box-shadow:inset 0 0 0 2px currentColor}
-.pill.na{background:var(--crit-soft);color:var(--crit);border-color:transparent}
-.pill.sr{background:var(--warn-soft);color:var(--warn);border-color:transparent}
-.pill.ok{background:var(--good-soft);color:var(--good);border-color:transparent}
-.ptab{width:100%;font-size:13px;border-collapse:separate;border-spacing:0}
-.ptab th{position:sticky;top:0;background:var(--card-2);text-align:left;padding:9px 14px;font-size:10.5px;
-  letter-spacing:.07em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--line-2);z-index:2}
-.ptab th.num,.ptab td.num{text-align:right}
-.ptab td{padding:8px 14px;border-bottom:1px solid var(--line);text-align:left;white-space:nowrap}
-.ptab tbody tr:hover td{background:var(--card-2)}
-.ptab tr.grp td{background:var(--card-2);font-weight:700;font-size:10.5px;letter-spacing:.07em;
-  text-transform:uppercase;color:var(--ink-2);border-top:1px solid var(--line-2);padding:8px 14px}
-.tag{display:inline-block;border-radius:3px;padding:2px 8px;font-size:11px;font-weight:600}
-.tag.na{background:var(--crit-soft);color:var(--crit)}
-.tag.sr{background:var(--warn-soft);color:var(--warn)}
-.ptab td.wrap{white-space:normal;line-height:1.9;min-width:280px}
-.ptab td.wrap .tag{margin:0 4px 3px 0}
-.empty{padding:38px 20px;text-align:center;color:var(--muted);font-size:13.5px}
-.empty strong{display:block;color:var(--ink);font-size:15px;margin-bottom:5px;font-weight:600}
+/* pendentes */
+.toolbar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;
+  padding:13px 18px;margin-bottom:12px}
+.seg{display:flex;gap:5px;flex-wrap:wrap}
+.btn{font:inherit;font-size:13px;padding:8px 14px;border-radius:7px;border:1px solid var(--line);
+  background:#fff;color:var(--ink);cursor:pointer;transition:.12s}
+.btn:hover{border-color:#b9cbe4;color:var(--blue-dk)}
+.btn.primary{background:var(--blue);border-color:var(--blue);color:#fff;font-weight:600}
+.btn.primary:hover{background:var(--blue-dk);color:#fff}
+.ptab td{white-space:normal;text-align:left;font-family:inherit}
+.ptab td.num{text-align:center;font-family:var(--mono)}
+.tag{display:inline-block;font-size:11px;padding:2px 8px;border-radius:5px;margin:2px 4px 2px 0;
+  background:#fdecec;color:var(--red)}
+.tag.sr{background:#fdf2e2;color:var(--amber)}
+.empty{padding:50px 20px;text-align:center;color:var(--muted);font-size:13.5px}
 
-/* page tabs */
-.tabs{display:flex;align-items:center;gap:2px;background:var(--card);border-top:1px solid var(--line);
-  padding:0 14px;overflow-x:auto;position:sticky;bottom:0;z-index:5}
-.ptabb{background:none;border:0;border-top:2px solid transparent;color:var(--ink-2);
-  padding:9px 14px 8px;font-size:12.5px;font-weight:600;white-space:nowrap;border-radius:0}
-.ptabb:hover{color:var(--ink);background:var(--card-2)}
-.ptabb[aria-selected="true"]{color:var(--brand);border-top-color:var(--gold);background:var(--brand-soft)}
-.tabs .fill{flex:1}
-.tabs .hint{font-size:11px;color:var(--muted);padding-right:4px;white-space:nowrap}
+/* atualizar base */
+.up{padding:20px}
+.drop{border:2px dashed #c6d4e6;border-radius:10px;padding:34px 20px;text-align:center;
+  background:#f8fafd;cursor:pointer;transition:.15s}
+.drop:hover,.drop.over{border-color:var(--blue);background:var(--blue-soft)}
+.drop b{display:block;font-size:15px;margin-bottom:4px}
+.drop span{font-size:12.5px;color:var(--muted)}
+.up ul{font-size:13px;color:#3d4d60;padding-left:20px;line-height:1.9}
+.up code{background:#f1f5f9;padding:1px 6px;border-radius:4px;font-family:var(--mono);font-size:12px}
+.note{font-size:12.5px;color:var(--muted);margin-top:16px;line-height:1.7}
 
-/* toast + dialog */
-#toast{position:fixed;left:50%;bottom:56px;transform:translateX(-50%) translateY(8px);opacity:0;
-  transition:opacity .18s,transform .18s;background:var(--ink);color:var(--canvas);padding:10px 16px;
-  border-radius:5px;font-size:13px;z-index:60;pointer-events:none;max-width:min(520px,90vw);text-align:center}
+#toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(12px);
+  background:#132330;color:#fff;padding:11px 18px;border-radius:8px;font-size:13.5px;
+  opacity:0;pointer-events:none;transition:.25s;z-index:60;max-width:90vw;text-align:center}
 #toast.on{opacity:1;transform:translateX(-50%)}
-#tip{position:fixed;z-index:50;pointer-events:none;opacity:0;transition:opacity .1s;background:var(--ink);
-  color:var(--canvas);border-radius:4px;padding:8px 11px;font-size:12px;line-height:1.45;max-width:240px;
-  box-shadow:0 6px 20px rgba(0,0,0,.3)}
-#tip b{display:block;font-size:12.5px;margin-bottom:1px}
-#tip i{font-style:normal;opacity:.7}
-dialog{border:0;border-radius:6px;padding:0;background:var(--card);color:var(--ink);max-width:min(560px,92vw);
-  box-shadow:0 18px 50px -12px rgba(0,0,0,.4)}
-dialog::backdrop{background:rgba(10,13,17,.55)}
-dialog .dh{padding:18px 22px 0}
-dialog h3{margin:0 0 6px;font-size:16px;font-weight:600}
-dialog .db{padding:8px 22px 4px;font-size:13.5px;color:var(--ink-2);line-height:1.55}
-dialog .db ul{margin:8px 0;padding-left:20px}
-dialog .db li{margin-bottom:3px}
-dialog code{background:var(--card-2);border:1px solid var(--line);border-radius:3px;padding:1px 5px;font-size:12px}
-dialog .df{display:flex;justify-content:flex-end;gap:8px;padding:14px 22px 18px}
-.drop{margin:12px 22px 4px;border:1.5px dashed var(--line-2);border-radius:5px;padding:22px 16px;
-  text-align:center;color:var(--muted);font-size:13px;background:var(--card-2)}
-.drop.over{border-color:var(--brand);background:var(--brand-soft);color:var(--brand-ink)}
-.drop b{display:block;color:var(--ink);font-size:13.5px;margin-bottom:3px}
-
-@media (prefers-reduced-motion: reduce){*{transition:none!important}}
-@media (max-width:900px){
-  .body{flex-direction:column}
-  .pane{width:auto;border-right:0;border-bottom:1px solid var(--line);max-height:none}
-  .scroller{max-height:none}
+.hide{display:none!important}
+@media (max-width:620px){
+  .scope{text-align:left}
+  .kpi .v{font-size:27px}
+  .head{padding:14px}
 }
-@media print{
-  .pane,.ribbon,.tabs,.crumb{display:none}
-  body{background:#fff}
-  .scroller{max-height:none;overflow:visible}
-}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
+</head>
+<body>
+<div class="wrap">
 
-<div class="app">
-  <div class="ribbon">
-    <div class="brandmark">
-      <img class="mark" alt="Rede HG" src="data:image/png;base64,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">
-      <span class="wm" aria-hidden="true">REDE HG</span>
-      <span style="min-width:0">
-        <h1>Painel de Treinamentos</h1>
-        <span class="fname" id="srcname">Base 09/2026 · 7.543 registros</span>
-      </span>
+  <header class="card head">
+    <div class="brand">
+      <img id="logo" alt="Rede HG" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAACACAYAAAD03Gy6AAAgvElEQVR42u19e3hdVbXvb4w511r7kaTvlEIBqRyBFlBBQJ5Jj3BBHi0gO3x4fB6PcvEcBJUCytWdjZ6LpSCoKCgKUkAh0crrKCLSBFHRA4gHWy4KyKPQ0neb7Ndac85x/1g76StJd5K920SY37e/9vuSrD3XePzGmL855pjAOBwdHVAAsPq2RMvq25OLAEAEjLdG/Uc2C5Ys+I0ONOTv1H92nZ70dnjv2lox42mMO6tpbwVTDi4Z6e+mEjhUnMCW6JtvmeYuGJKFBoDVP0peLEu09C7WUX6xMqYjkOu+/N4FALA026LfklQdcX/zT/Sx5SVeWLxTm97F2m1e7Dm5C/bR698RTT3l2y0EAJnMuIEiHieWz5kM3KYlmBKILNYQzzgQEUiRUCHSOHr63/X79nn6Njn06Wbp7HTIZvktBdRC+AChFUwEUUZ/30/SrFIZlmnL3K0wa4rsufv/z77JPR67BQDQBQZAbylgtGMpFM2F2Xy3viydwpmlXhjmbbMdJoeSUeqfp/8pmt284bT0yd+8At05g5aseksBo7H+jlj4r94VzE34uCoswAjtmGoSgMgpTAhCfVLzk5FTwZX7nf2VE9GdM8h0qLcUMELcRwZOfonmaQm7mASwDkyDwApBIACdNOMvlOAQRZu+vfmM66ejs80BYzcejMmJiYC6EON+Ma9vDQLMDMtwRIPPl0gQGsYhE19X+yZXmjJSexDC2wAALWM3HoxNy+iCmpuDKSzRVyTTOLWY3xH3B4OhqYkCHTppJZfKxqggffK0M65uH8vxYMwpoA/3ezpVq+/hynIBFqiOYhAQiIGDJ70KJ1ASFQ2r4MvNZ3ztpLEaD8aUAvpxfwmmBAn8UARsbZzvDydvPaDpDfLYQpxjiAjIv3VaJrsHOjNjbn0wliZDmAMigoSab/GS2DcMt833d/4AgXPAzOQGSusQDorFho60vxdKDT8ASLB8Do2leDBmFCBLoagNdv0S/wt+E80r52GYhsduEgFWCJOCgqRUKFYIRKQkKhn20qdOO/2ay9HZZsdSPBgTCuio4P7qnyWOb0jZr0QFWMFIqGWBFUaDLlGTXyQr3GfrSqKiJdZfnTpv0QlxPBgbfNFuV0C2wvMsX9I4pck3t2mCcgbENDKYcAACbSihDIn0P4QgjoigGGrxjNOvmYrOjjGxPtitExCA2is8z9tU8aYgJfuVy7BEo5vXwCs1YrGhJR3sayDfB0jGwvpg91pAhecp3sv/kWyUc8Ke4eP+QMIXAWTAH3Kcmvqp+c3zFl40FtYHu00Bffl+/gHvcB3QNaY0UtzfVvwMQdF4UjSeMLkBFCFKorIF+Qunn3btkbt7fbBbFCACQgYiS9Ggyd2hGIExw8z3B4Y0MDv02oT0RElRNJArEEEsEXEgjNunzFvYiNnLBBB683hAFxQRXFRSN/gpHBiWYJhqMBcBFAEbyikqWJ+J3MAQT8RiI0Ne8h1K+Abkcg4t7epNoQBZCk1zYYq/4I95Tfho2AtDhJrs4woITMCKwiTJG18UycCxIB5aooIhL/WR5tOu/mQlHuh/aAWIgGkuTOlhf7ZO0A2uDOukxqUkBDy/uRlGFNFQ4u+LB6ZsobxvNM//2iHozpldTVXwLhQ+oRMkf0XAzt6uPaRtBDDVLg0kiqmIP2+YCSap6i/gLBGrpIh3x74t2URltvSP5wFdMdUQvqAWeU04LCrAENXO+gWARxbrS0lZtmkvCtjAVSNHIhZbNkonDy02pa/d1fFglyigL+Us/UKd7TfiQtNTW+HHHkbwlcOzm2fIK/kpCNhAqnYu0i4qGtKpT08/Y1HbrkxN664AyYKpDXbDz/A25eO7LoKr4H5N3VxAIAK6Vh0geRMQkxsuiaHERk5Y3dR89lWz0Nlmd0U8qOsXiMQUswhUYyPfqhOYaiNILXG/P6Uhh3yo5eHXDyJf2WFY/9bxwAixN8kZ/zZkOtSuoK7rq+E+3P+lalcN1GrytYceAHDCSGiDJ9fs657ZOJNSKqwO/3fUgRJTMpRoOm5KuCK3K6jruimgf2vxwWCuSuAK0wsrVJ/qZYntFx0vHYGiHQn8bDOUC4sWXuKLzWdcc1K9qeu6KECyYCyDbF6Kqcm0uZUZJA5EdXBnJ4SkNnhh42T3wCuHUoMuw8loXosI4kiIySr/lj1O+ca0elLXXAdrjEsJc3AJ4ZtVA/Y1NaCYhwq+mh1ue/4YWVWawB4byKifKAwTWgSpmSbpbq4ndV17oVQo5tIj+jPeZDrT9tYH9/usP6ENXtw02d3+/DHU4JVHhv0DOkJMXUvQOH/yvGvqRl3XVAF9uF/uwrt1Sha5AiykfqdWBCQeO/n6X07EyuIE9oeV+1f1DUrCsiUvdfWUsxYdUY94UDMFZLPxs+QJpJRWdyoFX2pAMQ82rGM0+iEtfW1/ueOFo2liUICVWjt0TF1DKV+QuH1ayw0NmD1bahkPavag9tZ4wWV61TdVIw4yhTrivkB87VzeeNGlT5xjAAWCSF3cjIjFlA0FqQPcRFuhrjG2FNBHMZcf5fN0Ez7henZeSjgqmQA2SDGnG+z5T6w66ILGlCInbOuXrZOWsGCQSH10yvyvf7iW1DXXwBqZ5sIUfxPMUppudGU45+qI+wKTaIAuFN2P6Uy5lZd+9JawnL+LvaQGxNRCvSSCHbbSRJSYyEEHN0yZt/CAWlHXo90CJHTESgz3UEv9NI63edjtsx5XxsC75FL52SAPd9FW0zOACGwyAVWK5NnEVHskurKFdgA3/CmVVqL/QMo7SEzZgmhUBiDEsNobSPuWvKSCKT5+8Lp1x3c3z5G4/H3kme/oNFipZjMz1JX+ZBxv8/VMOSFagyKLHiN8Ls1Fb+ecHOWWL6d1913WA8a5ENsL1gSpWzxQYooGXvq9z0xq+s9aUBUjVkBfyhk9ok5WDfii662+inkEniaKYT0fXAjpk41t0TOShW5rg0Vnp0VLVq++9/PPWGv/jZRmENvRWOVOtKAkKljSqUunzb/u5NFS1yNSQF8V8+almIo0biaGiK0P1VDRgA3S0L0FWjjxvOhuWQpNOWzB+0pQXPvAJXdLVFxIflIDqFdQJghICOKU94PpZ32neTRV1zwCa+w/tZgO+GbdhL1daejTK6OEHptsgC4U8GDjedHl0gGF1gGE252zyHSo1fcv+IKEhZ+Tl9QQsXVSAcOEDl5ir0jCuMpuhKcyhy+0CtUQPsqf5cl0puuBIa4b7rtEAqpcxAs2MB8WB8IyyCC77YLOZQIiJFz0ITHl50n7CiKuPkqIqQpKNJ4xdf51F4+UqhiWxqQjDrq9Xd67E03u90qgnQETgySKM5WBnjiSLMhZCAsJa5TyRTphYlv0ZN/3DznJTEahs9NOO/Xqd5Hn/RaCBMRQTFhXLxbj+dUlxaQcgSyinmPX3XfZE33fX3MP6K9mewKpZMItVh4CF9WNahBmWD8AR6G7YGJb9KQshd6p8AH0BeU1P7/0aZjwU6Q0A8MNytX+alxVAVa+81KLZ3wqm4qpiuoZweohqFLNZkrqWzwRB9s8LHHdqAbrN0IXivL11Afc4r6VdtUPqATl1f912Z1iiovioFyveBBTFew3HFRaO/Vbw62qoCoFoohgi4/pCxKT5TuuF4awVTUbAbWCIIkzHlXo5e4/Nh1zYuuabkEGrooqqx3fLdPBmN0m05669iH2gvdJWKx6kWa8YJiLNzJINGkqbrxw/ZLP3IBMh0Jnmx21B0hHLPx8lz4ikZZvoFg/ilkETvtQURmvg/W/zJ3bbYYIujvHkdnLBDkRWPshMeFrUF7dgjJBlNiSFS9x3eQzrz0SnW22GuqadprvzwFhGpI2oZ5QaRzgCnA7QE8NPEAEwgqONRCW6X2peaa7qqC7s1GxxKnzrjqBOfVrWEOA450F5eF6AIjgWDnogCkq/o16V79n/VHoRQ4Acm5kHtBHMXvqKjUJB7giTL1wnwDrpaCKBbosNc90Vx10dxqU2yxasnrtfV94FKZ8GXkJBVDd4gFM2SDR9E9ITb66GuqadpZyFn+vWv0EHoGBgwzSq2GUHuAENtEIFfbKkuAM94FhB91qRktWoztnmk+/5qfkJ8+WMG9BPChEWO1BiIfnAUr3ycMSaUVh4aT1Sz7z8FDxgAZNOQHCD+Hbg9QTKoU5tgg3aA3/KBRgS3BeAI4i/L2k7Xsm/B4b0T5i3B8yTALt1JRpmpgo4wlivZ+YyGGQdxqVAkQc6YDFFp9LTlx92MoZKCHXLsCOFcODfQMTwZXfoS9SEzDHFYd3YHo4JBsriBPY9aXkxyaegvV9h7XrgA+CzBza3Pn59SL2wxAxIJKakXZbE7BELLZkyW88oLhu0sXI5RwynVxVDJB4b9eteSi5J2u5HEU4qVcBl8S4b41k9zyn99Gl2Rrh/k7iwZr7L/2ts+GXyEuq+pF2xBKVHang0slnfW0mOjMD1hbtKNiKBU5Mh//Hm4CJLqxPLacIrJeGDvP0cOJ095/SAdWaq6PwtyPt1jywYKGL8r8mnagTaUcEMQI/PcFR8orYA5fTkAoQAaMNTrrwT+zh48hjUIwcJfQ45YOiEjY4pT4pUiHZ6sbhD7A+AImy+ITYcD2xJsRnvGvvBWHJQSc+PiWz8AAM0EyQd1QbxPjqEm5EwhpI3bgeDTZGLky+v/xSVxcU5eCwq0Yu55DpUKt+vuBlJ9F/QHlcp120uHuFnwos0pcA6GsWsqMCJAtmgi38OrEvKfwL8hCqR+miwHoNUFEP7kqd4u6UpdBza51yDmd9cP9lP3Zh8Ufkp9QWKJLKxnxNbI8lKoqwf96k+dfsHaejW7yAt150CYAgiP5NTUDaOdhaW38Fetjk8boX2QslC0bXLrT8HeIBHJBlz4s+I1FpZcycjmI+AzoREcRZ8tNpBOlPx2uSLXKn/ryfgNVLkZ6aUs9ygJkuhKvaA6pfBxidgi5vwtmJU+3P+kg+7M5RWSQ1z7v6LFLJJWJCAzjtlBfzIsMIS07pQRgOEVEBxEWrvOLGA9bdd1lPvC6huJavqwuKAJno8xncgJmuDFtr+BEHqxugTS/uTJxqfyZLoXe78LeCotX3XfozsYXbyEtquFpnRURwkSM/PcMmmubFXhBT1gwAra2x2ynCx2MArH3Wwz7YFPBG0drP7nbo2ZHzcshmWXPq8xIVXyftMaQe8xNxwMf7vxMAicSr3mJ3sJ+XNM8yIRA3zOxn5xBkdRIq7JXzgpPdXTVhOesERdNOW3SO8hOdxhnrlB4W7T44BAFCLMIMCEKU8nM233PRC8hmmSu7+SC281UTAhGYWgZfEVidhop65d4xK/w+KMp0qDX/teAnNizeQ15SSW0XaJVgnAoo4PkAgK5W5j5X8Dx3ekUstRS+kAa5MjbZhPfZvgUXxuqYvUwAkCZ3kZjyRmLNqG3VNUEsxPmnxzDU5eIs6Ldodlq9wBoNbiSLr0EgSARWNUKtf0NdPuWUcOGYtf4BoGjSB756Ges9viZhoeptTGEFYR4MgiAEASmCs/kEFd6++q6L32AAMKKO5gY0OFu73N8KRAWiXlidWHXEkvk3iYAoM4YC75BeILTh4I5bDa1cT+Sr2nkBEcRa8pPpcugdvfVC7LjKFnvN3E2ROFEK178646cvfq9zEzrBoDEMP9vQFJ2M3P+sLje/8BMJANT07AEJSIEUH9evANI4okIG1Mj6Cawd3fFaM254/sD7BCBCBuNmZDoBgEr7P3V3OOkFIeMxqFa2I3EcIBwJALTxAUxqmKqWqQAzXDhC8m2rGCAEEEQ2iEeHP/2eFb1PHzB7wy239LhKP71xooJ4rtciycXTnpmw7MS3U9ET8NAFVzuPAQSICJRHZMpvNMrK2Tyh0duPCNNggFrgv4ut3121ZhZe7m18YuMtt/S4mIKV8eMCEHRkFD6Popuwvqs4628g69nReYH0hQGK6y55aiGasj9vMtiffWjnRi8gC0Ari+fzafPttftAq/C/46jbNf5uuVu2OjbGYrKrvNeLMA3rhKyukR2JI/aVeHg7J1IyCx4AGn2GQiAQRBasmMWlsoYv0Z8FAOY0y7hTAFpjeWz2/iS2ZApvX67haGiapupkSQTMENLvYM/IvjUJvCBoZfDwxqnunvV7esqWXFTkl2Nrmj3+FJDLxXMu97yCkloT7bmSwimvOzIeahOQCYDsw5ZpBmR0FJwIwBAYy3Lpillx70iRDVFZrwQAtOfGoQdUpLTod70AvQpNKO63XISsjDpZjKMxRHg6s+cmjRbWHAhKW9yxdg/5U+8kUtrCEecRbCzWltzYxYFYshSLy62H82AmrqHy9JccRaP3AolrMScyASm4kQtJEN/j1RN60r5yPxDHVCqMK2AlIozn0VmpYhD0xP8qFN/2HIlXdhhtWwQRgKKGUbdgcUJg5XDTG3vJy8VGZrJwIIiREr735PhWwJacpQwSwCq4xs1c2vN5DDcWDPKrzKMTPqCUw5p84Ba+tg+or1ebCCjgJLKz/XEt+UycPLCSVL8UrUZx7+fJBj0ObrRV+nHxoxnpGjW+tcjJohX7yLowxcwOTihOaBkpIFljhmkXj/Z+L2/YYnUMSRWotPdfQVZtY9o0XM5O2DCAwkhASBBb/8rehNy8di8ibbc0SxKBWJmAQjBxHNs/IZeLTYnQjDj5oT4vKM94hWxiFF5ABEBvZhvyhpEowAqB2OGOtXvIxnKC+3v1EwhOBEo1YUJqz9iSsuMvD+oz5suPmwDGTFhXSR8rXpAsUtj86g5eUL38CeyidaxYVlSOGA/rKZoEJlRyx5rpBJZtF4EiDoECVHQgxisV0ZaJ59yk3wHFU2D7inf64QPlGa9CdCjDbjVNIiCCEL3G1tKrwyUhrBBIWfyxp8k909tEpOLMZyv1ChiAp44YtwA0ezVVzPK9SCjC1lXUFRiyDRvJNK2pmiPaEiPiRIWtvMwukmcRAjycM8OVZ/xk3TQSUaR2+HJhWAEgrchkFHLddvxpoDtuQ+PziTFTsJ2ZCwDlKJy6SiocfJWYVpGPM2DI37gk+v/ZCHkwSGTnahQAmgVRqNwvN04GlIMb6JqQ0Ao8NQfv3HgIAIyXK8bjuYKRg8NXj58BRScgtAC2Py4jgDCiSWtIdLmiBKnOfkmRmLAEcc/xhAnlV4jwMvzqEkapBN/l+TSeKzQQyG0LP1uYJoukpxC4c+Lnjqc40BLPNfAzSPtNsM5i+70SAmAVbKqHbKpHyKmKUmSnBAdYgwgrGhrXvcT0HkTiZHm1lHSlnAu/65kA6zSpwbXOCC3A+AgWHNOI9m5b+5q7OqWf6Hb41OEegE/BOgxRbQV4hkzjuvjka5UBmJSGOPz55dtyJa5A0qPVRgCq+MnvepqAoaGPEVmLBn9vTE9/BARBZ2bse0FHJoafmemz0KDnIDR2Z4dUoonrpfrNAIoXFOIei4UEoAjqcj0Q3knHKwGgSADD8mw+BYiDsxW3GOgjIJSNAG4BFhzTiGWdMsa9gLBstiA720egvwwrAlfBhcE+lmCTm0mUqbZHh0JUBKjcBQAsAmo4OloOi2cRgGQnRalEgnWRJ6+UEoBzcQsMK4N8wChZh4S3Lyb4X0QODu0tasyKP9uikMs5qOkXIe3NQd44WPCg7+ccEBGcLsL1rQdoJwiufBJrntu0euNf4sjeVanRF9yPYOg4IEIAC94IfawPPaoq6hMxypFFUn8OXzrucOS6DToyY08JWTBy3QbZ42YhxV9CaB2oioPCwhAdkfilSrX/kDJxpDwAcn/c0WWpYqyJ/8JGttP1xigzdP4vWBn6zjoFru5UHcEKQbOPRv92fLqlIXbzMXaZNFoYWTBS/g/g60YYJ6iqSoQANuK8otn5UkoUopKDxd0AgOY1wtQGK1mwdzyeQog/cio+wD7UY9ZGHmM456mJGGVjkfIOwp50G3I5hzmZsXOz9XcP18h1G3hzr0KD34qyMVX3HhUALCx+5MdxbzCZiIVOAKb85Oaf/u8nIELobLOxylpjYzbg78dtmIdeAecNM0oCLjtQtZ9QFG0sG0p5Z9OVrdehrdMi26J2e1D+7uEezn8yQnvLeRSoS2lj2VDZKhrGuyG0EIQ7TeGJFUHh5ljmW52QQWtMtubzUafdhNfZB8sQh9XyERu4SuY1rA808pFBSl9MXzrhauS6DdqztJvgiJBt0Tj/yQiXn3AqeXwrQuNgJTaK4byXAyDODWFKDuyxlHrfYMsdAAjdOduvACIIlkJNPgmbSmV1E5IY8uDyKE1Wo2QMmvwFuHLuDcjlBDm4XRqY+xop5boNf6Xlw9Sk7wUQwFZKm2o/HOmASNyNGzrP31TprihbPKDPCwSU3hTe6DZiDTTUYF6Q9tzoOodLrARK6X+nXOs9+PcjplQgSdcVkqRi9Z2dFi0titpbFoqvF8OJ2oFuHvZgHgS6HVgpKfeuS/Ru+A4ghO52u2W1uoU+iwsc5mFt0dK1nAJhO3KubxXcqK0DVfYARv7RKEQGKT2Ppjc8hsuOPQ65bgOq1GXWEpayYHRk4uiW6zb44vFH0vvoUaS9SxEaB+fijaSRvEcsYmHrEwYsnBMhnSAWe/2qB69YE3dN2ZK/07a/CkI7aO27kZ40XT2tUtjPlSB9XXGtELRn8MiqyeZ9vzlUsXI0qqMLBMCJRaAVIhdB3Hckoa/Dl5a+3M+gzllOWNYZw9RwhT4nE69sc5WWYdlj96GILwHTBfCVRsnEp19GU7dNBIGRxpf+2fi9e3rOc5C+BErgSHsEU36Jyz3vXPfuQn77vkE7KKzvGFG5S2X8KehwRViqrA2cxAVYyzc1uHc+8i4yjohr0WFDxIGJEWggshsQyW1i8T1c/eiz2/E0CstWE+Y0CzqBuEcngOWV+p3ZlZ+1bdc49XNHH4i0969E9K/w1BSUDOAq31kLXBOWxhdPdro8UTnlIKz7U0/ykgqlDR/c8NPP/nigzlkDd8yqKCF8TP/cmyzvdz3xnQAxRgk2hdod9MhhWFkImFlqVfQgsSJYIVBA2ZRh5ddUsve4yDyMG/7492E97aKj3gZPn0Caz4HC/0LCCxBaxNQy1e5KKnLgKGmbXjwFbALlFCoKEEteSklx84Mbl1z4/sHalg0cTDMQEVC5my9yBXssPDRIFB/ecEKY4Bt6W6rkVuaTIDY7bBaNGJCIFEQEpciBOEBSnypJ71QqRQV84fhlEHqKrH3Wefw8rNsEpXsBANY0wEkTtNoPgjnEOAzAwUh4aRCAsgVKkQWIwVS7bEsIwgKO0iATsJBUwqoIWENMqVd7PRcBoMoJTFSlAKrUNSRaw7+VH+VL/Gn0PWdgAGgrBPYs3tmYx+9fmwQmGWBHbLS0AOJGZpF1lQQjBc1HgOkIgEGu0j/e2nhtyEzwGKIqLaKtAMYB+dD2LYFAUDUvUBIAYqCKE4VEQ6hcUQBZUoHm3vWXrb33i39FpkMhN3DTPj1EbLGyFJpOcDeXH9On+lPkTLe5v2MuHTtlM24yFiAHqs8F1LSFl7KCkpE+opAEDKItfaslLkSiLXkMVbYQ1VZr+PpM0Qp0fqr0b9qIGPJTmoqb7l9378XfQUtWo7PNDL5pMtTogpMsuLw+8Um7Ga9wAhoiDo5wzJReJBORmMo9vqjvh+Ie7aRBpOP/9+custXPVeV3VP+Sqq4fB3YJp8OpLGQBgYPytZTzK/z85k9AhPoOwo9IAZSDwxxQ07zetS6kc51DpD2IjVhmpYt82OS8E6OqvL+9Xia4u7gkgrCFCic5LjcwyAhYC4k1Xpg/d9WDV6xBWyf3p8Aj8gAA1BZDkX+8edxs5k8jCeWYLLSj+XttAGSXeMDY+1SgzSvMFBJNIFhSvuIwf8Gaey/5XQV6bDUWVF28qXSzjR5T/1dPoS+gYM0Lm1J0yAOHcMlybdYD42oIIMo1rTpNOGwSChKaSpsWrr3nc5f3demt1oWr/Trqu74kelz9UE+kj6Jgo3kPHcD3/22K8gID6+hNInyCcAg/fLtNr2t1FAQewp7F65Zc/NGK8Ku+MGJ4V5gICJ1gTAOVkvrexDRz6oPPTC6d+osDA6UsOXkzKcBIw8aTykF0YMJF6x445NCNZ3UDbrAWxSOOATvQHhk4tMIuWz0tU16rHzpl9sbEkTN6yibUUCRvDuFTBB01h77ZP+GiDV1B9Oy53bk+hnN4Qhg2F0IEQTvoPfNWFh56etpZKLhfXXvs6wk4RHizDJIoVT4qQNk8SrY0b+UD3ysg2047y3hqurfS1+pM7puRwt6rfvLBxw58/4+fmmy8pNH2HxaKCEJFE+AQ3bDymIdUb+/Zb/xqQR7ZLI9E+EOuhKvwBBcrYWVBBPMvWvH6LY+tbPrQinVkmYUExP9QsheIkHXKm6YTq2b9uPm54z+2fPnB4WiEPyII2kEJWTCRmJZ5mz68f5D/BnytoJghYv5xhC8WiogCrbiQ/vamu7/ywVoIf1QQtH12RJQlIOfUBUedLczXwVP7xGWJ4gBS49TqHUgEvlYwdgMcLnY3Pr44LuISqUXPgprABBGEkHOZDJS98Q9L3CYcIcbeBCbA0woCV7crBesHOAaaGL5WiNwvtJGj3I2PL44PnEBq1DCiDjzK1lf5ffqo45g4C0UnAgBCF1vU2PUIgYgFk4avgdCuAEnOffvx7wMAWlo0urtrCq31SlcImQz3KaICSwvA/F4QgMgijhEV1nIsQA3E9Qs+Mr0C/q6U7CL84A9v9BcI1KHFfn1fPg5S/Ry9Ov+9ZzoP55PQyfBUrAjntmya7FpmsxKfAChW0KoieNzuwV4ffvu//7qDR9fFUnfF2P4lLjj6CGJ8nETOhKdmAIh3sKzrq7pnENWaahZI/8UAALGCVwmBkX1FCD8ST9+M6x97sX/OHZ2u3p0ed637b/9Slx83iTfbU4RwDjnXCl9PBle2FK0DnGyx0ridYPVKkb7NGpFKYQ1DMaAqQg9NjzAtJYe7XIkewC2/6+mf4+wRlMGMCwVsDU3Ll9M2XvGpw6cq3z/KOWkl4BgAB4FoUr/ARLClHrWKtyJCfO1cfCYXxoUA/i4kjxPUr5yvHsH1v1m5jXHsQsHvXgVssVJCe4vC8mbZAWcvPHKmiugQIRxGoIMFMgugfSAyMa6egNru7FbsLfHeYAjCKgAvCfgvRHjKifsz9Lrn8K3ny9sYArq4co55tzCJ/x/coQ5UiLmRVgAAAABJRU5ErkJggg==">
+      <div>
+        <h1>Treinamentos de Segurança do Trabalho</h1>
+        <p>Andamento por regional, filial e curso — base exportada da plataforma de cursos</p>
+      </div>
     </div>
-    <span class="sp"></span>
-    <button class="btn primary" id="btnUp" type="button">
-      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M8 11V2m0 0L4.5 5.5M8 2l3.5 3.5M2 11v2.2A.8.8 0 0 0 2.8 14h10.4a.8.8 0 0 0 .8-.8V11"/></svg>
-      Atualizar base
-    </button>
-    <button class="btn ghost" id="btnReset" type="button" hidden>Restaurar base original</button>
-    <button class="btn ghost" id="btnHelp" type="button" aria-label="Como usar">?</button>
-  </div>
-
-  <div class="body">
-    <aside class="pane" aria-label="Filtros">
-      <h2>Filtros</h2>
-
-      <div class="slicer">
-        <span class="lab">Regional <button class="clr" type="button" data-clear="reg">limpar</button></span>
-        <div id="slReg"></div>
-      </div>
-
-      <div class="slicer">
-        <span class="lab">Curso <button class="clr" type="button" data-clear="cur">limpar</button></span>
-        <div id="slCur"></div>
-      </div>
-
-      <div class="slicer">
-        <span class="lab">Situação do funcionário</span>
-        <div id="slSit"></div>
-        <p style="font-size:11px;color:var(--muted);margin:7px 0 0;line-height:1.4">
-          Aplica-se à página <b>Quem falta fazer o curso</b>.</p>
-      </div>
-
-      <div class="slicer">
-        <span class="lab">Filial</span>
-        <input type="search" id="q" placeholder="Buscar filial…" aria-label="Buscar filial">
-        <div id="slFil" style="margin-top:8px;max-height:230px;overflow-y:auto"></div>
-      </div>
-    </aside>
-
-    <div class="canvas">
-      <div class="report">
-        <div class="crumb" id="crumb"></div>
-        <div id="page"></div>
-      </div>
-      <nav class="tabs" role="tablist" aria-label="Páginas do relatório">
-        <button class="ptabb" role="tab" data-p="geral" aria-selected="true">Visão geral</button>
-        <button class="ptabb" role="tab" data-p="matriz" aria-selected="false">Matriz filial × curso</button>
-        <button class="ptabb" role="tab" data-p="pend" aria-selected="false">Quem falta fazer o curso</button>
-        <span class="fill"></span>
-        <span class="hint" id="tabhint"></span>
-      </nav>
+    <div class="scope">
+      <div>Escopo: <b id="scopeName">Rede inteira</b></div>
+      <div id="scopeNums"></div>
+      <div id="srcname" style="font-size:10.5px"></div>
     </div>
-  </div>
+  </header>
+
+  <section class="card filters">
+    <p class="flab">Regional</p>
+    <div class="pills" id="regPills"></div>
+    <div class="selrow">
+      <div>
+        <p class="flab">Filial</p>
+        <select id="selFil"></select>
+      </div>
+      <div>
+        <p class="flab">Curso</p>
+        <select id="selCurso"></select>
+      </div>
+    </div>
+  </section>
+
+  <nav class="card tabs" id="tabs">
+    <button class="tab on" data-p="geral" type="button">Visão geral</button>
+    <button class="tab" data-p="matriz" type="button">Matriz curso × filial</button>
+    <button class="tab" data-p="pend" type="button">Quem ainda não fez</button>
+    <button class="tab" data-p="base" type="button">Atualizar base</button>
+  </nav>
+
+  <main id="main"></main>
 </div>
-
-<div id="tip" role="presentation"></div>
 <div id="toast" role="status" aria-live="polite"></div>
-<input type="file" id="file" accept=".xlsx,.csv,.txt" hidden>
-
-<dialog id="dlgUp">
-  <div class="dh"><h3>Atualizar a base</h3></div>
-  <div class="db">Envie a planilha de treinamentos em <code>.xlsx</code> ou <code>.csv</code>. O painel é recalculado na hora, dentro do seu navegador — nada é enviado para fora.</div>
-  <div class="drop" id="drop"><b>Arraste a planilha aqui</b>ou clique para escolher o arquivo</div>
-  <div class="db">
-    A planilha precisa ter estas colunas (a ordem não importa):
-    <ul>
-      <li><code>Participante</code> — nome do funcionário</li>
-      <li><code>Aprovação</code> — “Aprovado” ou “Não aprovado”</li>
-      <li><code>Empresa</code> — filial, como “Rede HG Posto Ferrari”</li>
-      <li><code>Curso</code> — nome do curso</li>
-    </ul>
-    Se o arquivo trouxer uma aba <code>Base de Regionais</code> nos mesmos moldes da original, o vínculo filial → regional é atualizado junto.
-  </div>
-  <div class="df"><button class="btn" type="button" data-close>Cancelar</button>
-    <button class="btn primary" type="button" id="pick">Escolher arquivo</button></div>
-</dialog>
-
-<dialog id="dlgHelp">
-  <div class="dh"><h3>Como usar este painel</h3></div>
-  <div class="db">
-    <ul>
-      <li><b>Filtros à esquerda</b> — regional, curso e filial. Tudo na página responde ao filtro.</li>
-      <li><b>Visão geral</b> — indicadores, ranking das regionais e desempenho por curso. Clicar numa barra filtra o painel.</li>
-      <li><b>Matriz filial × curso</b> — mapa de calor do índice de aprovação. Clicar no cabeçalho de um curso seleciona esse curso.</li>
-      <li><b>Quem falta fazer o curso</b> — a lista nominal. Sem curso selecionado, cada colaborador aparece com todos os cursos que ainda deve; selecione uma filial para ver só aquela empresa e um curso para isolar uma exigência. <b>Baixar lista filtrada</b> gera um CSV com exatamente o que está na tela. O filtro <b>Situação do funcionário</b> separa quem <b>não foi aprovado</b> de quem <b>não iniciou</b> (não tem registro naquele curso).</li>
-      <li><b>Atualizar base</b> — troca os dados por uma planilha nova sem precisar refazer o arquivo.</li>
-    </ul>
-    O índice de aprovação é <b>aprovados ÷ inscritos</b>. “Sem registro” é o funcionário que aparece na base em outros cursos, mas não naquele.
-    <p style="margin:12px 0 0"><b>Ajustes fixos no cruzamento filial → regional</b> (valem também para as planilhas que você enviar):</p>
-    <ul>
-      <li><b>Posto Gurupi</b> entra na <b>Regional 4 (Fabio Araujo)</b>, mesmo sem constar na aba de regionais.</li>
-      <li>Grafias equivalentes: Papa Leguas I = Papa Leguas 1 · Planalto = Planalto II · PQ Coqueiros = PQ dos Coqueiros.</li>
-      <li>O prefixo “Rede HG Posto” é ignorado na comparação dos nomes.</li>
-    </ul>
-  </div>
-  <div class="df"><button class="btn primary" type="button" data-close>Entendi</button></div>
-</dialog>
 
 <script>
-"use strict";
-const BASE_ORIGINAL = {"cursos":["SEGURANÇA DO TRABALHO","EPI","BENZENO","NR 20 INTERMEDIARIO","PLANO DE MANUTENÇÃO","CODIGO DE ETICA","APERFEIÇOE FRENTISTA","GESTAO AUDITORIA"],"cursosCurto":["Segurança do Trabalho","EPI","Benzeno","NR 20 Intermediário","Plano de Manutenção","Código de Ética","Aperf. Frentista/Caixa","Gestão de Auditoria"],"regionais":["REGIONAL 1","REGIONAL 2 (TIAGO CARDOSO)","REGIONAL 3 BRUNO VIANA","REGIONAL 4 (FABIO ARAUJO","SEM REGIONAL (ADMINISTRATIVO/OUTROS)"],"filiais":[["CASA BRANCA",0],["CHEROKEE",0],["FALÇÃO",0],["FERRARI",0],["ILHA BRAVA",0],["JR",0],["LAJINHA",0],["PAPA LEGUAS 1",0],["PERIQUITO",0],["PINHEIROS",0],["PISCINA",0],["PLANALTO II",0],["RAVENA",0],["ALAGOAS 101",1],["BENDEGO",1],["CARAVELAS",1],["COLONIAL 101",1],["FEIRA 101",1],["ITABUNA",1],["LINHARES",1],["PARCEIRO",1],["SALVADOR",1],["SANTO ANTONIO",1],["BALANÇA",2],["CAMPOS ALTOS",2],["CENTENARIO",2],["FLASH",2],["MINAS GERAIS",2],["MOC",2],["MOC 135",2],["NORTE DE MINAS",2],["QUILOMETRAGEM",2],["TURMALINA III",2],["ANEL VIARIO",3],["BARREIRAS",3],["CANDIDO SALES",3],["GRANDE VALE",3],["GRAO DE OURO",3],["MARACANA",3],["MARACANA 2",3],["NOVO PONTO",3],["PAPA LEGUAS III",3],["PQ DOS COQUEIROS",3],["SÃO MARCOS",3],["TALISMA",3],["UIRAPURU",3],["ULTRA",3],["EUCALIPTOS",4],["TECNO ARLA MARACANA",4],["TECNO ARLA MATRIZ",4]],"funcionarios":[["ACASSIANO SOARES RODRIGUES",42,"AAAAAAA-"],["ACASSIO ROBERTO REIS SANTOS",33,"AAAAAA--"],["ACASSIO SILVA OLIVEIRA",34,"NNNNNN-N"],["ADAILTON DO CARMO DOS SANTOS",42,"AAAAAAA-"],["ADAILTON LIMA GALVAO",45,"AAAAAAA-"],["ADAIR JOSE PIRES",11,"NNNNNNN-"],["ADAO JOSE DOS SANTOS",30,"NNNNNN-N"],["ADAUTO BARBOSA COUTINHO",21,"NNNNNNN-"],["ADEILSON RODRIGUES DE OLIVEIRA",7,"ANANNNN-"],["ADELCIO DE OLIVEIRA FERREIRA",30,"NNNNNN--"],["ADELMO FIGUEIREDO SILVA",40,"AAAAAAA-"],["ADELSON DE SOUZA SANTOS",42,"AAAAAAA-"],["ADEMARIO DAS VIRGENS VIEIRA",43,"NNNNNN--"],["ADENICIO PEREIRA SANTANA",42,"AAAAAAA-"],["ADENILSON CARDOSO DE OLIVEIRA",20,"ANANNNN-"],["ADENOR RIBEIRO DA SILVA",38,"NNNNNN--"],["ADERVISON DOS SANTOS",22,"AAAAAA--"],["ADILTON JUNIOR SANTOS DE JESUS",45,"AAAAAA--"],["ADIMILSON MODESTO BERNARDINO",26,"NNNNNN--"],["ADIMON SOUZA DE ARAUJO",38,"NNNNNNN-"],["ADRIANO DOS SANTOS SILVA",37,"AAAAAA--"],["ADRIANO JUNIOR PEREIRA",30,"AAAAAAA-"],["ADRIANO OLIVEIRA SILVA",43,"AAAAAAA-"],["ADRIANO RIBEIRO DE SOUZA",5,"AAAAAA--"],["ADRIANO SANTOS DE JESUS",37,"AAAAAA-A"],["ADRIANO SOUSA GOMES FILHO",18,"AAAAAAA-"],["ADRIANO VIEIRA DA SILVA",46,"AAAAAA--"],["ADRIANY NEVES SILVA",29,"NNNNNN--"],["ADRYAN PEREIRA DA SILVA",19,"NNNNNN--"],["ADSON BATISTA DOS SANTOS",45,"AAAAAA--"],["ADSON RENAN SANTOS MEDINA",26,"NNNNNNN-"],["AEMER CALEK SALMEN",1,"AAAAAA--"],["AGNALDO CONCEICAO DOS SANTOS",38,"NNNNNN--"],["AGUINALDO MARTINS SILVA",24,"NNNNNN--"],["AILTON SILVA PRADO",43,"AAAAAAA-"],["ALAN ADORNO COSTA",17,"AAAAAA--"],["ALCINO SILVA DE JESUS",34,"NNNNNNN-"],["ALDAIR LOPES DE OLIVEIRA",43,"AAAAAA-A"],["ALDO JOSE NOGUEIRA DOS SANTOS",10,"ANNNNNN-"],["ALECIO SANTOS BRITO",35,"AAAAAAA-"],["ALEF CERQUEIRA SANTOS",17,"NNNNNN--"],["ALESSANDRO LUIS BARBOSA MEIRA",28,"NNNNNN--"],["ALESSANDRO RIBEIRO VARJAO ALMEIDA",14,"AAAAAA--"],["ALESSANDRO SOUZA AMERICANO",46,"AAAAAA--"],["ALEX GOMES ALVES",15,"AAAAAA--"],["ALEX JÚNIOR DA SILVA",24,"NNNNNN--"],["ALEX PACHECO DOS SANTOS OLIVEIRA",46,"AAAAAA--"],["ALEX PASSOS",19,"NNNNNN--"],["ALEX SANTOS COELHO",28,"AAAAAA--"],["ALEXANDRE LIMA DOS SANTOS",43,"AAAAAAA-"],["ALEXANDRO ALVES DA SILVA",17,"NNNNNN--"],["ALEXSANDRO JESUS DA SILVA",45,"NNNNNN--"],["ALFREDO FERREIRA DO VALE JUNIOR",14,"AAAAAAA-"],["ALICE APARECIDA PINTO LEMOS",24,"AAAAAAA-"],["ALINE FONSECA OLIVEIRA",28,"AAAAAA--"],["ALINE SOARES DOS SANTOS",1,"NNNNNN--"],["ALIOMAR DE JESUS LIMA",43,"AAAAAA--"],["ALISSON PATRIK FIGUEIREDO SILVA",29,"NNNNNN--"],["ALISSON PEREIRA MEDINA",26,"NNNNNNN-"],["ALISSON VIRISSIMO DA SILVA",44,"NNNNNNN-"],["ALLAN JESUS DOS SANTOS",35,"AAAAAA--"],["ALLEX AUGUSTO DOS SANTOS",10,"AAAAAA--"],["ALMITO GONCALVES DA ROCHA",38,"AAAAAAA-"],["ALTAMIRANDO PORTO DE SOUZA",43,"AAAAAA--"],["ALVARO VINICIUS SANTOS DE OLIVEIRA",47,"AAAAAAA-"],["AMADEU FRANCISCO DOS SANTOS",38,"NNNNNN--"],["AMAURI SANTOS ALMEIDA",34,"NNNNNNN-"],["AMAURI SOUSA ABADE",35,"AAAAAA--"],["AMAURY BOTELHO DE NOVAES",36,"AAAAAAA-"],["ANA PAULA DE MORAIS COSTA",27,"AAAAAA--"],["ANA PAULA LOPES DE SOUZA",9,"ANNNNN--"],["ANA PAULA RODRIGUES DA SILVA",24,"NNNNNN--"],["ANDECLEI SOUZA NOVAIS",15,"AAAAAAA-"],["ANDERSON DOS SANTOS LOUZADO",45,"AAAAAAN-"],["ANDERSON FERREIRA DE JESUS LIMA",21,"NNNNNNN-"],["ANDRE CARDOSO ALVES",42,"AAAAAA--"],["ANDRE DA COSTA SANTOS",15,"AAAAAA--"],["ANDRE FERREIRA DA SILVA",28,"AAAAAAA-"],["ANDRE LUIZ MARTINS SOLAR",23,"NNNNNNN-"],["ANDRE RICARDO SILVA DOS SANTOS",21,"ANNNNNN-"],["ANDRE SILVA SANTOS",30,"NNNNNN-N"],["ANDRE SOUSA DE OLIVEIRA",33,"AAAAAAA-"],["ANDREA FERRARI CHAVES",11,"AAAAAA--"],["ANGELO ANTONIO MARINHO ROCHA",43,"AAAAAA--"],["ANIEL OLIVEIRA SOARES",36,"AAAAAAA-"],["ANSELMO JOSE DE SOUZA",11,"AAAAAA--"],["ANTONIO AMORIM COIMBRA",15,"AAAAAA--"],["ANTONIO CARDOSO ALVES",42,"AAAAAA--"],["ANTONIO CARLOS DA SILVA CONCEICAO",37,"AAAAAAA-"],["ANTONIO CARLOS DE LIMA",32,"ANNNNN--"],["ANTONIO CARLOS RODRIGUES DA SILVA",14,"AAAAAA--"],["ANTONIO CARLOS SANTOS LIMA",40,"NNNNNNN-"],["ANTONIO DE SOUZA",11,"AAAAAAA-"],["ANTONIO ESTEVAO DOS SANTOS AVILA FERRO",13,"AAAAAAA-"],["ANTONIO MARCOS CARDOSO DE SOUZA",21,"NNNNNNN-"],["ANTONIO MARCOS FERREIRA SOUSA DOS SANTOS",46,"AAAAAA--"],["ANTONIO MARCOS SOUZA DE OLIVEIRA",14,"AAAAAAA-"],["ANTONIO MORAES DOS SANTOS RODRIGUES",45,"AAAAAAA-"],["ANTONIO QUEIROZ DA SILVA",37,"AAAAAA-A"],["ANTONIO RODRIGUES DE SOUZA",1,"AAAAAAA-"],["ANTONIO SILVERIO RAMOS",11,"AAAAAAA-"],["ANTONIO VICTOR SANTANA BARRETO",20,"NNNNNN-N"],["ANTONIO VIEIRA LIMA FILHO",43,"AAAAAA--"],["ANTONIO XAVIER ROCHA",46,"AAAAAA--"],["APARECIDO JOSE DE SANTANA",32,"NNNNNNN-"],["ARGEU DE OLIVEIRA",10,"AAAAAAA-"],["ARIANE DE SOUZA DAMASCENO",29,"AAAAAA--"],["ARICLENES CRUZ SANTOS",20,"AAAAAAA-"],["ARIEL PIRES DIAS",12,"AAAAAAA-"],["ARLINDO CONCEICAO SANTOS",37,"AAAAAAA-"],["ARLINDO DA MOTA SILVA",14,"AAAAAAA-"],["ARMANDO RIBEIRO FILHO",25,"NNNNNNN-"],["ARTUR DEIVID SILVA SANTOS",24,"NNNNNNN-"],["AUGUSTO HENRIQUE SANTOS CONCEIÇÃO",47,"NNNNNNN-"],["AUGUSTO LEOCADIO DA SILVA",2,"AAAAAA--"],["AUGUSTO VIEIRA DA CRUZ",11,"NNNNNN--"],["AURINO VIEIRA PORTO JUNIOR",46,"AAAAAAA-"],["AZAPH CARLOS SILVA DE OLIVEIRA",27,"AAAAAAA-"],["BALTAZAR SOARES VIEIRA",24,"NNNNNN--"],["BARBARA OLIVEIRA SANTOS",28,"AAAAAA--"],["BEATRIZ SOUZA DA ROCHA",38,"AAAAAA--"],["BERNEVAL ARCANJO SANTANA",34,"NNNNNN--"],["BRENO DA SILVA OITICICA",45,"AAAAAA--"],["BRENO GUSTAVO GONCALVES DOS REIS",47,"AAAAAAA-"],["BRUNA MARQUES DOS SANTOS",33,"AAAAAA--"],["BRUNA ROCHA",11,"AAAAAA--"],["BRUNA ROCHA DA SILVA",43,"NNNNNNN-"],["BRUNO DE OLIVEIRA DUARTE",21,"NNNNNN--"],["BRUNO DE SOUZA BARBOSA",14,"AAAAAAA-"],["BRUNO HENRIQUE ALMEIDA SILVA",8,"AAAAAA--"],["BRUNO MENDES DA SILVA",11,"NNNNNN-N"],["BRUNO SANTOS VIANA",35,"AAAAAAA-"],["BRUNO TAVARES NOVAES",34,"NNNNNN--"],["BRUNO VINICIUS SANTOS BONFIM",20,"NNNNNNN-"],["CAIO INACIO NERY BEZERRA",24,"AAAAAA--"],["CARLITO SILVA ARAUJO",46,"AAAAAAA-"],["CARLOS ALBERTO DE SOUSA SANTANA",21,"NNNNNNN-"],["CARLOS ALBERTO DOS SANTOS",21,"NNNNNNN-"],["CARLOS ALEXANDRE DE LIMA ARAUJO",33,"AAAAAA-A"],["CARLOS ANDRE ALVES DOS SANTOS",45,"ANANNN--"],["CARLOS AUGUSTO DOS SANTOS SOUZA",17,"NNNNNNN-"],["CARLOS EDUARDO GOMES GARCIA",44,"NNNNNNN-"],["CARLOS HENRIQUE RODRIGUES DA SILVA",30,"NNNNNN--"],["CARLOS NUNES DE ARAUJO",28,"NNNNNNN-"],["CARLOS ROBERTO ALVES MASCARENHAS",45,"AAAAAA--"],["CARLOS SILVA DE QUEIROZ",45,"AAAAAA--"],["CARLOS VENILSON PORTO DA SILVA",34,"NNNNNN--"],["CAROLINE CARVALHO DA SILVA",33,"AAAAAAA-"],["CATIA SOUZA SANTOS",42,"AAAAAA--"],["CAUA FERREIRA DOS SANTOS",43,"AAAAAA--"],["CAUAN PRADO PORTUGAL",43,"AAAAAAA-"],["CELIO ALVES COELHO",11,"AAAAAAA-"],["CELIO PEREIRA DOS SANTOS",6,"ANANNN--"],["CELIO SOARES",9,"AAAAAA--"],["CELSO CEZARIO DE SOUZA",35,"AAAAAA-A"],["CELSON SILVA RIBEIRO",45,"NNNNNN--"],["CESAR GOMES PECANHA",11,"NNNNNNN-"],["CHARLEANE DE OLIVEIRA MOREIRA",20,"AAAAAA--"],["CHARLES APARECIDO DE JESUS SOARES",30,"AAAAAAA-"],["CHRYSTIAN IVANEY GARCIA MOURA",26,"NNNNNN--"],["CICERA DAYANE GONCALVES SANTANA",28,"AAAAAA--"],["CICERO MORAES NOGUEIRA DOS SANTOS",42,"AAAAAAA-"],["CLAUDILENE GOMES TEIXEIRA",6,"NNNNNN-N"],["CLAUDINEI DE SOUZA",23,"NNNNNN--"],["CLAUDINEI TORRES CANDIDO",31,"AAAAAA--"],["CLAUDINO DE SOUZA ILDEFONSO GONÇALVES",15,"NNNNNN--"],["CLAUDIO ADAO CRUZ DOS SANTOS",34,"NNNNNN--"],["CLAUDIO ALVES DE JESUS",21,"NNNNNN--"],["CLAUDIO LOPES DE OLIVEIRA",4,"NNNNNNN-"],["CLAUDIONOR AMERICO DE MOURA",19,"ANNNNN--"],["CLAUDIR DOS SANTOS SILVA",42,"AAAAAA--"],["CLAYDSON RODRIGUES SIQUEIRA",12,"NNNNNNN-"],["CLEBER DE ASSIS CAVALCANTE",4,"NNNNNN--"],["CLEBIO DE JESUS CONCEICAO",15,"AAAAAAA-"],["CLEDIVALDO QUEIROZ NASCIMENTO",42,"AAAAAA--"],["CLEIDSON DE JESUS SILVA",18,"AAAAAA--"],["CLEITON FERREIRA SILVA",30,"NNNNNN--"],["CLEITON PEREIRA DOS SANTOS",28,"ANNNNNN-"],["CLEMILDO BRANDAO DOS SANTOS",45,"AAAAAA--"],["CLEVERSON EDUARDO DA SILVA GALDINO",26,"AAAAAAA-"],["CLEYTON MATEUS BORGES NUNES",32,"ANANNNN-"],["CLEZIANE GOMES FERREIRA",13,"AAAAAA--"],["CRISLAN COUTO CERQUEIRA DE CARVALHO",45,"NNNNNNN-"],["DAIANA DOS SANTOS CARVALHO",17,"NNNNNN-N"],["DAILTON MACENA VELAME",45,"AAAAAA--"],["DANIEL ALEX LOPES MOREIRA",28,"AAAAAAA-"],["DANIEL BARBOSA OLIVEIRA",32,"AAAAAA--"],["DANIEL CARLOS MENDES DE PAULA",31,"AAAAAA--"],["DANIEL DIAS SOLINOS",18,"AAAAAA-A"],["DANIEL HENRIQUE SILVA CRUZ",15,"AAAAAA--"],["DANIEL LISBOA NUNES",38,"NNNNNN--"],["DANIEL SANTOS BARBOSA",42,"ANANNNN-"],["DANIEL SANTOS MACEDO",14,"AAAAAA--"],["DANIEL SILVA SANTOS",35,"AAAAAA--"],["DANIEL VANDERLEI DE SOUSA",24,"NNNNNN--"],["DANIELA DOS SANTOS SANTANA",20,"AAAAAAA-"],["DANILO CORREIA SILVA",45,"ANANNN--"],["DANILO COUTO DE OLIVEIRA",45,"AAAAAAA-"],["DANILO DA ROCHA MATOS",6,"NNNNNNN-"],["DANILO HENRIQUE FAUSTINO CUSTODIO",24,"NNNNNN-N"],["DANILO HENRIQUE SOUZA PAULA",24,"NNNNNNN-"],["DANILO VIANA LIMA",35,"AAAAAA--"],["DANUZIO VIANA GOMES",15,"AAAAAAA-"],["DARCIEL RODRIGUES DE SOUZA",1,"AAAAAAA-"],["DARDANE JORGE RAMOS SOUSA",20,"ANNNNNN-"],["DARLAN DE SOUZA SILVA",30,"AAAAAA--"],["DARLON PEREIRA DUARTE",6,"NNNNNNN-"],["DAVI ARAUJO DAMASCENA",49,"NNNNNN--"],["DAVI DE SOUZA SANTOS",45,"AAAAAAA-"],["DAVI MARCOS COELHO SILVA",11,"AAAAAA--"],["DAVI QUEIROZ DOS SANTOS GONÇALVES",41,"AAAAAAA-"],["DAVID DA CONCEIÇÃO NASCIMENTO QUEIROZ",21,"NNNNNNN-"],["DAVID GABRIEL BUENO",23,"NNNNNNN-"],["DAVISON SIMAO CIDALINO",24,"NNNNNNN-"],["DAYVISON JUNIOR PINTO DOS SANTOS",12,"NNNNNNN-"],["DEILSON RIBEIRO DA SILVA",10,"AAAAAAA-"],["DEIVEITE MARIANO DA SILVA",3,"ANNNNN--"],["DEIVISON FIRMINO DE SOUZA",27,"AAAAAAA-"],["DEIVSON SILVA SANTOS",38,"NNNNNN--"],["DERIVALDO ALVES SAMPAIO",45,"AAAAAA-A"],["DERNEVAL AMARAL LIMA",43,"AAAAAAA-"],["DHEIVISON GUSTAVO MOURA DE OLIVEIRA",30,"NNNNNNN-"],["DIASDAIVE NUNES DOS SANTOS",42,"AAAAAA--"],["DIEGO ALEXANDRE DE MENDONÇA",47,"NNNNNN--"],["DIEGO BARBOSA OLIVEIRA",15,"ANANNN-N"],["DIEGO FERNANDES DOS SANTOS LIMA",42,"AAAAAA--"],["DIEGO HENRIQUE BARBOSA SILVA",23,"NNNNNNN-"],["DIEGO SENA CAMPOS",43,"AAAAAAA-"],["DIEMERSON DOS SANTOS FERREIRA",25,"NNNNNNN-"],["DIOGO NUNES FOLGADO",7,"AAAAAAA-"],["DIOLENO DA PAIXAO MARTINS",22,"ANNNNNN-"],["DIONATHAN SENRA GOMES",10,"NNNNNN-N"],["DIRA MENDES DOS SANTOS",21,"NNNNNNN-"],["DIVANIO SOARES FERREIRA",8,"NNNNNN-N"],["DOMINGOS APARECIDO DE FREITAS",28,"NNNNNN--"],["DONIZETE BATISTA SILVA",7,"AAAAAA-A"],["DOUGLAS CARDOSO OLIVEIRA",14,"AAAAAA-A"],["DOUGLAS FERREIRA LANA",0,"ANNNNN-N"],["DOUGLAS MACIEL VIEIRA",34,"NNNNNNN-"],["DOUGLAS REIS CARNEIRO",23,"NNNNNNN-"],["EDE CARLOS RAMOS",1,"AAAAAA--"],["EDER CARDOSO DIAS",28,"AAAAAAA-"],["EDICARLO DA SILVA TEIXEIRA",45,"AAAAAAA-"],["EDILSON ALMEIDA ALVES",28,"ANNNNNN-"],["EDILSON DE OLIVEIRA SILVA",43,"AAAAAA--"],["EDILSON MASCENA DE SOUZA",45,"AAAAAAA-"],["EDILSON REIS DA SILVA TEIXEIRA",38,"NNNNNN--"],["EDILSON SANTOS GUEDES",34,"NNNNNNN-"],["EDIR JORGE MORONTE JÚNIOR",47,"NNNNNNN-"],["EDIVALDO CORREIA",34,"ANNNNNN-"],["EDMAR ALVES BATISTA",12,"AAAAAA--"],["EDMAR FRANCISCO DE QUEIROZ",32,"AAAAAAA-"],["EDMARIO BARBOSA DE CARVALHO",14,"AAAAAAA-"],["EDMILSON BARBOSA DA SILVA",14,"ANNNNN--"],["EDNAILSON NOVAIS DA SILVA ALMEIDA",46,"AAAAAA--"],["EDNALDO CARDOSO DA SILVA",45,"AAAAAAA-"],["EDNEI GONÇALVES ARAUJO",31,"AAAAAAA-"],["EDNELSON DE SOUSA VILA NOVA",47,"AAAAAA--"],["EDSON ALVES DE ANDRADE",31,"AAAAAA-A"],["EDSON ANDRADE ARAUJO",42,"AAAAAAA-"],["EDSON DA SILVA FERREIRA",21,"AAAAAA--"],["EDSON LOPES FAGUNDES",7,"AAAAAAA-"],["EDSON NUNES DE OLIVEIRA",46,"AAAAAA-A"],["EDSON RIBEIRO NOVAIS",33,"AAAAAAA-"],["EDUARDO CARDOSO VELOSO",28,"AAAAAAA-"],["EDUARDO DE JESUS SILVA",42,"AAAAAA--"],["EDUARDO LOPES SANTOS",15,"AAAAAA-A"],["EDVALD ESCOLASTICO PINTO DOS SANTOS",12,"AAAAAAA-"],["EDVALDO CARDOSO DA SILVA",45,"AAAAAA--"],["EDVALDO CONCEICAO DA SILVA SACRAMENTO",36,"AAAAAA-A"],["EDVALDO COSTA ANDRADE",3,"AAAAAA-A"],["EDVALDO GOMES DO NASCIMENTO",1,"AAAAAA--"],["EDVALDO HERCULANO CUNHA",12,"AAAAAAA-"],["EDVALDO OLIVEIRA PEREIRA",40,"AAAAAA--"],["EDVAN CERQUEIRA DE OLIVEIRA",17,"NNNNNNN-"],["ELCI CANDIDO DE SOUZA",31,"AAAAAA--"],["ELDER CONCEICAO DA CUNHA",38,"NNNNNN--"],["ELDIBERTO PEREIRA FONSECA",30,"AAAAAA--"],["ELDIMAR PEREIRA FONSECA",30,"AAAAAA--"],["ELEN OLIVEIRA SILVA",43,"AAAAAAA-"],["ELI CARLOS REIS FERREIRA",4,"AAAAAAA-"],["ELIAS BORGES DA CONCEICAO",21,"NNNNNN--"],["ELIAS DA COSTA SANTOS",4,"AAAAAAA-"],["ELIAS GUSTAVO LOPEZ",27,"NNNNNN--"],["ELIELSON SANTANA DE DEUS",40,"AAAAAAA-"],["ELIVALDO DIAS SILVA",42,"AAAAAA--"],["ELIZANDRO FERREIRA",1,"AAAAAAA-"],["ELLEN NOGUEIRA FERRAZ",19,"NNNNNN--"],["ELSE DE JESUS OLIVEIRA",28,"NNNNNNN-"],["ELVIS DA SILVA",30,"AAAAAA--"],["ELVIS OLIVEIRA DA SILVA",40,"AAAAAA--"],["ELVIS SANTOS GOMES DA SILVA",33,"AAAAAA--"],["ELZIRO RODRIGUES DOS SANTOS",9,"AAAAAAA-"],["EMANUEL BRASILEIRO RIBEIRO DA SILVA",39,"NNNNNN--"],["EMELSON BISPO SANTIAGO",38,"NNNNNNN-"],["EMERSON BASTOS DOS SANTOS JUNIOR",42,"AAAAAA--"],["EMILY AMARAL LIMA",43,"AAAAAAA-"],["ENES GONCALVES DE LIMA",27,"NNNNNNN-"],["ENIVALDO TEIXEIRA ESPINDOLA",25,"ANANNNN-"],["ERENILDO DE MOURA SOUSA",45,"NNNNNN--"],["ERENILSON ALVES DA FONSECA",1,"AAAAAAA-"],["ERICK JUNIO LEMOS",0,"AAAAAA-A"],["ERICK RODRIGO DANTAS SOARES",3,"AAAAAAA-"],["ERINALDO DA SILVA TEIXEIRA",42,"AAAAAAA-"],["ERIVALDO CARDOSO DA SILVA",42,"AAAAAA--"],["ERIVALDO SANTOS DA SILVA",34,"NNNNNNN-"],["ERIVANDO DA SILVA NOGUEIRA",45,"NNNNNNN-"],["ERLANDSON FERREIRA DOS SANTOS",37,"AAAAAAA-"],["ERNANES MESSIAS DE AMACENA",1,"NNNNNN--"],["EVANDRO FRANCA DE MORAIS",36,"AAAAAAA-"],["EVITON DA CRUZ SANTOS",36,"AAAAAAA-"],["FABIANA CRISTINA DE MORAIS DOS SANTOS",13,"AAAAAA--"],["FABIANA REIS DA SILVA",28,"AAAAAA--"],["FABIO ANDRADE DE SANTANA",42,"AAAAAA--"],["FABIO ANTONIO XAVIER",9,"AAAAAA--"],["FABIO CHAVES DE ANDRADE",2,"AAAAAAA-"],["FABIO JUNGER DA SILVA",1,"ANANNN--"],["FABIO PATRICK AVELINO FERREIRA SANTOS",30,"AAAAAA--"],["FABIO PEREIRA FAGUNDES",28,"AAAAAA-N"],["FABIO TORRES DE ARAUJO",31,"AAAAAAA-"],["FABRICIO DE JESUS SILVA",14,"AAAAAAA-"],["FABRICIO DOS SANTOS VIEIRA",26,"NNNNNNN-"],["FAGNER ARCANJO LEMOS SANTOS",43,"AAAAAA--"],["FAGNER ROBERTO OLIVEIRA DO CARMO",38,"AAAAAAA-"],["FARLEY CESAR PERES VELOSO",28,"AAAAAAA-"],["FELIPE BARRETO SILVA",38,"NNNNNN--"],["FELIPE CARDOSO DE ANDRADE VELAME",42,"AAAAAA--"],["FELIPE DAMACENA DA SILVA",42,"AAAAAAA-"],["FELIPE DOS SANTOS RODRIGUES SILVA",0,"AAAAAA--"],["FELIPE MANOEL DOS SANTOS",13,"AAAAAA-A"],["FELIPE RODRIGUES DE SOUSA",8,"AAAAAAA-"],["FERNANDA VEIGA GONCALVES",31,"AAAAAA--"],["FERNANDO ALVES SANTOS",30,"NNNNNN--"],["FERNANDO DIEGO CARDIM SANTOS",21,"NNNNNNN-"],["FERNANDO GONCALVES DIAS",7,"AAAAAAA-"],["FERNANDO PEREIRA DA SILVA",5,"AAAAAA-A"],["FERNANDO SILVA DO PRADO",34,"NNNNNN--"],["FERNANDO TEIXEIRA DOS SANTOS",19,"NNNNNNN-"],["FILIPE JORDAN DA SILVA",12,"NNNNNNN-"],["FILIPE OLIVEIRA DOS SANTOS",22,"AAAAAAA-"],["FLAVIA RIBEIRO SANTOS",7,"AAAAAA--"],["FLAVIA SILVA BATISTA",33,"AAAAAAA-"],["FLAVIANO DA SILVA CARVALHO",9,"AAAAAAAA"],["FLAVIO ANTONIO MIRANDA",27,"AAAAAAA-"],["FLAVIO SILVA PEREIRA",29,"AAAAAAA-"],["FRANCIELLY PAULA PEREIRA DE SOUZA",26,"NNNNNNN-"],["FRANCINALDO DE OLIVEIRA SILVA",34,"NNNNNN--"],["FRANCIO DOMINGOS DA SILVA",4,"NNNNNNN-"],["FRANCISCO DE PAULA SIQUEIRA",29,"NNNNNN--"],["FRANCISCO EUFRAZIO DA SILVA NETO",46,"AAAAAAA-"],["FRANCISCO MESSIAS ALVES",23,"NNNNNN--"],["FRANCISCO PEREIRA NETO",28,"AAAAAAA-"],["FREDISON DOS SANTOS",16,"AAAAAAA-"],["GABRIEL ALVES DA CRUZ",27,"ANANNNN-"],["GABRIEL ATAIDE ALVES PEREIRA",29,"NNNNNNN-"],["GABRIEL BARBOSA DOS SANTOS",42,"AAAAAA--"],["GABRIEL CHAVES DE LIMA",43,"AAAAAA-A"],["GABRIEL DE ALMEIDA FERNANDES",3,"AAAAAAN-"],["GABRIEL DE PAIVA TEOFILO",27,"AAAAAA-A"],["GABRIEL EDUARDO MARQUES DOS SANTOS",18,"AAAAAA--"],["GABRIEL GONCALVES DE OLIVEIRA",11,"NNNNNNN-"],["GABRIEL GONCALVES NERES",19,"NNNNNNN-"],["GABRIEL HENRIQUE SILVA SANTOS",47,"ANNNNN--"],["GABRIEL HENRIQUE TUROLA SILVA",24,"NNNNNNN-"],["GABRIEL LUIZ ALVES MARANHO",29,"NNNNNN--"],["GABRIEL OLIVEIRA DE MOURA",11,"NNNNNNN-"],["GABRIEL RODRIGUES SOARES",12,"AAAAAAA-"],["GABRIEL XAVIER DE ALMEIDA",34,"NNNNNN--"],["GABRYEL ALAN FERREIRA SANTOS",25,"NNNNNN--"],["GEAN CORDEIRO",19,"NNNNNNN-"],["GEAN DOS SANTOS BRITO",38,"NNNNNN--"],["GEAN SENA ARAUJO",42,"ANANNNN-"],["GENILDO OLIVEIRA NUNES",38,"AAAAAAA-"],["GENILSON APARECIDO FERREIRA",29,"NNNNNNN-"],["GENILSON ROCHA ANDRADE",38,"NNNNNN--"],["GENIVAL BISPO DOS SANTOS",37,"ANNNNNN-"],["GENIVAL PEREIRA DA SILVA",36,"AAAAAAA-"],["GENTIL MARTINS DOS SANTOS",28,"NNNNNN--"],["GEORGE MOREIRA DA SILVA",38,"AAAAAA--"],["GEOVANE LIMA DOS SANTOS",43,"AAAAAAA-"],["GERALDO DAVIDSON VITORIANO SANTOS",29,"NNNNNNN-"],["GERALDO DO CARMO",43,"NNNNNN--"],["GERALDO MAGELA FLORENCIO",28,"AAAAAAA-"],["GERALDO MARCOS ALVES DOS SANTOS",8,"AAAAAAA-"],["GERALDO SANTOS SILVA",11,"NNNNNN--"],["GERSON RODRIGO SANTOS SOUZA",29,"NNNNNN--"],["GESIVALDO BARBOSA NASCIMENTO",29,"NNNNNN--"],["GETULIO DE BRITO MOREIRA",37,"AAAAAAA-"],["GILBERTO AZI JUNIOR",8,"AAAAAA--"],["GILBERTO COELHO BRANDAO",11,"AAAAAAA-"],["GILBERTO GIL SOUSA SANTOS",43,"AAAAAA--"],["GILBERTO OLIVEIRA ROCHA",46,"AAAAAAA-"],["GILCIMAR SANTOS GONCALVES",42,"AAAAAA--"],["GILDO BARBOSA DOS REIS",11,"NNNNNNN-"],["GILDO BARROS DE OLIVEIRA",34,"NNNNNNN-"],["GILLIARD AGUIAR DOS SANTOS JUNIOR",16,"AAAAAA--"],["GILMAR ANTONIO DA COSTA",28,"NNNNNNN-"],["GILMAR DE ASSIS BARBOSA",26,"NNNNNN--"],["GILMAR DOS SANTOS GONCALVES",42,"AAAAAA--"],["GILMAR SANTANA DA SILVA",42,"AAAAAA--"],["GILSON BASTOS DE JESUS ROCHA",29,"ANNNNN--"],["GILSON DA SILVA SANTIAGO",42,"AAAAAAA-"],["GILSON PAES PEREIRA JUNIOR",10,"NNNNNN--"],["GILSON QUEIROZ DA SILVA JUNIOR",42,"AAAAAAA-"],["GILSON RAIMUNDO DE BARROS",6,"ANNNNNN-"],["GILSON SANTANA NERI",45,"AAAAAAA-"],["GILSON SANTOS DE SOUZA",21,"NNNNNNN-"],["GILTON DOS SANTOS CARDOSO",45,"AAAAAA--"],["GILVAN DA SILVA SOUSA",35,"AAAAAAA-"],["GILVANDO QUEIROZ",40,"NNNNNNN-"],["GIRLANDE FERREIRA SANTOS",7,"AAAAAA--"],["GIVANALDO JESUS DOS SANTOS",42,"AAAAAAA-"],["GIVANILDO SANTOS SANTANA",45,"AAAAAA--"],["GLEISON TELES SANTOS",46,"AAAAAA--"],["GRAZIELLE STEFANE CRUZ",24,"NNNNNN--"],["GUILHERME DE MACEDO PEREIRA",14,"AAAAAA--"],["GUILHERME DE SOUZA FRANCO",27,"AAAAAA--"],["GUILHERME HENRIQUE MIRANDA DE SOUZA",45,"AAAAAA--"],["GUILHERME HENRIQUE VINHA SILVA",5,"NNNNNNN-"],["GUSTAVO HENRIQUE DE MORAES",24,"ANNNNNN-"],["GUSTAVO PEREIRA SANDRES",8,"AAAAAAA-"],["HAMILTON NUNES ALECRIM",33,"NNNNNN-N"],["HAMILTON VIEIRA LIMA",43,"AAAAAA--"],["HAROLDO CORDEIRO DA SILVA",28,"AAAAAAA-"],["HEBERT RODRIGUES DE OLIVEIRA",31,"AAAAAAA-"],["HELBER PEREIRA RAMOS",32,"AAAAAA-A"],["HELIO RODRIGUES DOS SANTOS FERREIRA",21,"AAAAAA--"],["HENRIQUE DIAS FERREIRA",35,"AAAAAA--"],["HENZO RODRIGUES FIGUEIREDO",7,"AAAAAAA-"],["HERBERT QUEIROZ DOS SANTOS AMARAL",37,"AAAAAA--"],["HERBERT TIMOTEO LEITE",30,"AAAAAAA-"],["HERBERTH KENNEDY RODRIGUES DE SOUZA MARTINS",28,"AAAAAAA-"],["HILDEBERTO TEIXEIRA GONCALVES",21,"NNNNNN--"],["HIURE LEAL RIBEIRO",45,"AAAAAA--"],["HUGO RAPHAEL DE SOUZA FERNANDES",25,"NNNNNNN-"],["IARA DE SOUZA SILVA",25,"NNNNNN--"],["IARLEI EXPEDITO DE SOUZA COSTA",31,"NNNNNNN-"],["IDALECIO COELHO ANDRADE",3,"AAAAAAA-"],["IDELVAN ANDRADE DE FREITAS",14,"NNNNNN--"],["IDENILSON MARTINS DOS SANTOS",24,"NNNNNNN-"],["IEDA SILVA DE ALMEIDA",31,"AAAAAA--"],["IGOR EDUARDO DOS SANTOS SILVA",13,"AAAAAAA-"],["IHAGO GERBSON RODRIGUES DA SILVA",31,"AAAAAA--"],["ILDEMAR LUIZ PEREIRA",9,"AAAAAAA-"],["INACIO MARES NUNES",7,"AAAAAA--"],["IRENE APARECIDA MARTINS GOMES",28,"AAAAAA--"],["IRONI REIS ROSA",41,"AAAAAA--"],["ISAAC JHONAS DOS SANTOS SILVA",28,"AAAAAAA-"],["ISAAC NILTON BISPO SILVA",17,"NNNNNNN-"],["ISLAN ALVES CERQUEIRA",38,"NNNNNN--"],["ISNALDO NUNES DE ALMEIDA",8,"AAAAAAA-"],["ISRAEL SILVA NASCIMENTO",17,"NNNNNN-N"],["ISRAEL ZIMMERER CARDOSO",20,"AAAAAA--"],["ITELMAR GONÇALVES DE QUEIROZ",28,"AAAAAAA-"],["IURI COSTA GOMES DA SILVA",11,"AAAAAA--"],["IURY PEREIRA DOS SANTOS",0,"AAAAAA--"],["IVANILSON DA SILVA SOUZA",38,"ANNNNNN-"],["IVESON OLIVEIRA SANTOS",21,"NNNNNNN-"],["IVO DIAS GONCALVES",41,"ANANNNN-"],["IZAIAS TEIXEIRA DOS SANTOS",8,"AAAAAAA-"],["JACKSON MOTA DE JESUS",30,"NNNNNN--"],["JACSON ANDRADE SILVA DOS SANTOS",41,"AAAAAA--"],["JADIR REIS CARDOSO",42,"AAAAAA--"],["JADSON CARVALHO BOMFIM",20,"NNNNNNN-"],["JAERBSON LOPES DA SILVA",28,"AAAAAAA-"],["JAGUARACI DOS SANTOS FERREIRA",21,"NNNNNNN-"],["JAILSON DA SILVA NASCIMENTO SANTIAGO",38,"NNNNNN--"],["JAILSON LIMA DOS SANTOS",43,"AAAAAA--"],["JAILTON DE JESUS MENDES",43,"AAAAAA--"],["JAILTON DE JESUS SANTANA",38,"NNNNNN--"],["JAILTON DE JESUS SANTOS",16,"AAAAAAA-"],["JAIME MELO SILVA SOUZA",28,"NNNNNNN-"],["JAIR PEREIRA",0,"AAAAAAA-"],["JAIR PEREIRA ARAUJO",36,"AAAAAAA-"],["JAIR ROBERTO NOGUEIRA SANTOS",42,"AAAAAAA-"],["JAIRO GOMES DA SILVA",5,"AAAAAAA-"],["JAIRO SANTIAGO DA SILVA",19,"NNNNNNN-"],["JAKSON PEREIRA SILVA SA",28,"AAAAAA--"],["JAMILSON DONIZETI DA SILVEIRA",23,"NNNNNNN-"],["JANFERSON BORGES GONÇALVES",7,"AAAAAA--"],["JANIELE DE SOUZA SILVA",25,"ANNNNNN-"],["JANIO SILVA ALCANTARA",33,"AAAAAAA-"],["JARBAS DIEGO DIAS OLIVEIRA",32,"NNNNNN-N"],["JARBAS FERREIRA DOS SANTOS",1,"ANANNN--"],["JARLESON DOS SANTOS ARAUJO",13,"AAAAAA--"],["JASON SOUZA MEIRA",46,"AAAAAAA-"],["JEAN LIMA MENDES",33,"AAAAAA--"],["JEAN MARCOS SILVA",24,"AAAAAA--"],["JEFERSON DA CONCEICAO SOUZA",42,"AAAAAA--"],["JEFFERSON DOS SANTOS RIBEIRO",8,"AAAAAA--"],["JEFFSON DE JESUS SALES",38,"NNNNNN--"],["JEOVANE ALVES VIANA",33,"AAAAAA--"],["JERFFSON JOSE NEVES DE CARVALHO",22,"AAAAAA--"],["JERYSSON DE ALMEIDA DOLINO",6,"NNNNNNN-"],["JESIVALDO SILVA DE OLIVEIRA",34,"NNNNNNN-"],["JHONATAN DE PAULA NASCIMENTO",28,"AAAAAA--"],["JHONATAS MARTINS ROSA",23,"NNNNNN--"],["JHONY RIBEIRO MENDES ANDRADE",11,"AAAAAA--"],["JIDEON BASTOS DE SOUZA JUNIOR",34,"AAAAAA--"],["JILDEAN DOS SANTOS CARDOSO",41,"AAAAAA--"],["JILMAR GAMA DE OLIVEIRA",18,"AAAAAAA-"],["JIVANILDO DOS SANTOS GOUVEIA",18,"ANANNNN-"],["JIVANILDO ROCHA BARBOSA",28,"AAAAAA-A"],["JOALISSON SANTANA CARLOS MACEDO",18,"AAAAAAA-"],["JOAO ALFREDO NICESIO MOREIRA",12,"AAAAAA--"],["JOAO BATISTA COSTA ALVES",30,"NNNNNNN-"],["JOAO BRITO DE ARGOLO",45,"AAAAAAA-"],["JOAO CARLOS DA CRUZ NASCIMENTO",38,"AAAAAAA-"],["JOAO CARLOS DE JESUS DOS SANTOS",13,"AAAAAAA-"],["JOAO CARLOS VIEIRA JOAQUIM",43,"ANANNN-N"],["JOAO CRISTIAN CORREIA GONCALVES",26,"NNNNNN--"],["JOAO DE DEUS SOUZA ALVES",41,"AAAAAA-A"],["JOAO EDUARDO NUNES",29,"NNNNNN--"],["JOAO FRANCISCO DOS SANTOS",11,"NNNNNN--"],["JOAO LUCAS DE SANTANA PEIXINHO CARDOSO",14,"AAAAAA--"],["JOAO MARCOS SANTOS SANTANA",26,"AAAAAAA-"],["JOAO MENDES DE SOUSA",43,"NNNNNN--"],["JOAO PAULO ALVES FERNANDES",11,"NNNNNN--"],["JOAO PAULO BRANDAO DOS SANTOS",45,"ANNNNN--"],["JOAO PAULO CAMPOS SILVA",46,"AAAAAA--"],["JOAO PEDRO FERREIRA PELEGRINI",27,"AAAAAA--"],["JOAO SANTOS ROCHA",11,"NNNNNN--"],["JOAO VITOR FERREIRA ALMEIDA",13,"AAAAAA--"],["JOAO VITOR SILVA ANDRADE",38,"NNNNNNN-"],["JOAO VITOR TELES SILVA",4,"NNNNNN--"],["JOÃO PAULO JESUS DA SILVA DOS SANTOS",22,"NNNNNNN-"],["JOEL JORGE DE OLIVEIRA CORREA",26,"NNNNNN-N"],["JOEL MARCOS DE SIQUEIRA",12,"AAAAAAA-"],["JOELSON CARVALHO DA ANUNCIACAO",36,"AAAAAA-A"],["JOHNNATA HENRIQUE SANTOS SOUZA",30,"NNNNNN--"],["JOILSON MORAES SOUZA",42,"AAAAAAA-"],["JOILSON PASSOS CUNEGUNDES",34,"NNNNNNN-"],["JOILSON SARDINHA DE OLIVEIRA",20,"NNNNNN--"],["JONAS DA CRUZ SILVA",21,"AAAAAAA-"],["JONAS MINERVINO DA SILVA",13,"AAAAAAA-"],["JONATAS MAICO DA SILVA",19,"ANANNN-N"],["JONATAS SILVA SANTOS",21,"NNNNNNN-"],["JONATHAN DAVID DOS SANTOS",47,"AAAAAAA-"],["JONATHAN ROBERTO DOS SANTOS",10,"NNNNNNN-"],["JONATHAS KEWIN ARAUJO RIBEIRO",48,"NNNNNN--"],["JORDÃO FERREIRA DE SOUZA",28,"NNNNNN--"],["JORDSON MARCOS COSTA REIS",30,"AAAAAAA-"],["JORGE PAULA DOS SANTOS",45,"AAAAAA--"],["JOSANIA CRISTINA DA SILVA",3,"AAAAAA--"],["JOSE ABADE SANTOS",35,"AAAAAAA-"],["JOSE ADRIANO VIEIRA LISBOA",7,"AAAAAAA-"],["JOSE ANGELO DOS SANTOS FILHO",16,"AAAAAA-A"],["JOSE ANTONIO FERNANDES DE SOUZA",31,"AAAAAAA-"],["JOSE ANTONIO LIRIO",12,"AAAAAA--"],["JOSE ANTONIO MATIAS",2,"NNNNNN--"],["JOSE ARNOBIO FERREIRA DA SILVA",13,"AAAAAAA-"],["JOSE AUGUSTO ALVES BORGES RAMOS",28,"AAAAAAA-"],["JOSE AUGUSTO DOS SANTOS",13,"AAAAAA--"],["JOSE BISPO DA SILVA",38,"AAAAAAA-"],["JOSE CARLOS DE JESUS",19,"NNNNNN--"],["JOSE CARLOS DE OLIVEIRA ALMEIDA",40,"AAAAAAA-"],["JOSE CARLOS DIAS",2,"NNNNNNN-"],["JOSE CARLOS FERREIRA",9,"AAAAAA--"],["JOSE CLAUDIO PEREIRA DA SILVA",2,"NNNNNN--"],["JOSE DOS REIS OLIVEIRA",30,"AAAAAA-A"],["JOSE DOS REIS SILVA NUNES",30,"ANANNNN-"],["JOSE DOS SANTOS NUNES",38,"NNNNNNN-"],["JOSE EDILSON DA SILVA",11,"AAAAAAA-"],["JOSE EDUARDO DE SOUZA",44,"AAAAAAA-"],["JOSE FABIANO DA SILVA",9,"AAAAAAN-"],["JOSE FELICIO FILHO",21,"NNNNNNN-"],["JOSE FERNANDES DA SILVA",46,"AAAAAA--"],["JOSE FERREIRA DA CRUZ",28,"AAAAAAA-"],["JOSE FRANKLIN FERREIRA DO CARMO FILHO",21,"NNNNNNN-"],["JOSE GERALDO RODRIGUES JUNIOR",32,"ANANNN--"],["JOSE HENRIQUE BRITO OLIVEIRA",43,"AAAAAAA-"],["JOSE HENRIQUE REIS LIMA",43,"AAAAAAA-"],["JOSE JULIO CARDOSO DOS SANTOS",28,"AAAAAAA-"],["JOSE LUIZ SANTOS CERQUEIRA",1,"AAAAAAA-"],["JOSE MARCIEL PEREIRA DA SILVA",22,"NNNNNNN-"],["JOSE MARIA DE ASSIS MENDONCA",5,"AAAAAAA-"],["JOSE MARIA FERREIRA DOS SANTOS",12,"AAAAAAA-"],["JOSE NILTON DE SOUZA",30,"NNNNNN--"],["JOSE NILTON SOUZA DE OLIVEIRA",41,"NNNNNNN-"],["JOSE PAULO DE JESUS SANTOS",33,"AAAAAAA-"],["JOSE RAIMUNDO DOS SANTOS SOUZA",16,"AAAAAA--"],["JOSE RODRIGUES LORIANO MOREIRA",1,"AAAAAAA-"],["JOSE ROQUEM GONCALVES JUNIOR",5,"AAAAAAA-"],["JOSE VIEIRA DE SOUZA FILHO",11,"AAAAAAA-"],["JOSEMAR FERREIRA DOS SANTOS",7,"AAAAAAA-"],["JOSEMILTOM SOUZA DE ALMEIDA",42,"AAAAAAA-"],["JOSENILDO ALVES BASTOS",41,"AAAAAA-A"],["JOSENILTO DOS SANTOS SILVA",45,"AAAAAAA-"],["JOSENILTO SANTANA DE JESUS",45,"AAAAAAA-"],["JOSENILTON DE ALMEIDA CONCEIÇÃO",38,"ANNNNNN-"],["JOSÉ EDNO GONÇALVES DIAS",29,"NNNNNN--"],["JOSIMAR WESLEY SILVA BESSA",47,"NNNNNNN-"],["JOSUE LIMA DA SILVA DE JESUS",42,"AAAAAA--"],["JOSUE NASCIMENTO DOS SANTOS E SILVA FILHO",45,"AAAAAAA-"],["JOSUEL ISABEL DOS SANTOS",18,"AAAAAA--"],["JUAREZ QUEIROZ CERQUEIRA",40,"AAAAAAA-"],["JUCIAN CARDOSO REIS CARDOSO",45,"AAAAAA--"],["JUDERSON DOURADO DE ARAUJO",44,"ANANNNN-"],["JUDICAEL SANTANA DA ANUNCIAÇAO",36,"AAAAAA--"],["JULIANA APARECIDA CLARENTINO SANTOS",25,"NNNNNN--"],["JULIANE VIANA DE SOUSA",43,"AAAAAA--"],["JULIANO DE JESUS MARTINS",28,"AAAAAAA-"],["JULIANO LIMA DOS ANJOS",43,"AAAAAAA-"],["JULIO CESAR ALMEIDA REGIS",25,"NNNNNNN-"],["JULIO CESAR DAS NEVES",10,"AAAAAAA-"],["JULIO CESAR MIRANDA DA ROCHA",6,"AAAAAAN-"],["JULIO CESAR PEREIRA DE ALMEIDA",47,"AAAAAAA-"],["JULIO CEZAR DOS SANTOS",42,"AAAAAA--"],["JULIO CEZAR MENDES DOS SANTOS",1,"NNNNNNN-"],["JULIO LIMA JUNIOR",21,"NNNNNN--"],["JULISSON VIEGA PEREIRA",1,"AAAAAA--"],["JUNIOR CHAVES DO NASCIMENTO",0,"AAAAAA-N"],["JUNIOR DOS SANTOS SANTANA",40,"NNNNNNN-"],["JUNIOR MARTINS DOS SANTOS",19,"NNNNNNN-"],["JURACI TEIXEIRA BARROS",43,"AAAAAAA-"],["JURANDIR DE JESUS DOS SANTOS",45,"AAAAAA--"],["JUSCELINO CERQUEIRA ARAUJO",40,"AAAAAAA-"],["JUSCELIO MOREIRA CHAVES",7,"ANANNNN-"],["JUSCIMAR DE JESUS OLIVEIRA",37,"AAAAAA--"],["JUSSARA APARECIDA PEREIRA DA COSTA",24,"NNNNNN--"],["JUSSARA ROBERTA ABREU DE CAMARGO",27,"AAAAAAA-"],["KAMILLO MOURA DE SOUZA",20,"AAAAAA--"],["KARISSON ENRIQUE SIQUEIRA DE BRITO",34,"NNNNNN--"],["KAUAN GABRIEL GOMES SILVA",32,"AAAAAA--"],["KAWAM DA COSTA FREIRE",25,"AAAAAA--"],["KÁLITA RAYSSA SOUZA COSTA",44,"NNNNNN--"],["KEMERSON WALLA ROSA",28,"AAAAAA--"],["KENIO JÚNIOR PEREIRA DA SILVA",19,"NNNNNNN-"],["KENNEDY SILVA EPIFANIO",5,"AAAAAA-A"],["KENNEDY VIEIRA DE SOUZA",1,"AAAAAA--"],["KEROLAINE BATISTA NASCIMENTO",31,"ANNNNNN-"],["KEVIN SOUSA FERREIRA",18,"AAAAAAA-"],["KEYLLA SILVA LIMA",44,"AAAAAA--"],["KLEVERSON TEODORO DA SILVA",4,"NNNNNN--"],["LAUDIE BERNARDO ASSIS DE OLIVEIRA",25,"AAAAAAN-"],["LAURILENE SIRIANO BORGES",44,"NNNNNNN-"],["LAURO VINICIUS RAMOS SOBRINHO",44,"NNNNNN-N"],["LAZARO ENRICO CUPERTINO MAIA",8,"AAAAAA--"],["LAZARO NEVES DOS SANTOS",16,"AAAAAAA-"],["LEANDRA SOUSA FIGUEIREDO CORDEIRO",28,"NNNNNN--"],["LEANDRO BATISTA LIMA DOS SANTOS",33,"AAAAAA--"],["LEANDRO DOS SANTOS GONÇALVES",38,"AAAAAAA-"],["LEANDRO GERALDO DA SILVA",11,"NNNNNN--"],["LEANDRO OLIVEIRA FRANCO",0,"NNNNNN--"],["LEANDRO PEREIRA LIMA",43,"AAAAAAA-"],["LEANDRO QUEIROZ DOS SANTOS",22,"AAAAAAA-"],["LEANDRO RODRIGUES DE ALMEIDA",11,"NNNNNN--"],["LEANDRO SANTOS FRANCA",43,"AAAAAAA-"],["LEILA MARTINS DE OLIVEIRA",10,"AAAAAAA-"],["LEONAM LOPES FERNANDES",10,"AAAAAA--"],["LEONARDO ALVES BOTELHO",30,"NNNNNN--"],["LEONARDO AUGUSTO NOGUEIRA DE MIRANDA",23,"NNNNNN--"],["LEONARDO DE MELO DA SILVA",24,"AAAAAAA-"],["LEONARDO FERREIRA DA SILVA",28,"AAAAAAA-"],["LEONARDO GOMES PEREIRA",32,"AAAAAA--"],["LEONARDO HONORIO DE JESUS",1,"AAAAAA--"],["LEONARDO MOREIRA ALVES",1,"AAAAAAA-"],["LEONARDO PINHEIRO BARBOSA DA SILVA",42,"AAAAAA--"],["LEONES ASSUNCAO OLIVEIRA",33,"AAAAAA--"],["LEVI PEREIRA DE SOUZA",21,"AAAAAAA-"],["LIDIO ALVES DE ALMEIDA FILHO",11,"NNNNNN--"],["LIRIOVAN DOS SANTOS COUTO",16,"NNNNNN--"],["LOREN GABRIELY CRUZ FIGUEIREDO",29,"NNNNNN--"],["LORENA NOGUEIRA ROCHA",23,"NNNNNN--"],["LOURIVAL DE JESUS SILVA",45,"NNNNNN--"],["LOURIVAL JOSE BARRETO FILHO DO ESPIRITO SANTO",19,"NNNNNN--"],["LUAM RICHARD PEREIRA DE SOUZA",26,"ANANNN--"],["LUAN ALVES SALOMAO",7,"AAAAAAA-"],["LUANA THAYLINE FERREIRA CRUZ",29,"AAAAAA--"],["LUCAS ALVES RIBEIRO",45,"AAAAAA-A"],["LUCAS ANDRADE SOUZA",30,"AAAAAAA-"],["LUCAS DA PAIXAO SANTANA SANTOS",38,"NNNNNN--"],["LUCAS ESTEVAO DA SILVA",1,"AAAAAAA-"],["LUCAS GOMES SANTANA",19,"NNNNNN--"],["LUCAS LUCAS PIMENTA ALVES",29,"NNNNNN--"],["LUCAS SANTOS EVANGELISTA",15,"AAAAAA--"],["LUCAS SILVA SANTOS",16,"AAAAAAA-"],["LUCAS VENANCIO GONCALO",12,"AAAAAAA-"],["LUCAS WASHINGTON SOARES",28,"NNNNNN--"],["LUCIAN CAMPOS DE ASSIS",19,"NNNNNN--"],["LUCIANO BRITO DOS SANTOS",16,"AAAAAAA-"],["LUCIANO FIRMINO DOS SANTOS",22,"AAAAAAA-"],["LUCIANO JESUS DOS SANTOS",21,"AAAAAA--"],["LUCIANO MATEUS GONCALVES TEIXEIRA",27,"AAAAAAA-"],["LUCIANO PEREIRA MENDES",30,"NNNNNN--"],["LUCIANO ROCHA DA SILVEIRA",34,"NNNNNNN-"],["LUCIANO SARDINHA EVANGELISTA",38,"ANNNNN--"],["LUCIENE DUARTE SILVA",28,"AAAAAA--"],["LUCIMAR GONCALVES",31,"AAAAAAA-"],["LUCIMAR SOARES DE MELO",0,"AAAAAAA-"],["LUCIO GABRIEL GUIMARAES MACIEL",26,"ANNNNNN-"],["LUDSON VIRIATO DA SILVA",9,"ANANNNN-"],["LUIS CARLOS ALVES DA SILVA",42,"AAAAAAA-"],["LUIZ ALBERTO PEREIRA DOS SANTOS",42,"AAAAAAA-"],["LUIZ BRITO SILVA",21,"NNNNNN-N"],["LUIZ CARLOS CAMPOS DE ANDRADE",45,"AAAAAA--"],["LUIZ CARLOS CORDEIRO DOS SANTOS",25,"AAAAAAA-"],["LUIZ CARLOS DOS SANTOS",8,"ANANNNN-"],["LUIZ CARLOS PEREIRA BARBOSA",38,"NNNNNN--"],["LUIZ CLAUDIO DOS SANTOS",10,"ANNNNN-N"],["LUIZ FELIPE RIBEIRO DE PAIVA",27,"AAAAAAA-"],["LUIZ HENRIQUE SOUZA FONSECA",36,"AAAAAA--"],["LUIZ MOREIRA DOS SANTOS",1,"AAAAAA-A"],["LUIZ PAULO LOPES",24,"AAAAAAA-"],["LUKELINO SANTOS SAMPAIO",38,"NNNNNN-N"],["MACEDO PEREIRA DE LIMA",28,"AAAAAA-A"],["MACIEL SILVA ALVES",46,"AAAAAA--"],["MAICON CHAVES BRAGA",7,"AAAAAAA-"],["MAICON PEREIRA LOPES",27,"NNNNNNN-"],["MALU MARIA DA SILVA ROCHA",25,"NNNNNN--"],["MANOEL MISSIAS MARQUES DE SOUZA",24,"AAAAAA--"],["MANOEL WERICO DOS SANTOS",30,"NNNNNNN-"],["MARCELO DE OLIVEIRA EVARISTO",47,"NNNNNNN-"],["MARCELO GOMES FERREIRA",1,"NNNNNN--"],["MARCELO LIMA DE SOUZA",3,"AAAAAA--"],["MARCELO MOREIRA LEMOS",33,"AAAAAA--"],["MARCELO SPINOLA JUNIOR",28,"AAAAAA--"],["MARCELO TEIXEIRA DE SANTANA",38,"AAAAAAA-"],["MARCIEL SERIANO BARBOSA",44,"NNNNNNN-"],["MARCIO DE SOUZA AMORIM",20,"NNNNNN--"],["MARCIO GLEI ALMEIDA SANTOS",47,"NNNNNNN-"],["MARCIO HENRIQUE PEREIRA MARQUES",31,"NNNNNNN-"],["MARCIO JOSE DE SANTANA SANTOS",45,"AAAAAA--"],["MARCIO OLIVEIRA DA SILVA",28,"AAAAAAA-"],["MARCIO RIVELINO DE LIMA",32,"AAAAAAA-"],["MARCO AURELIO FUNCHAL SANTOS",23,"NNNNNNN-"],["MARCONE GOMES DOS SANTOS",19,"NNNNNN--"],["MARCONE RIBEIRO SANTOS",45,"NNNNNN-N"],["MARCONES CAETANO ALVES",11,"AAAAAA-A"],["MARCOS ARON NOGUEIRA CINTRA JUNIOR",17,"NNNNNN--"],["MARCOS CHAVES CRUZ",21,"NNNNNN--"],["MARCOS DOS SANTOS",19,"NNNNNN--"],["MARCOS HENRIQUE GONCALVES DE ALMEIDA",11,"NNNNNN--"],["MARCOS POLICARPO DA COSTA FILHO",1,"AAAAAAA-"],["MARCOS RAMALHO PARDIM",5,"AAAAAA--"],["MARCOS ROBERTO GONCALVES FERREIRA",29,"ANANNNN-"],["MARCOS SILVA SOUZA",20,"NNNNNNN-"],["MARCOS VINICIUS MENDES DE SOUZA",28,"AAAAAAA-"],["MARCOS VITOR SANTOS DE ALMEIDA",38,"ANNNNN-N"],["MARCOS WILLIAN DOS SANTOS VALERIO",21,"NNNNNNN-"],["MARCOS WINTER DE AGUIAR PINHEIRO",32,"AAAAAA--"],["MARCUS PAULO LISBOA DA MOTA",28,"NNNNNNN-"],["MARCUS VINICIUS BARBOSA DE ARAUJO",11,"AAAAAAA-"],["MARCUS VINICIUS CAMPOS SILVA",21,"ANANNN--"],["MARIA CRISTINA OLIVEIRA DE JESUS",26,"AAAAAA--"],["MARIA EDUARDA RIBEIRO ANDRADE",12,"NNNNNN--"],["MARIA EDUARDA ROCHA VITORIA",28,"AAAAAA--"],["MARIANA NAVES DE SOUZA",25,"NNNNNN--"],["MARIANA SANTOS OLIVEIRA",43,"AAAAAAA-"],["MARILZA ALVES DOS SANTOS",26,"AAAAAA--"],["MARINALDO COSTA DOS SANTOS",45,"AAAAAA--"],["MARIO NOGUEIRA OLIVEIRA",42,"AAAAAA-A"],["MARIVAL BISPO DE JESUS",42,"AAAAAAA-"],["MARIVALDO SILVA MARTES",45,"AAAAAAN-"],["MARLON BRUNO DOS SANTOS",4,"ANANNN--"],["MARTINHO GAMA",21,"NNNNNN--"],["MATEUS PEREIRA NERES",12,"NNNNNN--"],["MATEUS VITOR ALMEIDA OLIVEIRA",38,"NNNNNN--"],["MATHEUS DA SILVA DE JESUS",20,"NNNNNN--"],["MATHEUS DA SILVA DOS SANTOS",16,"AAAAAA--"],["MATHEUS DE LUCAS MESSIAS DA SILVA SANTANA",44,"NNNNNNN-"],["MATHEUS DE SOUZA RODRIGUES QUIRINO",4,"NNNNNN--"],["MATHEUS HENRIQUE COSTA ALVES",3,"AAAAAA--"],["MATHEUS JOSE DE PAULA CASSIANO",23,"NNNNNN-N"],["MATHEUS JUNIO FERREIRA SANTOS",25,"ANANNNN-"],["MATHEUS SILVA SANTOS",14,"AAAAAAA-"],["MATOSALEM PEREIRA DE OLIVEIRA",6,"NNNNNNN-"],["MAUREDSON MIRANDA MELO DE SOUZA",11,"NNNNNNN-"],["MAURICIO DE JESUS SANTOS",22,"AAAAAA--"],["MAURICIO NUNES DOS SANTOS",37,"AAAAAAA-"],["MAURICIO SENA CAMPOS",43,"AAAAAA--"],["MAURO GOMES DA SILVA",2,"AAAAAA--"],["MAX DE SOUZA DOS SANTOS",22,"AAAAAA-A"],["MAX OLIVEIRA ROCHA",8,"NNNNNN-N"],["MAXWELL SILVA MENDES",43,"AAAAAA--"],["MESSIAS DE SANTANA SANTOS",37,"AAAAAA--"],["MESSIAS JULIO NUNES SALOMAO",7,"AAAAAA--"],["MESSIAS MARTINS DA SILVA",27,"AAAAAA--"],["MICAEL PEREIRA REIS",36,"AAAAAA--"],["MICAEL REGIS ALMEIDA",14,"AAAAAA--"],["MICHEL WERLICH DE OLIVEIRA PORTILHO",10,"AAAAAA--"],["MIGUEL GONCALVES MIRANDA NETO",45,"NNNNNNN-"],["MIKAEL NATA ALVES DE CARVALHO",28,"NNNNNNN-"],["MILTON MARTINS GONCALVES",3,"AAAAAA--"],["MIRANDIR FERREIRA DA SILVA",11,"NNNNNN--"],["MIRELLY SILVA ARAUJO",31,"AAAAAA--"],["MOISES ARAUJO NASCIMENTO",21,"AAAAAA--"],["MOISES CARDOSO DOS SANTOS",42,"AAAAAA--"],["MOISES HENRIQUE PEREIRA BRANDAO",11,"ANANNN--"],["MOIZES DE CARVALHO CASAES",37,"AAAAAA--"],["NADIR NELIA ALMEIDA DOS SANTOS",42,"AAAAAA--"],["NAILTON ANDRADE DOS SANTOS",38,"NNNNNN--"],["NALBERT SILVA BENTO",33,"AAAAAA--"],["NARDSON FERREIRA ANDRADE",7,"AAAAAA--"],["NATANAEL ALVES PEREIRA",11,"NNNNNN--"],["NATHA ANDRADE DE OLIVEIRA",45,"AAAAAA--"],["NAYANE SOUZA DE ANDRADE",42,"AAAAAA--"],["NAYARA DA SILVA GONCALVES",24,"NNNNNN--"],["NAYARA JULIA DE FARIA",23,"NNNNNN--"],["NEIANDERSON FERREIRA DIAS",35,"NNNNNNN-"],["NEISON HENRIQUE QUEIROZ DE ALMEIDA",24,"AAAAAAN-"],["NEIVSON FABRICIO SILVA DA SILVA",41,"AAAAAA--"],["NELIO DE SOUSA",43,"AAAAAA--"],["NELIO VIEIRA DE SOUZA",12,"AAAAAAA-"],["NELSON CARDOSO DOS SANTOS NETO",38,"AAAAAAA-"],["NICHOLAS INEZ BOAVENTURA SANTOS",4,"NNNNNN--"],["NICODEMOS SILVA PAIXAO FILHO",18,"AAAAAA--"],["NICOLAS JUNIO FIGUEREDO SANTOS",3,"AAAAAAA-"],["NIELSON COUTO MOTA",21,"NNNNNNN-"],["NILSON DA SILVA MAIA",8,"AAAAAA--"],["NILSON FERNANDES LIMA",30,"NNNNNN--"],["NILTON CESAR ALVES DE MACEDO",17,"NNNNNN--"],["NIVALDO MOREIRA DE SOUZA JUNIOR",35,"AAAAAA--"],["NIVALDO QUEIROZ NASCIMENTO",41,"AAAAAA--"],["NIZALDO SANTOS DA SILVA",34,"NNNNNN--"],["NOE ALVES SOUSA",43,"AAAAAA--"],["NORIVAL OLIVEIRA DINIZ",23,"NNNNNNN-"],["ODAIR DO PRADO GONCALVES",27,"AAAAAA--"],["ODILON SILVA SANTOS",28,"AAAAAAA-"],["OSCAR BRENER MARQUES DE MACEDO",44,"AAAAAAA-"],["OSEIAS JUNIOR DE SOUZA",4,"NNNNNN--"],["OSMAN ROCHA BASTOS",42,"AAAAAAA-"],["OSMAR PEREIRA DA SILVA JUNIOR",31,"AAAAAA-A"],["OSVALDO LUCAS COSTA  ALVES",30,"NNNNNN--"],["OTAVIANO LUIZ MAGALHAES PEREIRA",8,"AAAAAA--"],["OTAVIO FABIAN FERREIRA DA COSTA",24,"NNNNNNN-"],["PABLO DIEGO RIBEIRO GONCALVES",28,"AAAAAAA-"],["PABLO HENRIQUE DE JESUS LAUREANO",15,"AAAAAAA-"],["PASCASSIO SOUZA DO COUTO",45,"AAAAAAN-"],["PASCOAL DOS SANTOS GONCALVES DE SOUZA",38,"ANANNNN-"],["PATRICK DANIEL OLIVEIRA MOTA",11,"AAAAAA-A"],["PAULO AFONSO LEMOS SANTOS",43,"AAAAAAA-"],["PAULO DE ARAUJO OLIVEIRA",45,"AAAAAA--"],["PAULO DONIZETTI DA SILVA",47,"NNNNNN--"],["PAULO GOMES SILVA",24,"NNNNNNN-"],["PAULO HENRIQUE CHAVES",1,"AAAAAAA-"],["PAULO HENRIQUE SILVA LOURENCO",45,"AAAAAA--"],["PAULO RICARDO SOARES SILVA",23,"NNNNNN--"],["PAULO ROBERTO ANDRADE NASCIMENTO",42,"AAAAAAA-"],["PAULO ROBERTO DA COSTA REIS",10,"AAAAAAA-"],["PAULO ROSA DE LIMA",2,"AAAAAAA-"],["PAULO SERGIO DA COSTA",3,"AAAAAAA-"],["PAULO SERGIO SANTOS CORREIA",42,"AAAAAA--"],["PEDRO BRANDAO OLIVEIRA",42,"AAAAAA--"],["PEDRO CAFE LOPES",22,"NNNNNNN-"],["PEDRO GARCIA DE SOUSA",11,"AAAAAA--"],["PEDRO HENRIQUE CARVALHO DE OLIVEIRA",27,"AAAAAA--"],["PEDRO HENRIQUE CORREA DE PAIVA",27,"AAAAAAA-"],["PEDRO HENRIQUE DA SILVA ARAUJO",36,"AAAAAA--"],["PEDRO HENRIQUE MARQUES FERREIRA",13,"AAAAAA--"],["PEDRO LUCAS RODRIGUES VIEIRA",23,"NNNNNN--"],["PEDRO SANTOS DE OLIVEIRA",46,"ANANNN--"],["PETHERSON DIOGO SOARES DIAS",30,"NNNNNN--"],["PHELIPE DE SOUZA SILVA",47,"NNNNNN--"],["RAFAEL ALVES BRITO",43,"AAAAAA--"],["RAFAEL DA SILVA MENDONCA",5,"AAAAAA--"],["RAFAEL FERREIRA LEAL",30,"NNNNNN--"],["RAFAEL LEMOS LIMA",43,"AAAAAA--"],["RAFAEL PEREIRA",31,"AAAAAA--"],["RAFAEL RIBEIRO GUEDES",32,"AAAAAAA-"],["RAFAEL SILVA ROCHA",12,"AAAAAA--"],["RAFAELA LIMA DOS SANTOS",43,"AAAAAAA-"],["RAFAELA MACHADO DE SOUSA",8,"AAAAAA--"],["RAIANE DE CASSIA SOUZA AUGUSTO",23,"AAAAAA--"],["RAILANE DA COSTA SANTOS PAIXÃO",19,"NNNNNN--"],["RAIMUNDO NASCIMENTO QUEIROZ",42,"AAAAAA--"],["RAINILDO DOS SANTOS SILVA",45,"AAAAAA--"],["RAMON DE ALMEIDA CARNEIRO",38,"NNNNNN-N"],["RAMON FERNANDES DO NASCIMENTO",0,"AAAAAA--"],["RAMON LOPES DA CRUZ",11,"NNNNNNN-"],["RAMON SANTOS SOUSA",43,"AAAAAAA-"],["RAYLAN MOURA DOS SANTOS",38,"NNNNNN--"],["REGINALDO SOARES SILVA",28,"ANNNNNN-"],["REGIVAL DE SOUZA SENA",37,"AAAAAAA-"],["REINAN DE ALMEIDA CARNEIRO",38,"ANANNN--"],["REINAN NOGUEIRA DOS SANTOS",34,"NNNNNN--"],["REMILTON DE SOUZA GOMES",45,"AAAAAAA-"],["RENAN LIMA MENDES",33,"AAAAAAA-"],["RENATO DE JESUS",42,"AAAAAAA-"],["RENATO RODRIGUES MOREIRA",29,"AAAAAAA-"],["RENATO SANTOS FERNANDES",11,"AAAAAA--"],["RENATO SANTOS LIMA",43,"AAAAAAA-"],["RENE FLAVIO PEREIRA ZUBA",30,"AAAAAA--"],["RENILDO ALMEIDA DE QUEIROZ",40,"NNNNNN-N"],["RENILDO BRITO DOS SANTOS",38,"ANNNNN--"],["RICARDO ALVES DOS SANTOS",46,"AAAAAA--"],["RICARDO DE JESUS GOMES",43,"AAAAAA--"],["RICARDO FREITAS DA SILVA",12,"NNNNNN-N"],["RICARDO LUCIANO PEREIRA",24,"NNNNNNN-"],["RICARDO PEREIRA DA SILVA JUNIOR",23,"NNNNNN--"],["RICARDO RAMOS DOS SANTOS",34,"NNNNNN--"],["RICARDO RODRIGUES DA SILVA",30,"AAAAAA--"],["RICARDO SILVA BARBOSA",29,"ANANNNN-"],["RICARDO VALENTIM FIUZA",1,"AAAAAAA-"],["RIVIANE GUERREIRO NUNES",18,"NNNNNN--"],["ROBENILSON DE JESUS MEDEIROS",42,"AAAAAA--"],["ROBENILTON MAGALHAES LIMA",45,"NNNNNNN-"],["ROBERTA ABREU DE ALMEIDA",11,"NNNNNN--"],["ROBERTO BATISTA DOS SANTOS",45,"AAAAAAA-"],["ROBERTO CARLOS LIMA CARDOSO",21,"NNNNNN--"],["ROBERTO CARLOS TEIXEIRA DE OLIVEIRA",11,"NNNNNNN-"],["ROBERTO DE SOUZA PEREIRA",9,"AAAAAAA-"],["ROBERTO JOSE DOS SANTOS FILHO",22,"AAAAAAA-"],["ROBERTO LIMA DOS SANTOS",33,"NNNNNN--"],["ROBERTO LOPES DA SILVA",0,"AAAAAA--"],["ROBERTO QUEIROZ DA SILVA",42,"AAAAAA-A"],["ROBERTO SATURNINO GOMES",0,"AAAAAAA-"],["ROBSON BARRETO HELIODORIO",22,"AAAAAAA-"],["ROBSON MIRANDA FERREIRA",30,"NNNNNN--"],["ROBSON PEREIRA DA SILVA",30,"NNNNNN--"],["ROBSON RODRIGUES DOS SANTOS",2,"ANANNNN-"],["RODINEY JESUS COSTA",19,"NNNNNN--"],["RODRIGO CARDOSO DOS SANTOS",45,"NNNNNN--"],["RODRIGO COSTA GRADIL SILVA",40,"AAAAAA--"],["RODRIGO DA SILVA SOUSA",8,"AAAAAA--"],["RODRIGO DE OLIVEIRA SILVA",41,"NNNNNNN-"],["RODRIGO DOS SANTOS",13,"AAAAAAA-"],["RODRIGO GOMES MARTINS",0,"AAAAAA-A"],["RODRIGO LEANDRO FERREIRA",2,"NNNNNNN-"],["RODRIGO SILVA DOS SANTOS",40,"NNNNNNN-"],["ROGERIO COUTO DE SOUZA",41,"AAAAAAA-"],["ROGERIO EDUARDO DOS SANTOS",12,"AAAAAA--"],["ROMARIO GONCALVES LIMA",43,"AAAAAA--"],["ROMILDO SANTOS DA ROCHA",22,"AAAAAAA-"],["ROMILSON CAETANO PIRES",46,"AAAAAA--"],["ROMILSON DE JESUS SANTOS",22,"AAAAAA--"],["ROMILSON DE SOUZA CERQUEIRA",41,"AAAAAAA-"],["RONALDO DA SILVA ANDRADE",41,"AAAAAAA-"],["RONALDO DE SOUZA DIAS",42,"AAAAAA-A"],["RONALDO FIGUEIREDO",26,"NNNNNNN-"],["RONALDO MENEZES MASCARENHAS",45,"AAAAAAA-"],["RONALDO PEREIRA LIMA",25,"NNNNNNN-"],["RONALDO RIBEIRO SOUSA",43,"AAAAAAA-"],["RONE VASCONCELOS",38,"AAAAAA--"],["RONICLEI AVELINO DE SOUZA",24,"NNNNNNN-"],["RONILDO AURELIANO NASCIMENTO",13,"AAAAAAA-"],["RONIVAL JESUS DOS SANTOS",36,"AAAAAAA-"],["RONIVAN SILVA ARAUJO",46,"AAAAAA--"],["ROQUE ANDRADE DOS SANTOS",45,"NNNNNNN-"],["ROSANGELA RUFINO FRANCISCO",19,"NNNNNN--"],["RUAN CARLOS RODRIGUES DE OLIVEIRA",30,"NNNNNNN-"],["RYAN SILVA DE LIMA",11,"NNNNNNN-"],["SADY HUMBERTO COELHO NUNES",3,"AAAAAA-A"],["SALVIO WANDERLEY SOARES MACHADO",28,"AAAAAAA-"],["SAMUEL CORCINO",0,"AAAAAAA-"],["SAMUEL DOUGLAS QUEIROZ ARAUJO",28,"AAAAAA--"],["SAMUEL PINTO SOARES",23,"AAAAAA--"],["SAMUEL SANTOS DA SILVA",15,"AAAAAAA-"],["SAMUEL SOARES PEREIRA",32,"AAAAAAA-"],["SANDRO SOUZA GONCALVES",33,"AAAAAA--"],["SAVIO ABADE DE JESUS",35,"AAAAAAA-"],["SEBASTIAO OPENHEIMER DE SOUZA",23,"NNNNNN-N"],["SEBASTIAO PEDRO DA SILVA",5,"AAAAAAA-"],["SEBASTIAO SOARES RAMOS",32,"NNNNNNN-"],["SELMO CARDOSO DA SILVA",28,"AAAAAA-A"],["SERGIO DE SOUZA ARAUJO JUNIOR",19,"NNNNNN--"],["SHIRLEY MARINHO DE OLIVEIRA",9,"AAAAAA--"],["SIDGREI SANTOS DA CONCEICAO",38,"NNNNNN--"],["SIDNEI VIEIRA DOS SANTOS",43,"AAAAAA--"],["SIDNEY SANTOS DE JESUS",16,"NNNNNN-N"],["SILAS DOS SANTOS GOMES",6,"NNNNNNN-"],["SILDEVAN SILVA DE FREITAS",34,"ANNNNN-N"],["SILVANDO SANTOS QUEIROZ",42,"NNNNNN--"],["SILVIO EDUARDO MOURA OLIVEIRA",28,"AAAAAAA-"],["SINESIO RIBEIRO CERQUEIRA NETO",42,"AAAAAA--"],["SINVAL VERÍSSIMO DE CASTRO JUNIOR",24,"NNNNNNN-"],["SORAIA SOARES FONSECA",28,"AAAAAA--"],["TAILAN SILVA DE MENEZES",45,"AAAAAA--"],["TAINAN VIANA OLIVEIRA",43,"AAAAAA--"],["TALIS DA SILVA MARTINS",10,"AAAAAA--"],["TALISSON ALVES DE SOUZA",9,"AAAAAA--"],["TANCREDO AUGUSTO AMARAL DA CRUZ",30,"NNNNNNN-"],["TANURE CARLOS MASCARENHAS DOS SANTOS",40,"AAAAAAA-"],["TARCISIO MARCOS SOUSA SILVA",22,"AAAAAAA-"],["TARCISIO VIRISSIMO DA COSTA",12,"NNNNNNN-"],["TATIANA KELLEN DE CASTRO TEIXEIRA",24,"NNNNNN--"],["TAWAN BARBOSA VIEIRA",43,"AAAAAAA-"],["TAYANE PRISCILA BRITO DE AVILA",28,"AAAAAA--"],["THALES DA PAIXAO MIRANDA",42,"AAAAAA--"],["THALES JOSE CORREIA AURELIO",6,"NNNNNNN-"],["THALES PINHEIRO CAMARA",19,"NNNNNNN-"],["THALISSON FERREIRA DE JESUS",14,"AAAAAA--"],["THALLYS VINICIUS RAMOS XAVIER",34,"NNNNNNN-"],["THALLYS VINICIUS RODRIGUES FERNANDES COSTA",12,"AAAAAA--"],["THAYNARA CRISTINA DA SILVA BARBOZA",26,"AAAAAA--"],["THAYSA SANTOS AZEVEDO",13,"AAAAAAN-"],["THIAGO ANUNCIACAO DA CRUZ",25,"AAAAAAA-"],["THIAGO COSTA MACHADO",33,"AAAAAAA-"],["THIAGO ROGERIO DIAS RIBEIRO FERREIRA",35,"AAAAAAA-"],["THIAGO VIANA GOMES",33,"NNNNNNN-"],["THIARO SANTANA FIGUEIREDO",40,"AAAAAA--"],["TIAGO CRISTIANO FARIAS",9,"ANANNN--"],["TIAGO DOS SANTOS MOREIRA",36,"AAAAAA-A"],["TIAGO HONORATO MARTINS",9,"AAAAAA-A"],["TIAGO ROCHA SILVA",46,"AAAAAAA-"],["UADSON AMARAL SANTANA",13,"AAAAAA-A"],["UBIRAJARA NUNES DA SILVA",37,"AAAAAAA-"],["UBIRATAN MASCENA DE SOUZA",42,"AAAAAAA-"],["UDSON GABRIEL RIBEIRO SOUZA",28,"NNNNNNN-"],["UEBESON GONÇALVES FERREIRA",11,"NNNNNN--"],["UENDEL NUNES DE JESUS",15,"AAAAAA--"],["UILHANS AMARAL LIMA",43,"AAAAAA--"],["VAGUINER DA SILVA CAMOES",21,"NNNNNN-N"],["VALDEMIR BISPO DA CONCEICAO",37,"ANANNNN-"],["VALDICK NOVAES DOS SANTOS",21,"NNNNNNN-"],["VALDINEY PEREIRA CARDOSO",28,"AAAAAAA-"],["VALDIR SERRA DO CARMO",38,"NNNNNN--"],["VALDIRENE GERMANO DA SILVA",0,"NNNNNN--"],["VALDIVINO ALAIR DIAS",32,"NNNNNNN-"],["VALMIR DOS SANTOS SILVA FILHO",40,"ANANNN--"],["VALNEI GOMES GUERRA",42,"AAAAAA--"],["VALNEY EVANGELISTA SANTOS",21,"NNNNNN--"],["VALTER MORAIS DOS ANJOS",45,"AAAAAA--"],["VANDER SERVULO DA CRUZ",11,"NNNNNNN-"],["VANDERLANE BESSA DO SACRAMENTO SANTOS",37,"AAAAAA--"],["VANDERLEI MOURA DA COSTA",11,"AAAAAAA-"],["VANESSA COSTA SANTANA",21,"NNNNNN--"],["VANETE CANDIDA DE OLIVEIRA CUNHA",25,"NNNNNNN-"],["VANILSON SANTOS DE JESUS",42,"AAAAAA--"],["VERONICA SOUZA OLIVEIRA",45,"ANANNN--"],["VICTOR EMANOEL NUNES",9,"ANANNNN-"],["VILMAR JOSE MARTINS",2,"NNNNNN-N"],["VINICIUS FIGUEIREDO DOS SANTOS",11,"AAAAAA-A"],["VINICIUS NARCISO LADEIA",30,"NNNNNNN-"],["VITOR ALEXANDRE DOS SANTOS CRUZ",38,"AAAAAA--"],["VITOR DE JESUS MARTINS EUGENIO",10,"NNNNNN--"],["VITOR DOS SANTOS MAIA",42,"AAAAAA--"],["VITOR GABRIEL ALVES AGUIAR",29,"AAAAAAA-"],["VITOR HENRIQUE FREITAS GOMES",6,"NNNNNNN-"],["VITOR HUGO SANTOS SCARCELA",32,"NNNNNNN-"],["VITOR POLICARPO DE ANDRADE",1,"ANNNNNN-"],["VITOR RODRIGUES SANTOS DAMASCENO",28,"NNNNNNN-"],["VITOR VIEIRA DE MELO DA SILVA",47,"AAAAAAA-"],["VITOR VIEIRA TEIXEIRA",24,"NNNNNN-N"],["VITORIA DOS SANTOS ATANASIO",36,"AAAAAAA-"],["VITÓRIA SILVA LIMA",43,"NNNNNNN-"],["WAGNER DOS SANTOS SILVA",21,"NNNNNNN-"],["WALACE ALVES FERREIRA",0,"AAAAAA--"],["WALDIR BRITO DE MESQUITA",25,"NNNNNN--"],["WALDIR RODRIGUES DE JESUS",0,"AAAAAAA-"],["WALDYR PEREIRA SILVA",28,"NNNNNN-N"],["WALTER RAMOS DUARTE NETO",8,"AAAAAAA-"],["WANDERLEY CHAVES DOS SANTOS",1,"ANNNNNN-"],["WANDRYO LARANJEIRA DO ESPIRITO SANTO",19,"NNNNNNN-"],["WANTUIL RESENDE DE MORAES",24,"NNNNNN--"],["WARLEY DANIEL TEIXEIRA SANTOS",28,"AAAAAA--"],["WARLEY EDUARDO DE JESUS MENDES",30,"AAAAAA--"],["WASHINGTON FERREIRA MARINHO",33,"AAAAAAA-"],["WASHINGTON OLIVEIRA DA SILVA",21,"NNNNNNN-"],["WEDSON DE SANTANA SOARES",21,"NNNNNNN-"],["WELINGTON DE JESUS DIAS",11,"NNNNNN--"],["WELLINGTON BARBOSA",19,"NNNNNNN-"],["WELVYS ALVES MOURA",44,"NNNNNNN-"],["WERLLON DE SOUZA COUTO",21,"NNNNNN-N"],["WESLEY LEONARDO ALVES PEREIRA",26,"NNNNNNN-"],["WEVERTTON PEREIRA OLIVEIRA",38,"AAAAAA--"],["WHENDELL DA CONCEIÇÃO PINHEIRO FILHO",19,"NNNNNN-N"],["WILIAN PEREIRA RODRIGUES",7,"AAAAAAA-"],["WILKER MATEUS LIMA EVANGELISTA",45,"AAAAAA--"],["WILLER MOREIRA FERNANDES",2,"NNNNNN--"],["WILLIAM DE JESUS SALES",38,"NNNNNN--"],["WILLIAM ESTEVAM DA COSTA",47,"NNNNNN-N"],["WILLIAN DHONEY CRUZ DE ANDRADE",45,"AAAAAA--"],["WILSMARA RAQUEL DA SILVA REIS RODRIGUES",23,"NNNNNNN-"],["WILSON COSTA SANTOS",36,"AAAAAAA-"],["WILSON CRISTOVAO RODRIGUES DE QUEIROZ",21,"NNNNNNN-"],["WILSON DOS SANTOS OLIVEIRA MOURA",40,"NNNNNNN-"],["WILSON FERNANDES COTA LEITE",1,"AAAAAA-A"],["WILSON JOAO DE PAULA",12,"AAAAAAA-"],["YAGO DE MORAES SANTANA",33,"AAAAAA--"],["YAN KLINIO DOS SANTOS FERNANDES DE SOUZA",10,"NNNNNN--"],["YARA STHEFANI PEREIRA GONCALVES ARAUJO",26,"ANNNNNN-"],["YELANGELA COROMOTO MARTINEZ LUGO",27,"AAAAAAA-"],["YGOR FORTUNATO PIMENTA",11,"AAAAAA--"],["YGOR RAMOS DE SOUZA",1,"AAAAAA--"],["YHAN RHAGNER PEREIRA SIRIANO",44,"AAAAAAA-"],["ZENILDO CARDOSO ALVES",45,"AAAAAA--"]],"meta":{"linhas":7543,"aprov":4234,"pessoas":1077}};
+const BASE_ORIGINAL = {"cursos":["SEGURANÇA DO TRABALHO","EPI","BENZENO","NR 20 INTERMEDIARIO","PLANO DE MANUTENÇÃO","CODIGO DE ETICA","APERFEIÇOE FRENTISTA","GESTAO AUDITORIA"],"cursosCurto":["Segurança do Trabalho","EPI","Benzeno","NR 20 Intermediário","Plano de Manutenção","Código de Ética","Aperf. Frentista/Caixa","Gestão de Auditoria"],"regionais":["REGIONAL 1","REGIONAL 2 (TIAGO CARDOSO)","REGIONAL 3 BRUNO VIANA","REGIONAL 4 (FABIO ARAUJO","SEM REGIONAL (ADMINISTRATIVO/OUTROS)"],"filiais":[["CASA BRANCA",0],["CHEROKEE",0],["FALÇÃO",0],["FERRARI",0],["ILHA BRAVA",0],["JR",0],["LAJINHA",0],["PAPA LEGUAS 1",0],["PERIQUITO",0],["PINHEIROS",0],["PISCINA",0],["PLANALTO II",0],["RAVENA",0],["ALAGOAS 101",1],["BENDEGO",1],["CARAVELAS",1],["COLONIAL 101",1],["FEIRA 101",1],["ITABUNA",1],["LINHARES",1],["PARCEIRO",1],["SALVADOR",1],["SANTO ANTONIO",1],["BALANÇA",2],["CAMPOS ALTOS",2],["CENTENARIO",2],["FLASH",2],["MINAS GERAIS",2],["MOC",2],["MOC 135",2],["NORTE DE MINAS",2],["QUILOMETRAGEM",2],["TURMALINA III",2],["ANEL VIARIO",3],["BARREIRAS",3],["CANDIDO SALES",3],["GRANDE VALE",3],["GRAO DE OURO",3],["MARACANA",3],["MARACANA 2",3],["NOVO PONTO",3],["PAPA LEGUAS III",3],["PQ DOS COQUEIROS",3],["SÃO MARCOS",3],["TALISMA",3],["UIRAPURU",3],["ULTRA",3],["EUCALIPTOS",2],["TECNO ARLA MARACANA",4],["TECNO ARLA MATRIZ",4]],"funcionarios":[["ACASSIANO SOARES RODRIGUES",42,"AAAAAAA-"],["ACASSIO ROBERTO REIS SANTOS",33,"AAAAAA--"],["ACASSIO SILVA OLIVEIRA",34,"NNNNNN-N"],["ADAILTON DO CARMO DOS SANTOS",42,"AAAAAAA-"],["ADAILTON LIMA GALVAO",45,"AAAAAAA-"],["ADAIR JOSE PIRES",11,"NNNNNNN-"],["ADAO JOSE DOS SANTOS",30,"NNNNNN-N"],["ADAUTO BARBOSA COUTINHO",21,"NNNNNNN-"],["ADEILSON RODRIGUES DE OLIVEIRA",7,"ANANNNN-"],["ADELCIO DE OLIVEIRA FERREIRA",30,"NNNNNN--"],["ADELMO FIGUEIREDO SILVA",40,"AAAAAAA-"],["ADELSON DE SOUZA SANTOS",42,"AAAAAAA-"],["ADEMARIO DAS VIRGENS VIEIRA",43,"NNNNNN--"],["ADENICIO PEREIRA SANTANA",42,"AAAAAAA-"],["ADENILSON CARDOSO DE OLIVEIRA",20,"ANANNNN-"],["ADENOR RIBEIRO DA SILVA",38,"NNNNNN--"],["ADERVISON DOS SANTOS",22,"AAAAAA--"],["ADILTON JUNIOR SANTOS DE JESUS",45,"AAAAAA--"],["ADIMILSON MODESTO BERNARDINO",26,"NNNNNN--"],["ADIMON SOUZA DE ARAUJO",38,"NNNNNNN-"],["ADRIANO DOS SANTOS SILVA",37,"AAAAAA--"],["ADRIANO JUNIOR PEREIRA",30,"AAAAAAA-"],["ADRIANO OLIVEIRA SILVA",43,"AAAAAAA-"],["ADRIANO RIBEIRO DE SOUZA",5,"AAAAAA--"],["ADRIANO SANTOS DE JESUS",37,"AAAAAA-A"],["ADRIANO SOUSA GOMES FILHO",18,"AAAAAAA-"],["ADRIANO VIEIRA DA SILVA",46,"AAAAAA--"],["ADRIANY NEVES SILVA",29,"NNNNNN--"],["ADRYAN PEREIRA DA SILVA",19,"NNNNNN--"],["ADSON BATISTA DOS SANTOS",45,"AAAAAA--"],["ADSON RENAN SANTOS MEDINA",26,"NNNNNNN-"],["AEMER CALEK SALMEN",1,"AAAAAA--"],["AGNALDO CONCEICAO DOS SANTOS",38,"NNNNNN--"],["AGUINALDO MARTINS SILVA",24,"NNNNNN--"],["AILTON SILVA PRADO",43,"AAAAAAA-"],["ALAN ADORNO COSTA",17,"AAAAAA--"],["ALCINO SILVA DE JESUS",34,"NNNNNNN-"],["ALDAIR LOPES DE OLIVEIRA",43,"AAAAAA-A"],["ALDO JOSE NOGUEIRA DOS SANTOS",10,"ANNNNNN-"],["ALECIO SANTOS BRITO",35,"AAAAAAA-"],["ALEF CERQUEIRA SANTOS",17,"NNNNNN--"],["ALESSANDRO LUIS BARBOSA MEIRA",28,"NNNNNN--"],["ALESSANDRO RIBEIRO VARJAO ALMEIDA",14,"AAAAAA--"],["ALESSANDRO SOUZA AMERICANO",46,"AAAAAA--"],["ALEX GOMES ALVES",15,"AAAAAA--"],["ALEX JÚNIOR DA SILVA",24,"NNNNNN--"],["ALEX PACHECO DOS SANTOS OLIVEIRA",46,"AAAAAA--"],["ALEX PASSOS",19,"NNNNNN--"],["ALEX SANTOS COELHO",28,"AAAAAA--"],["ALEXANDRE LIMA DOS SANTOS",43,"AAAAAAA-"],["ALEXANDRO ALVES DA SILVA",17,"NNNNNN--"],["ALEXSANDRO JESUS DA SILVA",45,"NNNNNN--"],["ALFREDO FERREIRA DO VALE JUNIOR",14,"AAAAAAA-"],["ALICE APARECIDA PINTO LEMOS",24,"AAAAAAA-"],["ALINE FONSECA OLIVEIRA",28,"AAAAAA--"],["ALINE SOARES DOS SANTOS",1,"NNNNNN--"],["ALIOMAR DE JESUS LIMA",43,"AAAAAA--"],["ALISSON PATRIK FIGUEIREDO SILVA",29,"NNNNNN--"],["ALISSON PEREIRA MEDINA",26,"NNNNNNN-"],["ALISSON VIRISSIMO DA SILVA",44,"NNNNNNN-"],["ALLAN JESUS DOS SANTOS",35,"AAAAAA--"],["ALLEX AUGUSTO DOS SANTOS",10,"AAAAAA--"],["ALMITO GONCALVES DA ROCHA",38,"AAAAAAA-"],["ALTAMIRANDO PORTO DE SOUZA",43,"AAAAAA--"],["ALVARO VINICIUS SANTOS DE OLIVEIRA",47,"AAAAAAA-"],["AMADEU FRANCISCO DOS SANTOS",38,"NNNNNN--"],["AMAURI SANTOS ALMEIDA",34,"NNNNNNN-"],["AMAURI SOUSA ABADE",35,"AAAAAA--"],["AMAURY BOTELHO DE NOVAES",36,"AAAAAAA-"],["ANA PAULA DE MORAIS COSTA",27,"AAAAAA--"],["ANA PAULA LOPES DE SOUZA",9,"ANNNNN--"],["ANA PAULA RODRIGUES DA SILVA",24,"NNNNNN--"],["ANDECLEI SOUZA NOVAIS",15,"AAAAAAA-"],["ANDERSON DOS SANTOS LOUZADO",45,"AAAAAAN-"],["ANDERSON FERREIRA DE JESUS LIMA",21,"NNNNNNN-"],["ANDRE CARDOSO ALVES",42,"AAAAAA--"],["ANDRE DA COSTA SANTOS",15,"AAAAAA--"],["ANDRE FERREIRA DA SILVA",28,"AAAAAAA-"],["ANDRE LUIZ MARTINS SOLAR",23,"NNNNNNN-"],["ANDRE RICARDO SILVA DOS SANTOS",21,"ANNNNNN-"],["ANDRE SILVA SANTOS",30,"NNNNNN-N"],["ANDRE SOUSA DE OLIVEIRA",33,"AAAAAAA-"],["ANDREA FERRARI CHAVES",11,"AAAAAA--"],["ANGELO ANTONIO MARINHO ROCHA",43,"AAAAAA--"],["ANIEL OLIVEIRA SOARES",36,"AAAAAAA-"],["ANSELMO JOSE DE SOUZA",11,"AAAAAA--"],["ANTONIO AMORIM COIMBRA",15,"AAAAAA--"],["ANTONIO CARDOSO ALVES",42,"AAAAAA--"],["ANTONIO CARLOS DA SILVA CONCEICAO",37,"AAAAAAA-"],["ANTONIO CARLOS DE LIMA",32,"ANNNNN--"],["ANTONIO CARLOS RODRIGUES DA SILVA",14,"AAAAAA--"],["ANTONIO CARLOS SANTOS LIMA",40,"NNNNNNN-"],["ANTONIO DE SOUZA",11,"AAAAAAA-"],["ANTONIO ESTEVAO DOS SANTOS AVILA FERRO",13,"AAAAAAA-"],["ANTONIO MARCOS CARDOSO DE SOUZA",21,"NNNNNNN-"],["ANTONIO MARCOS FERREIRA SOUSA DOS SANTOS",46,"AAAAAA--"],["ANTONIO MARCOS SOUZA DE OLIVEIRA",14,"AAAAAAA-"],["ANTONIO MORAES DOS SANTOS RODRIGUES",45,"AAAAAAA-"],["ANTONIO QUEIROZ DA SILVA",37,"AAAAAA-A"],["ANTONIO RODRIGUES DE SOUZA",1,"AAAAAAA-"],["ANTONIO SILVERIO RAMOS",11,"AAAAAAA-"],["ANTONIO VICTOR SANTANA BARRETO",20,"NNNNNN-N"],["ANTONIO VIEIRA LIMA FILHO",43,"AAAAAA--"],["ANTONIO XAVIER ROCHA",46,"AAAAAA--"],["APARECIDO JOSE DE SANTANA",32,"NNNNNNN-"],["ARGEU DE OLIVEIRA",10,"AAAAAAA-"],["ARIANE DE SOUZA DAMASCENO",29,"AAAAAA--"],["ARICLENES CRUZ SANTOS",20,"AAAAAAA-"],["ARIEL PIRES DIAS",12,"AAAAAAA-"],["ARLINDO CONCEICAO SANTOS",37,"AAAAAAA-"],["ARLINDO DA MOTA SILVA",14,"AAAAAAA-"],["ARMANDO RIBEIRO FILHO",25,"NNNNNNN-"],["ARTUR DEIVID SILVA SANTOS",24,"NNNNNNN-"],["AUGUSTO HENRIQUE SANTOS CONCEIÇÃO",47,"NNNNNNN-"],["AUGUSTO LEOCADIO DA SILVA",2,"AAAAAA--"],["AUGUSTO VIEIRA DA CRUZ",11,"NNNNNN--"],["AURINO VIEIRA PORTO JUNIOR",46,"AAAAAAA-"],["AZAPH CARLOS SILVA DE OLIVEIRA",27,"AAAAAAA-"],["BALTAZAR SOARES VIEIRA",24,"NNNNNN--"],["BARBARA OLIVEIRA SANTOS",28,"AAAAAA--"],["BEATRIZ SOUZA DA ROCHA",38,"AAAAAA--"],["BERNEVAL ARCANJO SANTANA",34,"NNNNNN--"],["BRENO DA SILVA OITICICA",45,"AAAAAA--"],["BRENO GUSTAVO GONCALVES DOS REIS",47,"AAAAAAA-"],["BRUNA MARQUES DOS SANTOS",33,"AAAAAA--"],["BRUNA ROCHA",11,"AAAAAA--"],["BRUNA ROCHA DA SILVA",43,"NNNNNNN-"],["BRUNO DE OLIVEIRA DUARTE",21,"NNNNNN--"],["BRUNO DE SOUZA BARBOSA",14,"AAAAAAA-"],["BRUNO HENRIQUE ALMEIDA SILVA",8,"AAAAAA--"],["BRUNO MENDES DA SILVA",11,"NNNNNN-N"],["BRUNO SANTOS VIANA",35,"AAAAAAA-"],["BRUNO TAVARES NOVAES",34,"NNNNNN--"],["BRUNO VINICIUS SANTOS BONFIM",20,"NNNNNNN-"],["CAIO INACIO NERY BEZERRA",24,"AAAAAA--"],["CARLITO SILVA ARAUJO",46,"AAAAAAA-"],["CARLOS ALBERTO DE SOUSA SANTANA",21,"NNNNNNN-"],["CARLOS ALBERTO DOS SANTOS",21,"NNNNNNN-"],["CARLOS ALEXANDRE DE LIMA ARAUJO",33,"AAAAAA-A"],["CARLOS ANDRE ALVES DOS SANTOS",45,"ANANNN--"],["CARLOS AUGUSTO DOS SANTOS SOUZA",17,"NNNNNNN-"],["CARLOS EDUARDO GOMES GARCIA",44,"NNNNNNN-"],["CARLOS HENRIQUE RODRIGUES DA SILVA",30,"NNNNNN--"],["CARLOS NUNES DE ARAUJO",28,"NNNNNNN-"],["CARLOS ROBERTO ALVES MASCARENHAS",45,"AAAAAA--"],["CARLOS SILVA DE QUEIROZ",45,"AAAAAA--"],["CARLOS VENILSON PORTO DA SILVA",34,"NNNNNN--"],["CAROLINE CARVALHO DA SILVA",33,"AAAAAAA-"],["CATIA SOUZA SANTOS",42,"AAAAAA--"],["CAUA FERREIRA DOS SANTOS",43,"AAAAAA--"],["CAUAN PRADO PORTUGAL",43,"AAAAAAA-"],["CELIO ALVES COELHO",11,"AAAAAAA-"],["CELIO PEREIRA DOS SANTOS",6,"ANANNN--"],["CELIO SOARES",9,"AAAAAA--"],["CELSO CEZARIO DE SOUZA",35,"AAAAAA-A"],["CELSON SILVA RIBEIRO",45,"NNNNNN--"],["CESAR GOMES PECANHA",11,"NNNNNNN-"],["CHARLEANE DE OLIVEIRA MOREIRA",20,"AAAAAA--"],["CHARLES APARECIDO DE JESUS SOARES",30,"AAAAAAA-"],["CHRYSTIAN IVANEY GARCIA MOURA",26,"NNNNNN--"],["CICERA DAYANE GONCALVES SANTANA",28,"AAAAAA--"],["CICERO MORAES NOGUEIRA DOS SANTOS",42,"AAAAAAA-"],["CLAUDILENE GOMES TEIXEIRA",6,"NNNNNN-N"],["CLAUDINEI DE SOUZA",23,"NNNNNN--"],["CLAUDINEI TORRES CANDIDO",31,"AAAAAA--"],["CLAUDINO DE SOUZA ILDEFONSO GONÇALVES",15,"NNNNNN--"],["CLAUDIO ADAO CRUZ DOS SANTOS",34,"NNNNNN--"],["CLAUDIO ALVES DE JESUS",21,"NNNNNN--"],["CLAUDIO LOPES DE OLIVEIRA",4,"NNNNNNN-"],["CLAUDIONOR AMERICO DE MOURA",19,"ANNNNN--"],["CLAUDIR DOS SANTOS SILVA",42,"AAAAAA--"],["CLAYDSON RODRIGUES SIQUEIRA",12,"NNNNNNN-"],["CLEBER DE ASSIS CAVALCANTE",4,"NNNNNN--"],["CLEBIO DE JESUS CONCEICAO",15,"AAAAAAA-"],["CLEDIVALDO QUEIROZ NASCIMENTO",42,"AAAAAA--"],["CLEIDSON DE JESUS SILVA",18,"AAAAAA--"],["CLEITON FERREIRA SILVA",30,"NNNNNN--"],["CLEITON PEREIRA DOS SANTOS",28,"ANNNNNN-"],["CLEMILDO BRANDAO DOS SANTOS",45,"AAAAAA--"],["CLEVERSON EDUARDO DA SILVA GALDINO",26,"AAAAAAA-"],["CLEYTON MATEUS BORGES NUNES",32,"ANANNNN-"],["CLEZIANE GOMES FERREIRA",13,"AAAAAA--"],["CRISLAN COUTO CERQUEIRA DE CARVALHO",45,"NNNNNNN-"],["DAIANA DOS SANTOS CARVALHO",17,"NNNNNN-N"],["DAILTON MACENA VELAME",45,"AAAAAA--"],["DANIEL ALEX LOPES MOREIRA",28,"AAAAAAA-"],["DANIEL BARBOSA OLIVEIRA",32,"AAAAAA--"],["DANIEL CARLOS MENDES DE PAULA",31,"AAAAAA--"],["DANIEL DIAS SOLINOS",18,"AAAAAA-A"],["DANIEL HENRIQUE SILVA CRUZ",15,"AAAAAA--"],["DANIEL LISBOA NUNES",38,"NNNNNN--"],["DANIEL SANTOS BARBOSA",42,"ANANNNN-"],["DANIEL SANTOS MACEDO",14,"AAAAAA--"],["DANIEL SILVA SANTOS",35,"AAAAAA--"],["DANIEL VANDERLEI DE SOUSA",24,"NNNNNN--"],["DANIELA DOS SANTOS SANTANA",20,"AAAAAAA-"],["DANILO CORREIA SILVA",45,"ANANNN--"],["DANILO COUTO DE OLIVEIRA",45,"AAAAAAA-"],["DANILO DA ROCHA MATOS",6,"NNNNNNN-"],["DANILO HENRIQUE FAUSTINO CUSTODIO",24,"NNNNNN-N"],["DANILO HENRIQUE SOUZA PAULA",24,"NNNNNNN-"],["DANILO VIANA LIMA",35,"AAAAAA--"],["DANUZIO VIANA GOMES",15,"AAAAAAA-"],["DARCIEL RODRIGUES DE SOUZA",1,"AAAAAAA-"],["DARDANE JORGE RAMOS SOUSA",20,"ANNNNNN-"],["DARLAN DE SOUZA SILVA",30,"AAAAAA--"],["DARLON PEREIRA DUARTE",6,"NNNNNNN-"],["DAVI ARAUJO DAMASCENA",49,"NNNNNN--"],["DAVI DE SOUZA SANTOS",45,"AAAAAAA-"],["DAVI MARCOS COELHO SILVA",11,"AAAAAA--"],["DAVI QUEIROZ DOS SANTOS GONÇALVES",41,"AAAAAAA-"],["DAVID DA CONCEIÇÃO NASCIMENTO QUEIROZ",21,"NNNNNNN-"],["DAVID GABRIEL BUENO",23,"NNNNNNN-"],["DAVISON SIMAO CIDALINO",24,"NNNNNNN-"],["DAYVISON JUNIOR PINTO DOS SANTOS",12,"NNNNNNN-"],["DEILSON RIBEIRO DA SILVA",10,"AAAAAAA-"],["DEIVEITE MARIANO DA SILVA",3,"ANNNNN--"],["DEIVISON FIRMINO DE SOUZA",27,"AAAAAAA-"],["DEIVSON SILVA SANTOS",38,"NNNNNN--"],["DERIVALDO ALVES SAMPAIO",45,"AAAAAA-A"],["DERNEVAL AMARAL LIMA",43,"AAAAAAA-"],["DHEIVISON GUSTAVO MOURA DE OLIVEIRA",30,"NNNNNNN-"],["DIASDAIVE NUNES DOS SANTOS",42,"AAAAAA--"],["DIEGO ALEXANDRE DE MENDONÇA",47,"NNNNNN--"],["DIEGO BARBOSA OLIVEIRA",15,"ANANNN-N"],["DIEGO FERNANDES DOS SANTOS LIMA",42,"AAAAAA--"],["DIEGO HENRIQUE BARBOSA SILVA",23,"NNNNNNN-"],["DIEGO SENA CAMPOS",43,"AAAAAAA-"],["DIEMERSON DOS SANTOS FERREIRA",25,"NNNNNNN-"],["DIOGO NUNES FOLGADO",7,"AAAAAAA-"],["DIOLENO DA PAIXAO MARTINS",22,"ANNNNNN-"],["DIONATHAN SENRA GOMES",10,"NNNNNN-N"],["DIRA MENDES DOS SANTOS",21,"NNNNNNN-"],["DIVANIO SOARES FERREIRA",8,"NNNNNN-N"],["DOMINGOS APARECIDO DE FREITAS",28,"NNNNNN--"],["DONIZETE BATISTA SILVA",7,"AAAAAA-A"],["DOUGLAS CARDOSO OLIVEIRA",14,"AAAAAA-A"],["DOUGLAS FERREIRA LANA",0,"ANNNNN-N"],["DOUGLAS MACIEL VIEIRA",34,"NNNNNNN-"],["DOUGLAS REIS CARNEIRO",23,"NNNNNNN-"],["EDE CARLOS RAMOS",1,"AAAAAA--"],["EDER CARDOSO DIAS",28,"AAAAAAA-"],["EDICARLO DA SILVA TEIXEIRA",45,"AAAAAAA-"],["EDILSON ALMEIDA ALVES",28,"ANNNNNN-"],["EDILSON DE OLIVEIRA SILVA",43,"AAAAAA--"],["EDILSON MASCENA DE SOUZA",45,"AAAAAAA-"],["EDILSON REIS DA SILVA TEIXEIRA",38,"NNNNNN--"],["EDILSON SANTOS GUEDES",34,"NNNNNNN-"],["EDIR JORGE MORONTE JÚNIOR",47,"NNNNNNN-"],["EDIVALDO CORREIA",34,"ANNNNNN-"],["EDMAR ALVES BATISTA",12,"AAAAAA--"],["EDMAR FRANCISCO DE QUEIROZ",32,"AAAAAAA-"],["EDMARIO BARBOSA DE CARVALHO",14,"AAAAAAA-"],["EDMILSON BARBOSA DA SILVA",14,"ANNNNN--"],["EDNAILSON NOVAIS DA SILVA ALMEIDA",46,"AAAAAA--"],["EDNALDO CARDOSO DA SILVA",45,"AAAAAAA-"],["EDNEI GONÇALVES ARAUJO",31,"AAAAAAA-"],["EDNELSON DE SOUSA VILA NOVA",47,"AAAAAA--"],["EDSON ALVES DE ANDRADE",31,"AAAAAA-A"],["EDSON ANDRADE ARAUJO",42,"AAAAAAA-"],["EDSON DA SILVA FERREIRA",21,"AAAAAA--"],["EDSON LOPES FAGUNDES",7,"AAAAAAA-"],["EDSON NUNES DE OLIVEIRA",46,"AAAAAA-A"],["EDSON RIBEIRO NOVAIS",33,"AAAAAAA-"],["EDUARDO CARDOSO VELOSO",28,"AAAAAAA-"],["EDUARDO DE JESUS SILVA",42,"AAAAAA--"],["EDUARDO LOPES SANTOS",15,"AAAAAA-A"],["EDVALD ESCOLASTICO PINTO DOS SANTOS",12,"AAAAAAA-"],["EDVALDO CARDOSO DA SILVA",45,"AAAAAA--"],["EDVALDO CONCEICAO DA SILVA SACRAMENTO",36,"AAAAAA-A"],["EDVALDO COSTA ANDRADE",3,"AAAAAA-A"],["EDVALDO GOMES DO NASCIMENTO",1,"AAAAAA--"],["EDVALDO HERCULANO CUNHA",12,"AAAAAAA-"],["EDVALDO OLIVEIRA PEREIRA",40,"AAAAAA--"],["EDVAN CERQUEIRA DE OLIVEIRA",17,"NNNNNNN-"],["ELCI CANDIDO DE SOUZA",31,"AAAAAA--"],["ELDER CONCEICAO DA CUNHA",38,"NNNNNN--"],["ELDIBERTO PEREIRA FONSECA",30,"AAAAAA--"],["ELDIMAR PEREIRA FONSECA",30,"AAAAAA--"],["ELEN OLIVEIRA SILVA",43,"AAAAAAA-"],["ELI CARLOS REIS FERREIRA",4,"AAAAAAA-"],["ELIAS BORGES DA CONCEICAO",21,"NNNNNN--"],["ELIAS DA COSTA SANTOS",4,"AAAAAAA-"],["ELIAS GUSTAVO LOPEZ",27,"NNNNNN--"],["ELIELSON SANTANA DE DEUS",40,"AAAAAAA-"],["ELIVALDO DIAS SILVA",42,"AAAAAA--"],["ELIZANDRO FERREIRA",1,"AAAAAAA-"],["ELLEN NOGUEIRA FERRAZ",19,"NNNNNN--"],["ELSE DE JESUS OLIVEIRA",28,"NNNNNNN-"],["ELVIS DA SILVA",30,"AAAAAA--"],["ELVIS OLIVEIRA DA SILVA",40,"AAAAAA--"],["ELVIS SANTOS GOMES DA SILVA",33,"AAAAAA--"],["ELZIRO RODRIGUES DOS SANTOS",9,"AAAAAAA-"],["EMANUEL BRASILEIRO RIBEIRO DA SILVA",39,"NNNNNN--"],["EMELSON BISPO SANTIAGO",38,"NNNNNNN-"],["EMERSON BASTOS DOS SANTOS JUNIOR",42,"AAAAAA--"],["EMILY AMARAL LIMA",43,"AAAAAAA-"],["ENES GONCALVES DE LIMA",27,"NNNNNNN-"],["ENIVALDO TEIXEIRA ESPINDOLA",25,"ANANNNN-"],["ERENILDO DE MOURA SOUSA",45,"NNNNNN--"],["ERENILSON ALVES DA FONSECA",1,"AAAAAAA-"],["ERICK JUNIO LEMOS",0,"AAAAAA-A"],["ERICK RODRIGO DANTAS SOARES",3,"AAAAAAA-"],["ERINALDO DA SILVA TEIXEIRA",42,"AAAAAAA-"],["ERIVALDO CARDOSO DA SILVA",42,"AAAAAA--"],["ERIVALDO SANTOS DA SILVA",34,"NNNNNNN-"],["ERIVANDO DA SILVA NOGUEIRA",45,"NNNNNNN-"],["ERLANDSON FERREIRA DOS SANTOS",37,"AAAAAAA-"],["ERNANES MESSIAS DE AMACENA",1,"NNNNNN--"],["EVANDRO FRANCA DE MORAIS",36,"AAAAAAA-"],["EVITON DA CRUZ SANTOS",36,"AAAAAAA-"],["FABIANA CRISTINA DE MORAIS DOS SANTOS",13,"AAAAAA--"],["FABIANA REIS DA SILVA",28,"AAAAAA--"],["FABIO ANDRADE DE SANTANA",42,"AAAAAA--"],["FABIO ANTONIO XAVIER",9,"AAAAAA--"],["FABIO CHAVES DE ANDRADE",2,"AAAAAAA-"],["FABIO JUNGER DA SILVA",1,"ANANNN--"],["FABIO PATRICK AVELINO FERREIRA SANTOS",30,"AAAAAA--"],["FABIO PEREIRA FAGUNDES",28,"AAAAAA-N"],["FABIO TORRES DE ARAUJO",31,"AAAAAAA-"],["FABRICIO DE JESUS SILVA",14,"AAAAAAA-"],["FABRICIO DOS SANTOS VIEIRA",26,"NNNNNNN-"],["FAGNER ARCANJO LEMOS SANTOS",43,"AAAAAA--"],["FAGNER ROBERTO OLIVEIRA DO CARMO",38,"AAAAAAA-"],["FARLEY CESAR PERES VELOSO",28,"AAAAAAA-"],["FELIPE BARRETO SILVA",38,"NNNNNN--"],["FELIPE CARDOSO DE ANDRADE VELAME",42,"AAAAAA--"],["FELIPE DAMACENA DA SILVA",42,"AAAAAAA-"],["FELIPE DOS SANTOS RODRIGUES SILVA",0,"AAAAAA--"],["FELIPE MANOEL DOS SANTOS",13,"AAAAAA-A"],["FELIPE RODRIGUES DE SOUSA",8,"AAAAAAA-"],["FERNANDA VEIGA GONCALVES",31,"AAAAAA--"],["FERNANDO ALVES SANTOS",30,"NNNNNN--"],["FERNANDO DIEGO CARDIM SANTOS",21,"NNNNNNN-"],["FERNANDO GONCALVES DIAS",7,"AAAAAAA-"],["FERNANDO PEREIRA DA SILVA",5,"AAAAAA-A"],["FERNANDO SILVA DO PRADO",34,"NNNNNN--"],["FERNANDO TEIXEIRA DOS SANTOS",19,"NNNNNNN-"],["FILIPE JORDAN DA SILVA",12,"NNNNNNN-"],["FILIPE OLIVEIRA DOS SANTOS",22,"AAAAAAA-"],["FLAVIA RIBEIRO SANTOS",7,"AAAAAA--"],["FLAVIA SILVA BATISTA",33,"AAAAAAA-"],["FLAVIANO DA SILVA CARVALHO",9,"AAAAAAAA"],["FLAVIO ANTONIO MIRANDA",27,"AAAAAAA-"],["FLAVIO SILVA PEREIRA",29,"AAAAAAA-"],["FRANCIELLY PAULA PEREIRA DE SOUZA",26,"NNNNNNN-"],["FRANCINALDO DE OLIVEIRA SILVA",34,"NNNNNN--"],["FRANCIO DOMINGOS DA SILVA",4,"NNNNNNN-"],["FRANCISCO DE PAULA SIQUEIRA",29,"NNNNNN--"],["FRANCISCO EUFRAZIO DA SILVA NETO",46,"AAAAAAA-"],["FRANCISCO MESSIAS ALVES",23,"NNNNNN--"],["FRANCISCO PEREIRA NETO",28,"AAAAAAA-"],["FREDISON DOS SANTOS",16,"AAAAAAA-"],["GABRIEL ALVES DA CRUZ",27,"ANANNNN-"],["GABRIEL ATAIDE ALVES PEREIRA",29,"NNNNNNN-"],["GABRIEL BARBOSA DOS SANTOS",42,"AAAAAA--"],["GABRIEL CHAVES DE LIMA",43,"AAAAAA-A"],["GABRIEL DE ALMEIDA FERNANDES",3,"AAAAAAN-"],["GABRIEL DE PAIVA TEOFILO",27,"AAAAAA-A"],["GABRIEL EDUARDO MARQUES DOS SANTOS",18,"AAAAAA--"],["GABRIEL GONCALVES DE OLIVEIRA",11,"NNNNNNN-"],["GABRIEL GONCALVES NERES",19,"NNNNNNN-"],["GABRIEL HENRIQUE SILVA SANTOS",47,"ANNNNN--"],["GABRIEL HENRIQUE TUROLA SILVA",24,"NNNNNNN-"],["GABRIEL LUIZ ALVES MARANHO",29,"NNNNNN--"],["GABRIEL OLIVEIRA DE MOURA",11,"NNNNNNN-"],["GABRIEL RODRIGUES SOARES",12,"AAAAAAA-"],["GABRIEL XAVIER DE ALMEIDA",34,"NNNNNN--"],["GABRYEL ALAN FERREIRA SANTOS",25,"NNNNNN--"],["GEAN CORDEIRO",19,"NNNNNNN-"],["GEAN DOS SANTOS BRITO",38,"NNNNNN--"],["GEAN SENA ARAUJO",42,"ANANNNN-"],["GENILDO OLIVEIRA NUNES",38,"AAAAAAA-"],["GENILSON APARECIDO FERREIRA",29,"NNNNNNN-"],["GENILSON ROCHA ANDRADE",38,"NNNNNN--"],["GENIVAL BISPO DOS SANTOS",37,"ANNNNNN-"],["GENIVAL PEREIRA DA SILVA",36,"AAAAAAA-"],["GENTIL MARTINS DOS SANTOS",28,"NNNNNN--"],["GEORGE MOREIRA DA SILVA",38,"AAAAAA--"],["GEOVANE LIMA DOS SANTOS",43,"AAAAAAA-"],["GERALDO DAVIDSON VITORIANO SANTOS",29,"NNNNNNN-"],["GERALDO DO CARMO",43,"NNNNNN--"],["GERALDO MAGELA FLORENCIO",28,"AAAAAAA-"],["GERALDO MARCOS ALVES DOS SANTOS",8,"AAAAAAA-"],["GERALDO SANTOS SILVA",11,"NNNNNN--"],["GERSON RODRIGO SANTOS SOUZA",29,"NNNNNN--"],["GESIVALDO BARBOSA NASCIMENTO",29,"NNNNNN--"],["GETULIO DE BRITO MOREIRA",37,"AAAAAAA-"],["GILBERTO AZI JUNIOR",8,"AAAAAA--"],["GILBERTO COELHO BRANDAO",11,"AAAAAAA-"],["GILBERTO GIL SOUSA SANTOS",43,"AAAAAA--"],["GILBERTO OLIVEIRA ROCHA",46,"AAAAAAA-"],["GILCIMAR SANTOS GONCALVES",42,"AAAAAA--"],["GILDO BARBOSA DOS REIS",11,"NNNNNNN-"],["GILDO BARROS DE OLIVEIRA",34,"NNNNNNN-"],["GILLIARD AGUIAR DOS SANTOS JUNIOR",16,"AAAAAA--"],["GILMAR ANTONIO DA COSTA",28,"NNNNNNN-"],["GILMAR DE ASSIS BARBOSA",26,"NNNNNN--"],["GILMAR DOS SANTOS GONCALVES",42,"AAAAAA--"],["GILMAR SANTANA DA SILVA",42,"AAAAAA--"],["GILSON BASTOS DE JESUS ROCHA",29,"ANNNNN--"],["GILSON DA SILVA SANTIAGO",42,"AAAAAAA-"],["GILSON PAES PEREIRA JUNIOR",10,"NNNNNN--"],["GILSON QUEIROZ DA SILVA JUNIOR",42,"AAAAAAA-"],["GILSON RAIMUNDO DE BARROS",6,"ANNNNNN-"],["GILSON SANTANA NERI",45,"AAAAAAA-"],["GILSON SANTOS DE SOUZA",21,"NNNNNNN-"],["GILTON DOS SANTOS CARDOSO",45,"AAAAAA--"],["GILVAN DA SILVA SOUSA",35,"AAAAAAA-"],["GILVANDO QUEIROZ",40,"NNNNNNN-"],["GIRLANDE FERREIRA SANTOS",7,"AAAAAA--"],["GIVANALDO JESUS DOS SANTOS",42,"AAAAAAA-"],["GIVANILDO SANTOS SANTANA",45,"AAAAAA--"],["GLEISON TELES SANTOS",46,"AAAAAA--"],["GRAZIELLE STEFANE CRUZ",24,"NNNNNN--"],["GUILHERME DE MACEDO PEREIRA",14,"AAAAAA--"],["GUILHERME DE SOUZA FRANCO",27,"AAAAAA--"],["GUILHERME HENRIQUE MIRANDA DE SOUZA",45,"AAAAAA--"],["GUILHERME HENRIQUE VINHA SILVA",5,"NNNNNNN-"],["GUSTAVO HENRIQUE DE MORAES",24,"ANNNNNN-"],["GUSTAVO PEREIRA SANDRES",8,"AAAAAAA-"],["HAMILTON NUNES ALECRIM",33,"NNNNNN-N"],["HAMILTON VIEIRA LIMA",43,"AAAAAA--"],["HAROLDO CORDEIRO DA SILVA",28,"AAAAAAA-"],["HEBERT RODRIGUES DE OLIVEIRA",31,"AAAAAAA-"],["HELBER PEREIRA RAMOS",32,"AAAAAA-A"],["HELIO RODRIGUES DOS SANTOS FERREIRA",21,"AAAAAA--"],["HENRIQUE DIAS FERREIRA",35,"AAAAAA--"],["HENZO RODRIGUES FIGUEIREDO",7,"AAAAAAA-"],["HERBERT QUEIROZ DOS SANTOS AMARAL",37,"AAAAAA--"],["HERBERT TIMOTEO LEITE",30,"AAAAAAA-"],["HERBERTH KENNEDY RODRIGUES DE SOUZA MARTINS",28,"AAAAAAA-"],["HILDEBERTO TEIXEIRA GONCALVES",21,"NNNNNN--"],["HIURE LEAL RIBEIRO",45,"AAAAAA--"],["HUGO RAPHAEL DE SOUZA FERNANDES",25,"NNNNNNN-"],["IARA DE SOUZA SILVA",25,"NNNNNN--"],["IARLEI EXPEDITO DE SOUZA COSTA",31,"NNNNNNN-"],["IDALECIO COELHO ANDRADE",3,"AAAAAAA-"],["IDELVAN ANDRADE DE FREITAS",14,"NNNNNN--"],["IDENILSON MARTINS DOS SANTOS",24,"NNNNNNN-"],["IEDA SILVA DE ALMEIDA",31,"AAAAAA--"],["IGOR EDUARDO DOS SANTOS SILVA",13,"AAAAAAA-"],["IHAGO GERBSON RODRIGUES DA SILVA",31,"AAAAAA--"],["ILDEMAR LUIZ PEREIRA",9,"AAAAAAA-"],["INACIO MARES NUNES",7,"AAAAAA--"],["IRENE APARECIDA MARTINS GOMES",28,"AAAAAA--"],["IRONI REIS ROSA",41,"AAAAAA--"],["ISAAC JHONAS DOS SANTOS SILVA",28,"AAAAAAA-"],["ISAAC NILTON BISPO SILVA",17,"NNNNNNN-"],["ISLAN ALVES CERQUEIRA",38,"NNNNNN--"],["ISNALDO NUNES DE ALMEIDA",8,"AAAAAAA-"],["ISRAEL SILVA NASCIMENTO",17,"NNNNNN-N"],["ISRAEL ZIMMERER CARDOSO",20,"AAAAAA--"],["ITELMAR GONÇALVES DE QUEIROZ",28,"AAAAAAA-"],["IURI COSTA GOMES DA SILVA",11,"AAAAAA--"],["IURY PEREIRA DOS SANTOS",0,"AAAAAA--"],["IVANILSON DA SILVA SOUZA",38,"ANNNNNN-"],["IVESON OLIVEIRA SANTOS",21,"NNNNNNN-"],["IVO DIAS GONCALVES",41,"ANANNNN-"],["IZAIAS TEIXEIRA DOS SANTOS",8,"AAAAAAA-"],["JACKSON MOTA DE JESUS",30,"NNNNNN--"],["JACSON ANDRADE SILVA DOS SANTOS",41,"AAAAAA--"],["JADIR REIS CARDOSO",42,"AAAAAA--"],["JADSON CARVALHO BOMFIM",20,"NNNNNNN-"],["JAERBSON LOPES DA SILVA",28,"AAAAAAA-"],["JAGUARACI DOS SANTOS FERREIRA",21,"NNNNNNN-"],["JAILSON DA SILVA NASCIMENTO SANTIAGO",38,"NNNNNN--"],["JAILSON LIMA DOS SANTOS",43,"AAAAAA--"],["JAILTON DE JESUS MENDES",43,"AAAAAA--"],["JAILTON DE JESUS SANTANA",38,"NNNNNN--"],["JAILTON DE JESUS SANTOS",16,"AAAAAAA-"],["JAIME MELO SILVA SOUZA",28,"NNNNNNN-"],["JAIR PEREIRA",0,"AAAAAAA-"],["JAIR PEREIRA ARAUJO",36,"AAAAAAA-"],["JAIR ROBERTO NOGUEIRA SANTOS",42,"AAAAAAA-"],["JAIRO GOMES DA SILVA",5,"AAAAAAA-"],["JAIRO SANTIAGO DA SILVA",19,"NNNNNNN-"],["JAKSON PEREIRA SILVA SA",28,"AAAAAA--"],["JAMILSON DONIZETI DA SILVEIRA",23,"NNNNNNN-"],["JANFERSON BORGES GONÇALVES",7,"AAAAAA--"],["JANIELE DE SOUZA SILVA",25,"ANNNNNN-"],["JANIO SILVA ALCANTARA",33,"AAAAAAA-"],["JARBAS DIEGO DIAS OLIVEIRA",32,"NNNNNN-N"],["JARBAS FERREIRA DOS SANTOS",1,"ANANNN--"],["JARLESON DOS SANTOS ARAUJO",13,"AAAAAA--"],["JASON SOUZA MEIRA",46,"AAAAAAA-"],["JEAN LIMA MENDES",33,"AAAAAA--"],["JEAN MARCOS SILVA",24,"AAAAAA--"],["JEFERSON DA CONCEICAO SOUZA",42,"AAAAAA--"],["JEFFERSON DOS SANTOS RIBEIRO",8,"AAAAAA--"],["JEFFSON DE JESUS SALES",38,"NNNNNN--"],["JEOVANE ALVES VIANA",33,"AAAAAA--"],["JERFFSON JOSE NEVES DE CARVALHO",22,"AAAAAA--"],["JERYSSON DE ALMEIDA DOLINO",6,"NNNNNNN-"],["JESIVALDO SILVA DE OLIVEIRA",34,"NNNNNNN-"],["JHONATAN DE PAULA NASCIMENTO",28,"AAAAAA--"],["JHONATAS MARTINS ROSA",23,"NNNNNN--"],["JHONY RIBEIRO MENDES ANDRADE",11,"AAAAAA--"],["JIDEON BASTOS DE SOUZA JUNIOR",34,"AAAAAA--"],["JILDEAN DOS SANTOS CARDOSO",41,"AAAAAA--"],["JILMAR GAMA DE OLIVEIRA",18,"AAAAAAA-"],["JIVANILDO DOS SANTOS GOUVEIA",18,"ANANNNN-"],["JIVANILDO ROCHA BARBOSA",28,"AAAAAA-A"],["JOALISSON SANTANA CARLOS MACEDO",18,"AAAAAAA-"],["JOAO ALFREDO NICESIO MOREIRA",12,"AAAAAA--"],["JOAO BATISTA COSTA ALVES",30,"NNNNNNN-"],["JOAO BRITO DE ARGOLO",45,"AAAAAAA-"],["JOAO CARLOS DA CRUZ NASCIMENTO",38,"AAAAAAA-"],["JOAO CARLOS DE JESUS DOS SANTOS",13,"AAAAAAA-"],["JOAO CARLOS VIEIRA JOAQUIM",43,"ANANNN-N"],["JOAO CRISTIAN CORREIA GONCALVES",26,"NNNNNN--"],["JOAO DE DEUS SOUZA ALVES",41,"AAAAAA-A"],["JOAO EDUARDO NUNES",29,"NNNNNN--"],["JOAO FRANCISCO DOS SANTOS",11,"NNNNNN--"],["JOAO LUCAS DE SANTANA PEIXINHO CARDOSO",14,"AAAAAA--"],["JOAO MARCOS SANTOS SANTANA",26,"AAAAAAA-"],["JOAO MENDES DE SOUSA",43,"NNNNNN--"],["JOAO PAULO ALVES FERNANDES",11,"NNNNNN--"],["JOAO PAULO BRANDAO DOS SANTOS",45,"ANNNNN--"],["JOAO PAULO CAMPOS SILVA",46,"AAAAAA--"],["JOAO PEDRO FERREIRA PELEGRINI",27,"AAAAAA--"],["JOAO SANTOS ROCHA",11,"NNNNNN--"],["JOAO VITOR FERREIRA ALMEIDA",13,"AAAAAA--"],["JOAO VITOR SILVA ANDRADE",38,"NNNNNNN-"],["JOAO VITOR TELES SILVA",4,"NNNNNN--"],["JOÃO PAULO JESUS DA SILVA DOS SANTOS",22,"NNNNNNN-"],["JOEL JORGE DE OLIVEIRA CORREA",26,"NNNNNN-N"],["JOEL MARCOS DE SIQUEIRA",12,"AAAAAAA-"],["JOELSON CARVALHO DA ANUNCIACAO",36,"AAAAAA-A"],["JOHNNATA HENRIQUE SANTOS SOUZA",30,"NNNNNN--"],["JOILSON MORAES SOUZA",42,"AAAAAAA-"],["JOILSON PASSOS CUNEGUNDES",34,"NNNNNNN-"],["JOILSON SARDINHA DE OLIVEIRA",20,"NNNNNN--"],["JONAS DA CRUZ SILVA",21,"AAAAAAA-"],["JONAS MINERVINO DA SILVA",13,"AAAAAAA-"],["JONATAS MAICO DA SILVA",19,"ANANNN-N"],["JONATAS SILVA SANTOS",21,"NNNNNNN-"],["JONATHAN DAVID DOS SANTOS",47,"AAAAAAA-"],["JONATHAN ROBERTO DOS SANTOS",10,"NNNNNNN-"],["JONATHAS KEWIN ARAUJO RIBEIRO",48,"NNNNNN--"],["JORDÃO FERREIRA DE SOUZA",28,"NNNNNN--"],["JORDSON MARCOS COSTA REIS",30,"AAAAAAA-"],["JORGE PAULA DOS SANTOS",45,"AAAAAA--"],["JOSANIA CRISTINA DA SILVA",3,"AAAAAA--"],["JOSE ABADE SANTOS",35,"AAAAAAA-"],["JOSE ADRIANO VIEIRA LISBOA",7,"AAAAAAA-"],["JOSE ANGELO DOS SANTOS FILHO",16,"AAAAAA-A"],["JOSE ANTONIO FERNANDES DE SOUZA",31,"AAAAAAA-"],["JOSE ANTONIO LIRIO",12,"AAAAAA--"],["JOSE ANTONIO MATIAS",2,"NNNNNN--"],["JOSE ARNOBIO FERREIRA DA SILVA",13,"AAAAAAA-"],["JOSE AUGUSTO ALVES BORGES RAMOS",28,"AAAAAAA-"],["JOSE AUGUSTO DOS SANTOS",13,"AAAAAA--"],["JOSE BISPO DA SILVA",38,"AAAAAAA-"],["JOSE CARLOS DE JESUS",19,"NNNNNN--"],["JOSE CARLOS DE OLIVEIRA ALMEIDA",40,"AAAAAAA-"],["JOSE CARLOS DIAS",2,"NNNNNNN-"],["JOSE CARLOS FERREIRA",9,"AAAAAA--"],["JOSE CLAUDIO PEREIRA DA SILVA",2,"NNNNNN--"],["JOSE DOS REIS OLIVEIRA",30,"AAAAAA-A"],["JOSE DOS REIS SILVA NUNES",30,"ANANNNN-"],["JOSE DOS SANTOS NUNES",38,"NNNNNNN-"],["JOSE EDILSON DA SILVA",11,"AAAAAAA-"],["JOSE EDUARDO DE SOUZA",44,"AAAAAAA-"],["JOSE FABIANO DA SILVA",9,"AAAAAAN-"],["JOSE FELICIO FILHO",21,"NNNNNNN-"],["JOSE FERNANDES DA SILVA",46,"AAAAAA--"],["JOSE FERREIRA DA CRUZ",28,"AAAAAAA-"],["JOSE FRANKLIN FERREIRA DO CARMO FILHO",21,"NNNNNNN-"],["JOSE GERALDO RODRIGUES JUNIOR",32,"ANANNN--"],["JOSE HENRIQUE BRITO OLIVEIRA",43,"AAAAAAA-"],["JOSE HENRIQUE REIS LIMA",43,"AAAAAAA-"],["JOSE JULIO CARDOSO DOS SANTOS",28,"AAAAAAA-"],["JOSE LUIZ SANTOS CERQUEIRA",1,"AAAAAAA-"],["JOSE MARCIEL PEREIRA DA SILVA",22,"NNNNNNN-"],["JOSE MARIA DE ASSIS MENDONCA",5,"AAAAAAA-"],["JOSE MARIA FERREIRA DOS SANTOS",12,"AAAAAAA-"],["JOSE NILTON DE SOUZA",30,"NNNNNN--"],["JOSE NILTON SOUZA DE OLIVEIRA",41,"NNNNNNN-"],["JOSE PAULO DE JESUS SANTOS",33,"AAAAAAA-"],["JOSE RAIMUNDO DOS SANTOS SOUZA",16,"AAAAAA--"],["JOSE RODRIGUES LORIANO MOREIRA",1,"AAAAAAA-"],["JOSE ROQUEM GONCALVES JUNIOR",5,"AAAAAAA-"],["JOSE VIEIRA DE SOUZA FILHO",11,"AAAAAAA-"],["JOSEMAR FERREIRA DOS SANTOS",7,"AAAAAAA-"],["JOSEMILTOM SOUZA DE ALMEIDA",42,"AAAAAAA-"],["JOSENILDO ALVES BASTOS",41,"AAAAAA-A"],["JOSENILTO DOS SANTOS SILVA",45,"AAAAAAA-"],["JOSENILTO SANTANA DE JESUS",45,"AAAAAAA-"],["JOSENILTON DE ALMEIDA CONCEIÇÃO",38,"ANNNNNN-"],["JOSÉ EDNO GONÇALVES DIAS",29,"NNNNNN--"],["JOSIMAR WESLEY SILVA BESSA",47,"NNNNNNN-"],["JOSUE LIMA DA SILVA DE JESUS",42,"AAAAAA--"],["JOSUE NASCIMENTO DOS SANTOS E SILVA FILHO",45,"AAAAAAA-"],["JOSUEL ISABEL DOS SANTOS",18,"AAAAAA--"],["JUAREZ QUEIROZ CERQUEIRA",40,"AAAAAAA-"],["JUCIAN CARDOSO REIS CARDOSO",45,"AAAAAA--"],["JUDERSON DOURADO DE ARAUJO",44,"ANANNNN-"],["JUDICAEL SANTANA DA ANUNCIAÇAO",36,"AAAAAA--"],["JULIANA APARECIDA CLARENTINO SANTOS",25,"NNNNNN--"],["JULIANE VIANA DE SOUSA",43,"AAAAAA--"],["JULIANO DE JESUS MARTINS",28,"AAAAAAA-"],["JULIANO LIMA DOS ANJOS",43,"AAAAAAA-"],["JULIO CESAR ALMEIDA REGIS",25,"NNNNNNN-"],["JULIO CESAR DAS NEVES",10,"AAAAAAA-"],["JULIO CESAR MIRANDA DA ROCHA",6,"AAAAAAN-"],["JULIO CESAR PEREIRA DE ALMEIDA",47,"AAAAAAA-"],["JULIO CEZAR DOS SANTOS",42,"AAAAAA--"],["JULIO CEZAR MENDES DOS SANTOS",1,"NNNNNNN-"],["JULIO LIMA JUNIOR",21,"NNNNNN--"],["JULISSON VIEGA PEREIRA",1,"AAAAAA--"],["JUNIOR CHAVES DO NASCIMENTO",0,"AAAAAA-N"],["JUNIOR DOS SANTOS SANTANA",40,"NNNNNNN-"],["JUNIOR MARTINS DOS SANTOS",19,"NNNNNNN-"],["JURACI TEIXEIRA BARROS",43,"AAAAAAA-"],["JURANDIR DE JESUS DOS SANTOS",45,"AAAAAA--"],["JUSCELINO CERQUEIRA ARAUJO",40,"AAAAAAA-"],["JUSCELIO MOREIRA CHAVES",7,"ANANNNN-"],["JUSCIMAR DE JESUS OLIVEIRA",37,"AAAAAA--"],["JUSSARA APARECIDA PEREIRA DA COSTA",24,"NNNNNN--"],["JUSSARA ROBERTA ABREU DE CAMARGO",27,"AAAAAAA-"],["KAMILLO MOURA DE SOUZA",20,"AAAAAA--"],["KARISSON ENRIQUE SIQUEIRA DE BRITO",34,"NNNNNN--"],["KAUAN GABRIEL GOMES SILVA",32,"AAAAAA--"],["KAWAM DA COSTA FREIRE",25,"AAAAAA--"],["KÁLITA RAYSSA SOUZA COSTA",44,"NNNNNN--"],["KEMERSON WALLA ROSA",28,"AAAAAA--"],["KENIO JÚNIOR PEREIRA DA SILVA",19,"NNNNNNN-"],["KENNEDY SILVA EPIFANIO",5,"AAAAAA-A"],["KENNEDY VIEIRA DE SOUZA",1,"AAAAAA--"],["KEROLAINE BATISTA NASCIMENTO",31,"ANNNNNN-"],["KEVIN SOUSA FERREIRA",18,"AAAAAAA-"],["KEYLLA SILVA LIMA",44,"AAAAAA--"],["KLEVERSON TEODORO DA SILVA",4,"NNNNNN--"],["LAUDIE BERNARDO ASSIS DE OLIVEIRA",25,"AAAAAAN-"],["LAURILENE SIRIANO BORGES",44,"NNNNNNN-"],["LAURO VINICIUS RAMOS SOBRINHO",44,"NNNNNN-N"],["LAZARO ENRICO CUPERTINO MAIA",8,"AAAAAA--"],["LAZARO NEVES DOS SANTOS",16,"AAAAAAA-"],["LEANDRA SOUSA FIGUEIREDO CORDEIRO",28,"NNNNNN--"],["LEANDRO BATISTA LIMA DOS SANTOS",33,"AAAAAA--"],["LEANDRO DOS SANTOS GONÇALVES",38,"AAAAAAA-"],["LEANDRO GERALDO DA SILVA",11,"NNNNNN--"],["LEANDRO OLIVEIRA FRANCO",0,"NNNNNN--"],["LEANDRO PEREIRA LIMA",43,"AAAAAAA-"],["LEANDRO QUEIROZ DOS SANTOS",22,"AAAAAAA-"],["LEANDRO RODRIGUES DE ALMEIDA",11,"NNNNNN--"],["LEANDRO SANTOS FRANCA",43,"AAAAAAA-"],["LEILA MARTINS DE OLIVEIRA",10,"AAAAAAA-"],["LEONAM LOPES FERNANDES",10,"AAAAAA--"],["LEONARDO ALVES BOTELHO",30,"NNNNNN--"],["LEONARDO AUGUSTO NOGUEIRA DE MIRANDA",23,"NNNNNN--"],["LEONARDO DE MELO DA SILVA",24,"AAAAAAA-"],["LEONARDO FERREIRA DA SILVA",28,"AAAAAAA-"],["LEONARDO GOMES PEREIRA",32,"AAAAAA--"],["LEONARDO HONORIO DE JESUS",1,"AAAAAA--"],["LEONARDO MOREIRA ALVES",1,"AAAAAAA-"],["LEONARDO PINHEIRO BARBOSA DA SILVA",42,"AAAAAA--"],["LEONES ASSUNCAO OLIVEIRA",33,"AAAAAA--"],["LEVI PEREIRA DE SOUZA",21,"AAAAAAA-"],["LIDIO ALVES DE ALMEIDA FILHO",11,"NNNNNN--"],["LIRIOVAN DOS SANTOS COUTO",16,"NNNNNN--"],["LOREN GABRIELY CRUZ FIGUEIREDO",29,"NNNNNN--"],["LORENA NOGUEIRA ROCHA",23,"NNNNNN--"],["LOURIVAL DE JESUS SILVA",45,"NNNNNN--"],["LOURIVAL JOSE BARRETO FILHO DO ESPIRITO SANTO",19,"NNNNNN--"],["LUAM RICHARD PEREIRA DE SOUZA",26,"ANANNN--"],["LUAN ALVES SALOMAO",7,"AAAAAAA-"],["LUANA THAYLINE FERREIRA CRUZ",29,"AAAAAA--"],["LUCAS ALVES RIBEIRO",45,"AAAAAA-A"],["LUCAS ANDRADE SOUZA",30,"AAAAAAA-"],["LUCAS DA PAIXAO SANTANA SANTOS",38,"NNNNNN--"],["LUCAS ESTEVAO DA SILVA",1,"AAAAAAA-"],["LUCAS GOMES SANTANA",19,"NNNNNN--"],["LUCAS LUCAS PIMENTA ALVES",29,"NNNNNN--"],["LUCAS SANTOS EVANGELISTA",15,"AAAAAA--"],["LUCAS SILVA SANTOS",16,"AAAAAAA-"],["LUCAS VENANCIO GONCALO",12,"AAAAAAA-"],["LUCAS WASHINGTON SOARES",28,"NNNNNN--"],["LUCIAN CAMPOS DE ASSIS",19,"NNNNNN--"],["LUCIANO BRITO DOS SANTOS",16,"AAAAAAA-"],["LUCIANO FIRMINO DOS SANTOS",22,"AAAAAAA-"],["LUCIANO JESUS DOS SANTOS",21,"AAAAAA--"],["LUCIANO MATEUS GONCALVES TEIXEIRA",27,"AAAAAAA-"],["LUCIANO PEREIRA MENDES",30,"NNNNNN--"],["LUCIANO ROCHA DA SILVEIRA",34,"NNNNNNN-"],["LUCIANO SARDINHA EVANGELISTA",38,"ANNNNN--"],["LUCIENE DUARTE SILVA",28,"AAAAAA--"],["LUCIMAR GONCALVES",31,"AAAAAAA-"],["LUCIMAR SOARES DE MELO",0,"AAAAAAA-"],["LUCIO GABRIEL GUIMARAES MACIEL",26,"ANNNNNN-"],["LUDSON VIRIATO DA SILVA",9,"ANANNNN-"],["LUIS CARLOS ALVES DA SILVA",42,"AAAAAAA-"],["LUIZ ALBERTO PEREIRA DOS SANTOS",42,"AAAAAAA-"],["LUIZ BRITO SILVA",21,"NNNNNN-N"],["LUIZ CARLOS CAMPOS DE ANDRADE",45,"AAAAAA--"],["LUIZ CARLOS CORDEIRO DOS SANTOS",25,"AAAAAAA-"],["LUIZ CARLOS DOS SANTOS",8,"ANANNNN-"],["LUIZ CARLOS PEREIRA BARBOSA",38,"NNNNNN--"],["LUIZ CLAUDIO DOS SANTOS",10,"ANNNNN-N"],["LUIZ FELIPE RIBEIRO DE PAIVA",27,"AAAAAAA-"],["LUIZ HENRIQUE SOUZA FONSECA",36,"AAAAAA--"],["LUIZ MOREIRA DOS SANTOS",1,"AAAAAA-A"],["LUIZ PAULO LOPES",24,"AAAAAAA-"],["LUKELINO SANTOS SAMPAIO",38,"NNNNNN-N"],["MACEDO PEREIRA DE LIMA",28,"AAAAAA-A"],["MACIEL SILVA ALVES",46,"AAAAAA--"],["MAICON CHAVES BRAGA",7,"AAAAAAA-"],["MAICON PEREIRA LOPES",27,"NNNNNNN-"],["MALU MARIA DA SILVA ROCHA",25,"NNNNNN--"],["MANOEL MISSIAS MARQUES DE SOUZA",24,"AAAAAA--"],["MANOEL WERICO DOS SANTOS",30,"NNNNNNN-"],["MARCELO DE OLIVEIRA EVARISTO",47,"NNNNNNN-"],["MARCELO GOMES FERREIRA",1,"NNNNNN--"],["MARCELO LIMA DE SOUZA",3,"AAAAAA--"],["MARCELO MOREIRA LEMOS",33,"AAAAAA--"],["MARCELO SPINOLA JUNIOR",28,"AAAAAA--"],["MARCELO TEIXEIRA DE SANTANA",38,"AAAAAAA-"],["MARCIEL SERIANO BARBOSA",44,"NNNNNNN-"],["MARCIO DE SOUZA AMORIM",20,"NNNNNN--"],["MARCIO GLEI ALMEIDA SANTOS",47,"NNNNNNN-"],["MARCIO HENRIQUE PEREIRA MARQUES",31,"NNNNNNN-"],["MARCIO JOSE DE SANTANA SANTOS",45,"AAAAAA--"],["MARCIO OLIVEIRA DA SILVA",28,"AAAAAAA-"],["MARCIO RIVELINO DE LIMA",32,"AAAAAAA-"],["MARCO AURELIO FUNCHAL SANTOS",23,"NNNNNNN-"],["MARCONE GOMES DOS SANTOS",19,"NNNNNN--"],["MARCONE RIBEIRO SANTOS",45,"NNNNNN-N"],["MARCONES CAETANO ALVES",11,"AAAAAA-A"],["MARCOS ARON NOGUEIRA CINTRA JUNIOR",17,"NNNNNN--"],["MARCOS CHAVES CRUZ",21,"NNNNNN--"],["MARCOS DOS SANTOS",19,"NNNNNN--"],["MARCOS HENRIQUE GONCALVES DE ALMEIDA",11,"NNNNNN--"],["MARCOS POLICARPO DA COSTA FILHO",1,"AAAAAAA-"],["MARCOS RAMALHO PARDIM",5,"AAAAAA--"],["MARCOS ROBERTO GONCALVES FERREIRA",29,"ANANNNN-"],["MARCOS SILVA SOUZA",20,"NNNNNNN-"],["MARCOS VINICIUS MENDES DE SOUZA",28,"AAAAAAA-"],["MARCOS VITOR SANTOS DE ALMEIDA",38,"ANNNNN-N"],["MARCOS WILLIAN DOS SANTOS VALERIO",21,"NNNNNNN-"],["MARCOS WINTER DE AGUIAR PINHEIRO",32,"AAAAAA--"],["MARCUS PAULO LISBOA DA MOTA",28,"NNNNNNN-"],["MARCUS VINICIUS BARBOSA DE ARAUJO",11,"AAAAAAA-"],["MARCUS VINICIUS CAMPOS SILVA",21,"ANANNN--"],["MARIA CRISTINA OLIVEIRA DE JESUS",26,"AAAAAA--"],["MARIA EDUARDA RIBEIRO ANDRADE",12,"NNNNNN--"],["MARIA EDUARDA ROCHA VITORIA",28,"AAAAAA--"],["MARIANA NAVES DE SOUZA",25,"NNNNNN--"],["MARIANA SANTOS OLIVEIRA",43,"AAAAAAA-"],["MARILZA ALVES DOS SANTOS",26,"AAAAAA--"],["MARINALDO COSTA DOS SANTOS",45,"AAAAAA--"],["MARIO NOGUEIRA OLIVEIRA",42,"AAAAAA-A"],["MARIVAL BISPO DE JESUS",42,"AAAAAAA-"],["MARIVALDO SILVA MARTES",45,"AAAAAAN-"],["MARLON BRUNO DOS SANTOS",4,"ANANNN--"],["MARTINHO GAMA",21,"NNNNNN--"],["MATEUS PEREIRA NERES",12,"NNNNNN--"],["MATEUS VITOR ALMEIDA OLIVEIRA",38,"NNNNNN--"],["MATHEUS DA SILVA DE JESUS",20,"NNNNNN--"],["MATHEUS DA SILVA DOS SANTOS",16,"AAAAAA--"],["MATHEUS DE LUCAS MESSIAS DA SILVA SANTANA",44,"NNNNNNN-"],["MATHEUS DE SOUZA RODRIGUES QUIRINO",4,"NNNNNN--"],["MATHEUS HENRIQUE COSTA ALVES",3,"AAAAAA--"],["MATHEUS JOSE DE PAULA CASSIANO",23,"NNNNNN-N"],["MATHEUS JUNIO FERREIRA SANTOS",25,"ANANNNN-"],["MATHEUS SILVA SANTOS",14,"AAAAAAA-"],["MATOSALEM PEREIRA DE OLIVEIRA",6,"NNNNNNN-"],["MAUREDSON MIRANDA MELO DE SOUZA",11,"NNNNNNN-"],["MAURICIO DE JESUS SANTOS",22,"AAAAAA--"],["MAURICIO NUNES DOS SANTOS",37,"AAAAAAA-"],["MAURICIO SENA CAMPOS",43,"AAAAAA--"],["MAURO GOMES DA SILVA",2,"AAAAAA--"],["MAX DE SOUZA DOS SANTOS",22,"AAAAAA-A"],["MAX OLIVEIRA ROCHA",8,"NNNNNN-N"],["MAXWELL SILVA MENDES",43,"AAAAAA--"],["MESSIAS DE SANTANA SANTOS",37,"AAAAAA--"],["MESSIAS JULIO NUNES SALOMAO",7,"AAAAAA--"],["MESSIAS MARTINS DA SILVA",27,"AAAAAA--"],["MICAEL PEREIRA REIS",36,"AAAAAA--"],["MICAEL REGIS ALMEIDA",14,"AAAAAA--"],["MICHEL WERLICH DE OLIVEIRA PORTILHO",10,"AAAAAA--"],["MIGUEL GONCALVES MIRANDA NETO",45,"NNNNNNN-"],["MIKAEL NATA ALVES DE CARVALHO",28,"NNNNNNN-"],["MILTON MARTINS GONCALVES",3,"AAAAAA--"],["MIRANDIR FERREIRA DA SILVA",11,"NNNNNN--"],["MIRELLY SILVA ARAUJO",31,"AAAAAA--"],["MOISES ARAUJO NASCIMENTO",21,"AAAAAA--"],["MOISES CARDOSO DOS SANTOS",42,"AAAAAA--"],["MOISES HENRIQUE PEREIRA BRANDAO",11,"ANANNN--"],["MOIZES DE CARVALHO CASAES",37,"AAAAAA--"],["NADIR NELIA ALMEIDA DOS SANTOS",42,"AAAAAA--"],["NAILTON ANDRADE DOS SANTOS",38,"NNNNNN--"],["NALBERT SILVA BENTO",33,"AAAAAA--"],["NARDSON FERREIRA ANDRADE",7,"AAAAAA--"],["NATANAEL ALVES PEREIRA",11,"NNNNNN--"],["NATHA ANDRADE DE OLIVEIRA",45,"AAAAAA--"],["NAYANE SOUZA DE ANDRADE",42,"AAAAAA--"],["NAYARA DA SILVA GONCALVES",24,"NNNNNN--"],["NAYARA JULIA DE FARIA",23,"NNNNNN--"],["NEIANDERSON FERREIRA DIAS",35,"NNNNNNN-"],["NEISON HENRIQUE QUEIROZ DE ALMEIDA",24,"AAAAAAN-"],["NEIVSON FABRICIO SILVA DA SILVA",41,"AAAAAA--"],["NELIO DE SOUSA",43,"AAAAAA--"],["NELIO VIEIRA DE SOUZA",12,"AAAAAAA-"],["NELSON CARDOSO DOS SANTOS NETO",38,"AAAAAAA-"],["NICHOLAS INEZ BOAVENTURA SANTOS",4,"NNNNNN--"],["NICODEMOS SILVA PAIXAO FILHO",18,"AAAAAA--"],["NICOLAS JUNIO FIGUEREDO SANTOS",3,"AAAAAAA-"],["NIELSON COUTO MOTA",21,"NNNNNNN-"],["NILSON DA SILVA MAIA",8,"AAAAAA--"],["NILSON FERNANDES LIMA",30,"NNNNNN--"],["NILTON CESAR ALVES DE MACEDO",17,"NNNNNN--"],["NIVALDO MOREIRA DE SOUZA JUNIOR",35,"AAAAAA--"],["NIVALDO QUEIROZ NASCIMENTO",41,"AAAAAA--"],["NIZALDO SANTOS DA SILVA",34,"NNNNNN--"],["NOE ALVES SOUSA",43,"AAAAAA--"],["NORIVAL OLIVEIRA DINIZ",23,"NNNNNNN-"],["ODAIR DO PRADO GONCALVES",27,"AAAAAA--"],["ODILON SILVA SANTOS",28,"AAAAAAA-"],["OSCAR BRENER MARQUES DE MACEDO",44,"AAAAAAA-"],["OSEIAS JUNIOR DE SOUZA",4,"NNNNNN--"],["OSMAN ROCHA BASTOS",42,"AAAAAAA-"],["OSMAR PEREIRA DA SILVA JUNIOR",31,"AAAAAA-A"],["OSVALDO LUCAS COSTA  ALVES",30,"NNNNNN--"],["OTAVIANO LUIZ MAGALHAES PEREIRA",8,"AAAAAA--"],["OTAVIO FABIAN FERREIRA DA COSTA",24,"NNNNNNN-"],["PABLO DIEGO RIBEIRO GONCALVES",28,"AAAAAAA-"],["PABLO HENRIQUE DE JESUS LAUREANO",15,"AAAAAAA-"],["PASCASSIO SOUZA DO COUTO",45,"AAAAAAN-"],["PASCOAL DOS SANTOS GONCALVES DE SOUZA",38,"ANANNNN-"],["PATRICK DANIEL OLIVEIRA MOTA",11,"AAAAAA-A"],["PAULO AFONSO LEMOS SANTOS",43,"AAAAAAA-"],["PAULO DE ARAUJO OLIVEIRA",45,"AAAAAA--"],["PAULO DONIZETTI DA SILVA",47,"NNNNNN--"],["PAULO GOMES SILVA",24,"NNNNNNN-"],["PAULO HENRIQUE CHAVES",1,"AAAAAAA-"],["PAULO HENRIQUE SILVA LOURENCO",45,"AAAAAA--"],["PAULO RICARDO SOARES SILVA",23,"NNNNNN--"],["PAULO ROBERTO ANDRADE NASCIMENTO",42,"AAAAAAA-"],["PAULO ROBERTO DA COSTA REIS",10,"AAAAAAA-"],["PAULO ROSA DE LIMA",2,"AAAAAAA-"],["PAULO SERGIO DA COSTA",3,"AAAAAAA-"],["PAULO SERGIO SANTOS CORREIA",42,"AAAAAA--"],["PEDRO BRANDAO OLIVEIRA",42,"AAAAAA--"],["PEDRO CAFE LOPES",22,"NNNNNNN-"],["PEDRO GARCIA DE SOUSA",11,"AAAAAA--"],["PEDRO HENRIQUE CARVALHO DE OLIVEIRA",27,"AAAAAA--"],["PEDRO HENRIQUE CORREA DE PAIVA",27,"AAAAAAA-"],["PEDRO HENRIQUE DA SILVA ARAUJO",36,"AAAAAA--"],["PEDRO HENRIQUE MARQUES FERREIRA",13,"AAAAAA--"],["PEDRO LUCAS RODRIGUES VIEIRA",23,"NNNNNN--"],["PEDRO SANTOS DE OLIVEIRA",46,"ANANNN--"],["PETHERSON DIOGO SOARES DIAS",30,"NNNNNN--"],["PHELIPE DE SOUZA SILVA",47,"NNNNNN--"],["RAFAEL ALVES BRITO",43,"AAAAAA--"],["RAFAEL DA SILVA MENDONCA",5,"AAAAAA--"],["RAFAEL FERREIRA LEAL",30,"NNNNNN--"],["RAFAEL LEMOS LIMA",43,"AAAAAA--"],["RAFAEL PEREIRA",31,"AAAAAA--"],["RAFAEL RIBEIRO GUEDES",32,"AAAAAAA-"],["RAFAEL SILVA ROCHA",12,"AAAAAA--"],["RAFAELA LIMA DOS SANTOS",43,"AAAAAAA-"],["RAFAELA MACHADO DE SOUSA",8,"AAAAAA--"],["RAIANE DE CASSIA SOUZA AUGUSTO",23,"AAAAAA--"],["RAILANE DA COSTA SANTOS PAIXÃO",19,"NNNNNN--"],["RAIMUNDO NASCIMENTO QUEIROZ",42,"AAAAAA--"],["RAINILDO DOS SANTOS SILVA",45,"AAAAAA--"],["RAMON DE ALMEIDA CARNEIRO",38,"NNNNNN-N"],["RAMON FERNANDES DO NASCIMENTO",0,"AAAAAA--"],["RAMON LOPES DA CRUZ",11,"NNNNNNN-"],["RAMON SANTOS SOUSA",43,"AAAAAAA-"],["RAYLAN MOURA DOS SANTOS",38,"NNNNNN--"],["REGINALDO SOARES SILVA",28,"ANNNNNN-"],["REGIVAL DE SOUZA SENA",37,"AAAAAAA-"],["REINAN DE ALMEIDA CARNEIRO",38,"ANANNN--"],["REINAN NOGUEIRA DOS SANTOS",34,"NNNNNN--"],["REMILTON DE SOUZA GOMES",45,"AAAAAAA-"],["RENAN LIMA MENDES",33,"AAAAAAA-"],["RENATO DE JESUS",42,"AAAAAAA-"],["RENATO RODRIGUES MOREIRA",29,"AAAAAAA-"],["RENATO SANTOS FERNANDES",11,"AAAAAA--"],["RENATO SANTOS LIMA",43,"AAAAAAA-"],["RENE FLAVIO PEREIRA ZUBA",30,"AAAAAA--"],["RENILDO ALMEIDA DE QUEIROZ",40,"NNNNNN-N"],["RENILDO BRITO DOS SANTOS",38,"ANNNNN--"],["RICARDO ALVES DOS SANTOS",46,"AAAAAA--"],["RICARDO DE JESUS GOMES",43,"AAAAAA--"],["RICARDO FREITAS DA SILVA",12,"NNNNNN-N"],["RICARDO LUCIANO PEREIRA",24,"NNNNNNN-"],["RICARDO PEREIRA DA SILVA JUNIOR",23,"NNNNNN--"],["RICARDO RAMOS DOS SANTOS",34,"NNNNNN--"],["RICARDO RODRIGUES DA SILVA",30,"AAAAAA--"],["RICARDO SILVA BARBOSA",29,"ANANNNN-"],["RICARDO VALENTIM FIUZA",1,"AAAAAAA-"],["RIVIANE GUERREIRO NUNES",18,"NNNNNN--"],["ROBENILSON DE JESUS MEDEIROS",42,"AAAAAA--"],["ROBENILTON MAGALHAES LIMA",45,"NNNNNNN-"],["ROBERTA ABREU DE ALMEIDA",11,"NNNNNN--"],["ROBERTO BATISTA DOS SANTOS",45,"AAAAAAA-"],["ROBERTO CARLOS LIMA CARDOSO",21,"NNNNNN--"],["ROBERTO CARLOS TEIXEIRA DE OLIVEIRA",11,"NNNNNNN-"],["ROBERTO DE SOUZA PEREIRA",9,"AAAAAAA-"],["ROBERTO JOSE DOS SANTOS FILHO",22,"AAAAAAA-"],["ROBERTO LIMA DOS SANTOS",33,"NNNNNN--"],["ROBERTO LOPES DA SILVA",0,"AAAAAA--"],["ROBERTO QUEIROZ DA SILVA",42,"AAAAAA-A"],["ROBERTO SATURNINO GOMES",0,"AAAAAAA-"],["ROBSON BARRETO HELIODORIO",22,"AAAAAAA-"],["ROBSON MIRANDA FERREIRA",30,"NNNNNN--"],["ROBSON PEREIRA DA SILVA",30,"NNNNNN--"],["ROBSON RODRIGUES DOS SANTOS",2,"ANANNNN-"],["RODINEY JESUS COSTA",19,"NNNNNN--"],["RODRIGO CARDOSO DOS SANTOS",45,"NNNNNN--"],["RODRIGO COSTA GRADIL SILVA",40,"AAAAAA--"],["RODRIGO DA SILVA SOUSA",8,"AAAAAA--"],["RODRIGO DE OLIVEIRA SILVA",41,"NNNNNNN-"],["RODRIGO DOS SANTOS",13,"AAAAAAA-"],["RODRIGO GOMES MARTINS",0,"AAAAAA-A"],["RODRIGO LEANDRO FERREIRA",2,"NNNNNNN-"],["RODRIGO SILVA DOS SANTOS",40,"NNNNNNN-"],["ROGERIO COUTO DE SOUZA",41,"AAAAAAA-"],["ROGERIO EDUARDO DOS SANTOS",12,"AAAAAA--"],["ROMARIO GONCALVES LIMA",43,"AAAAAA--"],["ROMILDO SANTOS DA ROCHA",22,"AAAAAAA-"],["ROMILSON CAETANO PIRES",46,"AAAAAA--"],["ROMILSON DE JESUS SANTOS",22,"AAAAAA--"],["ROMILSON DE SOUZA CERQUEIRA",41,"AAAAAAA-"],["RONALDO DA SILVA ANDRADE",41,"AAAAAAA-"],["RONALDO DE SOUZA DIAS",42,"AAAAAA-A"],["RONALDO FIGUEIREDO",26,"NNNNNNN-"],["RONALDO MENEZES MASCARENHAS",45,"AAAAAAA-"],["RONALDO PEREIRA LIMA",25,"NNNNNNN-"],["RONALDO RIBEIRO SOUSA",43,"AAAAAAA-"],["RONE VASCONCELOS",38,"AAAAAA--"],["RONICLEI AVELINO DE SOUZA",24,"NNNNNNN-"],["RONILDO AURELIANO NASCIMENTO",13,"AAAAAAA-"],["RONIVAL JESUS DOS SANTOS",36,"AAAAAAA-"],["RONIVAN SILVA ARAUJO",46,"AAAAAA--"],["ROQUE ANDRADE DOS SANTOS",45,"NNNNNNN-"],["ROSANGELA RUFINO FRANCISCO",19,"NNNNNN--"],["RUAN CARLOS RODRIGUES DE OLIVEIRA",30,"NNNNNNN-"],["RYAN SILVA DE LIMA",11,"NNNNNNN-"],["SADY HUMBERTO COELHO NUNES",3,"AAAAAA-A"],["SALVIO WANDERLEY SOARES MACHADO",28,"AAAAAAA-"],["SAMUEL CORCINO",0,"AAAAAAA-"],["SAMUEL DOUGLAS QUEIROZ ARAUJO",28,"AAAAAA--"],["SAMUEL PINTO SOARES",23,"AAAAAA--"],["SAMUEL SANTOS DA SILVA",15,"AAAAAAA-"],["SAMUEL SOARES PEREIRA",32,"AAAAAAA-"],["SANDRO SOUZA GONCALVES",33,"AAAAAA--"],["SAVIO ABADE DE JESUS",35,"AAAAAAA-"],["SEBASTIAO OPENHEIMER DE SOUZA",23,"NNNNNN-N"],["SEBASTIAO PEDRO DA SILVA",5,"AAAAAAA-"],["SEBASTIAO SOARES RAMOS",32,"NNNNNNN-"],["SELMO CARDOSO DA SILVA",28,"AAAAAA-A"],["SERGIO DE SOUZA ARAUJO JUNIOR",19,"NNNNNN--"],["SHIRLEY MARINHO DE OLIVEIRA",9,"AAAAAA--"],["SIDGREI SANTOS DA CONCEICAO",38,"NNNNNN--"],["SIDNEI VIEIRA DOS SANTOS",43,"AAAAAA--"],["SIDNEY SANTOS DE JESUS",16,"NNNNNN-N"],["SILAS DOS SANTOS GOMES",6,"NNNNNNN-"],["SILDEVAN SILVA DE FREITAS",34,"ANNNNN-N"],["SILVANDO SANTOS QUEIROZ",42,"NNNNNN--"],["SILVIO EDUARDO MOURA OLIVEIRA",28,"AAAAAAA-"],["SINESIO RIBEIRO CERQUEIRA NETO",42,"AAAAAA--"],["SINVAL VERÍSSIMO DE CASTRO JUNIOR",24,"NNNNNNN-"],["SORAIA SOARES FONSECA",28,"AAAAAA--"],["TAILAN SILVA DE MENEZES",45,"AAAAAA--"],["TAINAN VIANA OLIVEIRA",43,"AAAAAA--"],["TALIS DA SILVA MARTINS",10,"AAAAAA--"],["TALISSON ALVES DE SOUZA",9,"AAAAAA--"],["TANCREDO AUGUSTO AMARAL DA CRUZ",30,"NNNNNNN-"],["TANURE CARLOS MASCARENHAS DOS SANTOS",40,"AAAAAAA-"],["TARCISIO MARCOS SOUSA SILVA",22,"AAAAAAA-"],["TARCISIO VIRISSIMO DA COSTA",12,"NNNNNNN-"],["TATIANA KELLEN DE CASTRO TEIXEIRA",24,"NNNNNN--"],["TAWAN BARBOSA VIEIRA",43,"AAAAAAA-"],["TAYANE PRISCILA BRITO DE AVILA",28,"AAAAAA--"],["THALES DA PAIXAO MIRANDA",42,"AAAAAA--"],["THALES JOSE CORREIA AURELIO",6,"NNNNNNN-"],["THALES PINHEIRO CAMARA",19,"NNNNNNN-"],["THALISSON FERREIRA DE JESUS",14,"AAAAAA--"],["THALLYS VINICIUS RAMOS XAVIER",34,"NNNNNNN-"],["THALLYS VINICIUS RODRIGUES FERNANDES COSTA",12,"AAAAAA--"],["THAYNARA CRISTINA DA SILVA BARBOZA",26,"AAAAAA--"],["THAYSA SANTOS AZEVEDO",13,"AAAAAAN-"],["THIAGO ANUNCIACAO DA CRUZ",25,"AAAAAAA-"],["THIAGO COSTA MACHADO",33,"AAAAAAA-"],["THIAGO ROGERIO DIAS RIBEIRO FERREIRA",35,"AAAAAAA-"],["THIAGO VIANA GOMES",33,"NNNNNNN-"],["THIARO SANTANA FIGUEIREDO",40,"AAAAAA--"],["TIAGO CRISTIANO FARIAS",9,"ANANNN--"],["TIAGO DOS SANTOS MOREIRA",36,"AAAAAA-A"],["TIAGO HONORATO MARTINS",9,"AAAAAA-A"],["TIAGO ROCHA SILVA",46,"AAAAAAA-"],["UADSON AMARAL SANTANA",13,"AAAAAA-A"],["UBIRAJARA NUNES DA SILVA",37,"AAAAAAA-"],["UBIRATAN MASCENA DE SOUZA",42,"AAAAAAA-"],["UDSON GABRIEL RIBEIRO SOUZA",28,"NNNNNNN-"],["UEBESON GONÇALVES FERREIRA",11,"NNNNNN--"],["UENDEL NUNES DE JESUS",15,"AAAAAA--"],["UILHANS AMARAL LIMA",43,"AAAAAA--"],["VAGUINER DA SILVA CAMOES",21,"NNNNNN-N"],["VALDEMIR BISPO DA CONCEICAO",37,"ANANNNN-"],["VALDICK NOVAES DOS SANTOS",21,"NNNNNNN-"],["VALDINEY PEREIRA CARDOSO",28,"AAAAAAA-"],["VALDIR SERRA DO CARMO",38,"NNNNNN--"],["VALDIRENE GERMANO DA SILVA",0,"NNNNNN--"],["VALDIVINO ALAIR DIAS",32,"NNNNNNN-"],["VALMIR DOS SANTOS SILVA FILHO",40,"ANANNN--"],["VALNEI GOMES GUERRA",42,"AAAAAA--"],["VALNEY EVANGELISTA SANTOS",21,"NNNNNN--"],["VALTER MORAIS DOS ANJOS",45,"AAAAAA--"],["VANDER SERVULO DA CRUZ",11,"NNNNNNN-"],["VANDERLANE BESSA DO SACRAMENTO SANTOS",37,"AAAAAA--"],["VANDERLEI MOURA DA COSTA",11,"AAAAAAA-"],["VANESSA COSTA SANTANA",21,"NNNNNN--"],["VANETE CANDIDA DE OLIVEIRA CUNHA",25,"NNNNNNN-"],["VANILSON SANTOS DE JESUS",42,"AAAAAA--"],["VERONICA SOUZA OLIVEIRA",45,"ANANNN--"],["VICTOR EMANOEL NUNES",9,"ANANNNN-"],["VILMAR JOSE MARTINS",2,"NNNNNN-N"],["VINICIUS FIGUEIREDO DOS SANTOS",11,"AAAAAA-A"],["VINICIUS NARCISO LADEIA",30,"NNNNNNN-"],["VITOR ALEXANDRE DOS SANTOS CRUZ",38,"AAAAAA--"],["VITOR DE JESUS MARTINS EUGENIO",10,"NNNNNN--"],["VITOR DOS SANTOS MAIA",42,"AAAAAA--"],["VITOR GABRIEL ALVES AGUIAR",29,"AAAAAAA-"],["VITOR HENRIQUE FREITAS GOMES",6,"NNNNNNN-"],["VITOR HUGO SANTOS SCARCELA",32,"NNNNNNN-"],["VITOR POLICARPO DE ANDRADE",1,"ANNNNNN-"],["VITOR RODRIGUES SANTOS DAMASCENO",28,"NNNNNNN-"],["VITOR VIEIRA DE MELO DA SILVA",47,"AAAAAAA-"],["VITOR VIEIRA TEIXEIRA",24,"NNNNNN-N"],["VITORIA DOS SANTOS ATANASIO",36,"AAAAAAA-"],["VITÓRIA SILVA LIMA",43,"NNNNNNN-"],["WAGNER DOS SANTOS SILVA",21,"NNNNNNN-"],["WALACE ALVES FERREIRA",0,"AAAAAA--"],["WALDIR BRITO DE MESQUITA",25,"NNNNNN--"],["WALDIR RODRIGUES DE JESUS",0,"AAAAAAA-"],["WALDYR PEREIRA SILVA",28,"NNNNNN-N"],["WALTER RAMOS DUARTE NETO",8,"AAAAAAA-"],["WANDERLEY CHAVES DOS SANTOS",1,"ANNNNNN-"],["WANDRYO LARANJEIRA DO ESPIRITO SANTO",19,"NNNNNNN-"],["WANTUIL RESENDE DE MORAES",24,"NNNNNN--"],["WARLEY DANIEL TEIXEIRA SANTOS",28,"AAAAAA--"],["WARLEY EDUARDO DE JESUS MENDES",30,"AAAAAA--"],["WASHINGTON FERREIRA MARINHO",33,"AAAAAAA-"],["WASHINGTON OLIVEIRA DA SILVA",21,"NNNNNNN-"],["WEDSON DE SANTANA SOARES",21,"NNNNNNN-"],["WELINGTON DE JESUS DIAS",11,"NNNNNN--"],["WELLINGTON BARBOSA",19,"NNNNNNN-"],["WELVYS ALVES MOURA",44,"NNNNNNN-"],["WERLLON DE SOUZA COUTO",21,"NNNNNN-N"],["WESLEY LEONARDO ALVES PEREIRA",26,"NNNNNNN-"],["WEVERTTON PEREIRA OLIVEIRA",38,"AAAAAA--"],["WHENDELL DA CONCEIÇÃO PINHEIRO FILHO",19,"NNNNNN-N"],["WILIAN PEREIRA RODRIGUES",7,"AAAAAAA-"],["WILKER MATEUS LIMA EVANGELISTA",45,"AAAAAA--"],["WILLER MOREIRA FERNANDES",2,"NNNNNN--"],["WILLIAM DE JESUS SALES",38,"NNNNNN--"],["WILLIAM ESTEVAM DA COSTA",47,"NNNNNN-N"],["WILLIAN DHONEY CRUZ DE ANDRADE",45,"AAAAAA--"],["WILSMARA RAQUEL DA SILVA REIS RODRIGUES",23,"NNNNNNN-"],["WILSON COSTA SANTOS",36,"AAAAAAA-"],["WILSON CRISTOVAO RODRIGUES DE QUEIROZ",21,"NNNNNNN-"],["WILSON DOS SANTOS OLIVEIRA MOURA",40,"NNNNNNN-"],["WILSON FERNANDES COTA LEITE",1,"AAAAAA-A"],["WILSON JOAO DE PAULA",12,"AAAAAAA-"],["YAGO DE MORAES SANTANA",33,"AAAAAA--"],["YAN KLINIO DOS SANTOS FERNANDES DE SOUZA",10,"NNNNNN--"],["YARA STHEFANI PEREIRA GONCALVES ARAUJO",26,"ANNNNNN-"],["YELANGELA COROMOTO MARTINEZ LUGO",27,"AAAAAAA-"],["YGOR FORTUNATO PIMENTA",11,"AAAAAA--"],["YGOR RAMOS DE SOUZA",1,"AAAAAA--"],["YHAN RHAGNER PEREIRA SIRIANO",44,"AAAAAAA-"],["ZENILDO CARDOSO ALVES",45,"AAAAAA--"]],"meta":{"linhas":7543,"aprov":4234,"pessoas":1077}};
 
 /* ============================================================
-   1. MODELO — tudo é derivado de DATA
+   Helpers
    ============================================================ */
-let DATA = clone(BASE_ORIGINAL);
 function clone(o){ return JSON.parse(JSON.stringify(o)); }
+let DATA = clone(BASE_ORIGINAL);
 
-const fmt  = n => n.toLocaleString('pt-BR');
-const pctf = v => (v*100).toLocaleString('pt-BR',{minimumFractionDigits:1,maximumFractionDigits:1}) + '%';
+const fmt  = n => Number(n).toLocaleString('pt-BR');
+const pctf = v => v === null ? '—' : (v*100).toLocaleString('pt-BR',{minimumFractionDigits:1,maximumFractionDigits:1}) + '%';
+const pct0 = v => v === null ? '—' : Math.round(v*100) + '%';
 const esc  = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const regLabel = r => r.replace('REGIONAL 1','Regional 1')
   .replace('REGIONAL 2 (TIAGO CARDOSO)','Regional 2 · Tiago Cardoso')
@@ -409,213 +191,158 @@ const regLabel = r => r.replace('REGIONAL 1','Regional 1')
   .replace('SEM REGIONAL (ADMINISTRATIVO/OUTROS)','Sem regional');
 const MINUS = new Set(['DE','DO','DA','DOS','DAS','E']);
 const filLabel = f => String(f).split(/\s+/).map((w,i)=>{
-  if(/^[IVX]+$/.test(w)) return w;                    /* II, III */
-  if(/^\d+$/.test(w)) return w;                       /* 101, 135 */
-  if(i && MINUS.has(w)) return w.toLowerCase();       /* PQ dos Coqueiros */
+  if(/^[IVX]+$/.test(w)) return w;
+  if(/^\d+$/.test(w)) return w;
+  if(i && MINUS.has(w)) return w.toLowerCase();
   return w.charAt(0) + w.slice(1).toLowerCase();
 }).join(' ');
+const el = id => document.getElementById(id);
 
-/* estado dos filtros */
-const S = { regs:new Set(), curso:null, fils:new Set(), q:'', page:'geral', sit:'todos' };
-const SITS = [
-  ['todos', 'Todos que faltam',   'Não aprovados e quem nunca iniciou'],
-  ['na',    'Não aprovados',      'Fizeram o curso e não foram aprovados'],
-  ['sr',    'Não iniciaram',      'Não têm registro neste curso']
-];
+/* estado */
+const S = { reg:null, fil:null, curso:null, page:'geral', sit:'na' };
 
-/* funcionários no escopo (regional + filial) */
 function scope(){
-  return DATA.funcionarios.filter(([n,fi]) => {
-    const ri = DATA.filiais[fi][1];
-    if(S.regs.size && !S.regs.has(ri)) return false;
-    if(S.fils.size && !S.fils.has(fi)) return false;
+  return DATA.funcionarios.filter(([,fi]) => {
+    if(S.reg !== null && DATA.filiais[fi][1] !== S.reg) return false;
+    if(S.fil !== null && fi !== S.fil) return false;
     return true;
   });
 }
-/* agregação de um conjunto de funcionários para um curso (ou todos) */
+/* matrículas = registros existentes; '-' não conta como matrícula */
 function agg(rows, ci){
   let ins=0, apr=0, nap=0, sem=0;
   for(const [,,st] of rows){
     if(ci === null){
-      for(const ch of st){ if(ch==='-') sem++; else { ins++; if(ch==='A') apr++; else nap++; } }
+      for(const ch of st){ if(ch === '-') sem++; else { ins++; ch === 'A' ? apr++ : nap++; } }
     } else {
       const ch = st[ci];
-      if(ch==='-') sem++; else { ins++; if(ch==='A') apr++; else nap++; }
+      if(ch === '-') sem++; else { ins++; ch === 'A' ? apr++ : nap++; }
     }
   }
-  return {ins, apr, nap, sem, pend:nap+sem, idx: ins ? apr/ins : null, pessoas: rows.length};
+  return {ins, apr, nap, sem, idx: ins ? apr/ins : null, pessoas: rows.length};
 }
 const CI = () => S.curso === null ? null : DATA.cursos.indexOf(S.curso);
-
-/* ============================================================
-   2. FILTROS (slicers)
-   ============================================================ */
-const CHECK = '<span class="bx"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M2.5 6.2 5 8.7l4.5-5"/></svg></span>';
-
-function drawSlicers(){
-  document.getElementById('slReg').innerHTML = DATA.regionais.map((r,i)=>{
-    const n = DATA.funcionarios.filter(([,fi]) => DATA.filiais[fi][1]===i).length;
-    return `<button class="opt" type="button" data-reg="${i}" aria-pressed="${S.regs.has(i)}">
-      ${CHECK}<span class="t">${esc(regLabel(r))}</span><span class="n">${n}</span></button>`;
-  }).join('');
-
-  document.getElementById('slCur').innerHTML = DATA.cursos.map((c,i)=>
-    `<button class="opt" type="button" data-cur="${i}" aria-pressed="${S.curso===c}">
-      ${CHECK}<span class="t">${esc(DATA.cursosCurto[i])}</span></button>`).join('');
-
-  document.getElementById('slSit').innerHTML = SITS.map(([k,l,d])=>
-    `<button class="opt" type="button" data-sit="${k}" aria-pressed="${S.sit===k}" title="${esc(d)}">
-      ${CHECK}<span class="t">${esc(l)}</span></button>`).join('');
-
-  drawFilList();
-}
-function drawFilList(){
-  const t = S.q.trim().toLowerCase();
-  const items = DATA.filiais.map((f,i)=>({f:f[0], r:f[1], i}))
-    .filter(x => !S.regs.size || S.regs.has(x.r))
-    .filter(x => !t || x.f.toLowerCase().includes(t));
-  document.getElementById('slFil').innerHTML = items.length
-    ? items.map(x=>`<button class="opt" type="button" data-fil="${x.i}" aria-pressed="${S.fils.has(x.i)}">
-        ${CHECK}<span class="t">${esc(filLabel(x.f))}</span></button>`).join('')
-    : `<p style="font-size:12px;color:var(--muted);padding:6px 7px;margin:0">Nenhuma filial encontrada.</p>`;
+function emDia(rows, ci){
+  return rows.filter(([,,st]) => ci === null ? ![...st].some(c => c === 'N') : st[ci] !== 'N').length;
 }
 
-document.querySelector('.pane').addEventListener('click', e=>{
-  const b = e.target.closest('button'); if(!b) return;
-  if(b.dataset.clear === 'reg'){ S.regs.clear(); S.fils.clear(); return render(); }
-  if(b.dataset.clear === 'cur'){ S.curso = null; return render(); }
-  if(b.dataset.reg !== undefined){
-    const i = +b.dataset.reg;
-    S.regs.has(i) ? S.regs.delete(i) : S.regs.add(i);
-    [...S.fils].forEach(fi => { if(!S.regs.size || S.regs.has(DATA.filiais[fi][1])) return; S.fils.delete(fi); });
-    return render();
-  }
-  if(b.dataset.cur !== undefined){
-    const c = DATA.cursos[+b.dataset.cur];
-    S.curso = (S.curso === c) ? null : c;
-    return render();
-  }
-  if(b.dataset.fil !== undefined){
-    const i = +b.dataset.fil;
-    S.fils.has(i) ? S.fils.delete(i) : S.fils.add(i);
-    return render();
-  }
-  if(b.dataset.sit !== undefined){ S.sit = b.dataset.sit; if(S.page!=='pend') S.page='pend'; return render(); }
-});
-document.getElementById('q').addEventListener('input', e=>{ S.q = e.target.value; drawFilList(); });
+/* ============================================================
+   Filtros
+   ============================================================ */
+function drawFilters(){
+  const pills = ['<button class="pill' + (S.reg === null ? ' on' : '') + '" data-r="all" type="button">Rede inteira</button>']
+    .concat(DATA.regionais.map((r,i) =>
+      `<button class="pill${S.reg===i?' on':''}" data-r="${i}" type="button">${esc(regLabel(r).toUpperCase())}</button>`));
+  el('regPills').innerHTML = pills.join('');
+
+  const fils = DATA.filiais.map((f,i) => ({i, nome: filLabel(f[0]), ri: f[1]}))
+    .filter(f => S.reg === null || f.ri === S.reg)
+    .sort((a,b) => a.nome.localeCompare(b.nome,'pt-BR'));
+  el('selFil').innerHTML = '<option value="">Todas as filiais</option>' +
+    fils.map(f => `<option value="${f.i}"${S.fil===f.i?' selected':''}>${esc(f.nome)}</option>`).join('');
+
+  el('selCurso').innerHTML = '<option value="">Todos os cursos</option>' +
+    DATA.cursos.map((c,i) => `<option value="${esc(c)}"${S.curso===c?' selected':''}>${esc(DATA.cursosCurto[i])}</option>`).join('');
+}
 
 /* ============================================================
-   3. PÁGINAS
+   Páginas
    ============================================================ */
-const HEAT = [.05,.10,.15,.20,.25,.325];
-const heat = v => { if(v===null) return 'na'; if(v===0) return 0; let h=1; for(const b of HEAT) if(v>b) h++; return h; };
-
 function pageGeral(){
   const rows = scope(), ci = CI(), a = agg(rows, ci);
-  const alvo = S.curso ? DATA.cursosCurto[ci] : 'todos os cursos';
+  const fil100 = emDia(rows, ci);
+  const nFil = new Set(rows.map(([,fi]) => fi)).size;
 
-  /* regionais */
-  const porReg = DATA.regionais.map((r,i)=>{
-    const rr = rows.filter(([,fi]) => DATA.filiais[fi][1]===i);
-    return {i, nome:r, ...agg(rr,ci), filiais:new Set(rr.map(x=>DATA.filiais[x[1]][0])).size};
-  }).filter(x => x.pessoas);
-  const maxR = Math.max(.01, ...porReg.map(x=>x.idx||0));
-  const escR = Math.max(.05, Math.ceil(maxR*100/5)*5/100);
+  const kpis = `
+  <div class="kpis">
+    <div class="card kpi">
+      <div class="t">Andamento do escopo</div>
+      <div class="v">${pctf(a.idx)}</div>
+      <div class="s">${fmt(a.apr)} de ${fmt(a.ins)} matrículas concluídas</div>
+      <div class="meter"><i style="width:${(a.idx||0)*100}%"></i></div>
+    </div>
+    <div class="card kpi">
+      <div class="t">Colaboradores</div>
+      <div class="v">${fmt(rows.length)}</div>
+      <div class="s">${fmt(nFil)} ${nFil===1?'filial':'filiais'} no escopo</div>
+    </div>
+    <div class="card kpi">
+      <div class="t">Treinamentos pendentes</div>
+      <div class="v">${fmt(a.nap)}</div>
+      <div class="s">${ci===null?'somando todos os cursos exigidos':'em '+esc(DATA.cursosCurto[ci])}</div>
+    </div>
+    <div class="card kpi">
+      <div class="t">Colaboradores 100% em dia</div>
+      <div class="v">${fmt(fil100)}</div>
+      <div class="s">${rows.length ? pctf(fil100/rows.length) : '—'} do efetivo do escopo</div>
+      <div class="meter"><i style="width:${rows.length ? fil100/rows.length*100 : 0}%"></i></div>
+    </div>
+  </div>`;
 
-  /* cursos */
-  const porCur = DATA.cursos.map((c,i)=>({c, i, nome:DATA.cursosCurto[i], ...agg(rows,i)}));
-  const maxC = Math.max(.01, ...porCur.map(x=>x.idx||0));
-  const escC = Math.max(.05, Math.ceil(maxC*100/5)*5/100);
+  /* por filial */
+  const porFil = {};
+  rows.forEach(r => (porFil[r[1]] = porFil[r[1]] || []).push(r));
+  const listaFil = Object.keys(porFil).map(fi => {
+    const g = agg(porFil[fi], ci);
+    return {nome: filLabel(DATA.filiais[fi][0]), ...g};
+  }).sort((x,y) => (x.idx ?? 2) - (y.idx ?? 2) || x.nome.localeCompare(y.nome,'pt-BR'));
 
-  return `
-  <div class="grid kpis" style="margin-bottom:12px">
-    <div class="tile"><span class="t">Funcionários</span><span class="v tnum">${fmt(a.pessoas)}</span>
-      <span class="s">no escopo filtrado</span></div>
-    <div class="tile good"><span class="t">Aprovações</span><span class="v tnum">${fmt(a.apr)}</span>
-      <span class="s">${esc(alvo)}</span></div>
-    <div class="tile brand"><span class="t">Índice de aprovação</span><span class="v tnum">${a.idx===null?'—':pctf(a.idx)}</span>
-      <span class="s">aprovados ÷ inscritos</span></div>
-    <div class="tile warn"><span class="t">Não iniciaram</span><span class="v tnum">${S.curso ? fmt(a.sem) : '—'}</span>
-      <span class="s">${S.curso ? 'sem registro em ' + esc(DATA.cursosCurto[ci]) : 'selecione um curso no filtro ao lado'}</span></div>
-  </div>
+  const porCur = DATA.cursos.map((c,i) => ({nome: DATA.cursosCurto[i], ...agg(rows, i)}));
 
-  <div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(340px,1fr));align-items:start">
-    <section class="panel">
-      <header><h3>Índice por regional</h3><span class="sub">clique para filtrar</span></header>
-      <div class="pbody"><div class="bars">${
-        porReg.map(x=>`<button class="bar" type="button" data-breg="${x.i}" aria-pressed="${S.regs.has(x.i)}">
-          <span class="nm">${esc(regLabel(x.nome))}<small>${x.filiais} filiais · ${fmt(x.ins)} inscrições</small></span>
-          <span class="tk"><span class="fl" style="width:${((x.idx||0)/escR*100).toFixed(1)}%"></span>
-            ${a.idx?`<span class="avg" style="left:${(a.idx/escR*100).toFixed(1)}%"></span>`:''}</span>
-          <span class="vv">${x.idx===null?'—':pctf(x.idx)}</span></button>`).join('')
-      }</div></div>
-      <div class="legend">A marca vertical é o índice médio do escopo${a.idx?' ('+pctf(a.idx)+')':''}.</div>
+  const barra = (o, i) => `
+    <div class="row">
+      <div class="l"><div class="n">${i!==undefined?`<span class="rank">${i+1}.</span>`:''}${esc(o.nome)}</div>
+        <div class="c">${fmt(o.apr)}/${fmt(o.ins)}</div></div>
+      <div class="bar"><div class="track"><i style="width:${(o.idx||0)*100}%"></i></div>
+        <div class="p">${pct0(o.idx)}</div></div>
+    </div>`;
+
+  return kpis + `
+  <div class="cols">
+    <section class="card panel">
+      <h2>Conclusão por filial</h2>
+      <p class="sub">Percentual de matrículas concluídas em cada filial, da menor para a maior</p>
+      <div class="scrolly">${listaFil.length ? listaFil.map(o => barra(o)).join('') : '<p class="empty">Sem dados no escopo.</p>'}</div>
     </section>
-
-    <section class="panel">
-      <header><h3>Índice por curso</h3><span class="sub">na ordem do programa</span></header>
-      <div class="pbody"><div class="bars">${
-        porCur.map(x=>`<button class="bar" type="button" data-bcur="${x.i}" aria-pressed="${S.curso===x.c}">
-          <span class="nm">${esc(x.nome)}<small>${fmt(x.ins)} inscritos · ${fmt(x.sem)} não iniciaram</small></span>
-          <span class="tk"><span class="fl" style="width:${((x.idx||0)/escC*100).toFixed(1)}%"></span></span>
-          <span class="vv">${x.idx===null?'—':pctf(x.idx)}</span></button>`).join('')
-      }</div></div>
-      <div class="legend">“Não iniciaram” pressupõe que o curso vale para todos os ${fmt(a.pessoas)} funcionários do escopo — nem todo curso é obrigatório para toda a rede.</div>
+    <section class="card panel">
+      <h2>Conclusão por curso</h2>
+      <p class="sub">Na sequência oficial dos treinamentos</p>
+      <div class="scrolly">${porCur.map((o,i) => barra(o,i)).join('')}</div>
     </section>
   </div>`;
 }
 
+function heat(v){
+  if(v === null) return 'background:#f4f6f9;color:#94a3b8';
+  const a = 0.10 + v*0.80;
+  return `background:rgba(26,106,212,${a.toFixed(2)});color:${v > 0.55 ? '#fff' : '#1e293b'}`;
+}
 function pageMatriz(){
-  const ci = CI();
   const rows = scope();
-  const fset = new Set(rows.map(x=>x[1]));
-  const byFil = {}; rows.forEach(x => (byFil[x[1]] ||= []).push(x));
-
-  let head = '<tr><th class="lbl">Filial</th>' + DATA.cursos.map((c,i)=>
-    `<th class="${S.curso===c?'on':''}"><button type="button" data-hcur="${i}" title="${esc(c)}">${
-      esc(DATA.cursosCurto[i]).replace(' / ','<br>/ ').replace('Segurança do','Segurança<br>do')
-        .replace('NR 20 ','NR 20<br>').replace('Plano de ','Plano de<br>').replace('Código de ','Código de<br>')
-        .replace('Gestão de ','Gestão de<br>')}</button></th>`).join('') +
-    '<th class="tot">Total</th></tr>';
+  if(!rows.length) return '<section class="card"><p class="empty">Sem dados no escopo.</p></section>';
+  const porFil = {};
+  rows.forEach(r => (porFil[r[1]] = porFil[r[1]] || []).push(r));
+  const fis = Object.keys(porFil).map(Number)
+    .map(fi => ({fi, tot: agg(porFil[fi], null), nome: filLabel(DATA.filiais[fi][0])}))
+    .sort((a,b) => (b.tot.idx ?? -1) - (a.tot.idx ?? -1) || a.nome.localeCompare(b.nome,'pt-BR'));
 
   let body = '';
-  DATA.regionais.forEach((r, ri)=>{
-    const fl = DATA.filiais.map((f,i)=>({f:f[0], i})).filter(x => DATA.filiais[x.i][1]===ri && fset.has(x.i));
-    if(!fl.length) return;
-    const rr = rows.filter(x => DATA.filiais[x[1]][1]===ri);
-    body += `<tr class="reg"><td class="lbl">${esc(regLabel(r))}</td>` +
-      DATA.cursos.map((c,i)=>{const g=agg(rr,i);return `<td class="rt${S.curso&&S.curso!==c?' dimc':''}">${g.idx===null?'—':pctf(g.idx)}</td>`}).join('') +
-      `<td class="rt tot">${(()=>{const g=agg(rr,ci);return g.idx===null?'—':pctf(g.idx)})()}</td></tr>`;
-    fl.forEach(({f,i})=>{
-      const rw = byFil[i] || [];
-      body += `<tr><td class="lbl">${esc(filLabel(f))}</td>` +
-        DATA.cursos.map((c,k)=>{
-          const g = agg(rw,k);
-          return `<td class="c${S.curso&&S.curso!==c?' dimc':''}" data-h="${heat(g.idx)}" data-f="${esc(f)}" data-c="${esc(DATA.cursosCurto[k])}" data-i="${g.ins}" data-a="${g.apr}" data-p="${g.pend}">${
-            g.idx===null?'—':pctf(g.idx)}</td>`;
-        }).join('') +
-        (()=>{const g=agg(rw,ci);
-          return `<td class="c tot" data-h="${heat(g.idx)}" data-f="${esc(f)}" data-c="${esc(S.curso?DATA.cursosCurto[ci]:'Todos os cursos')}" data-i="${g.ins}" data-a="${g.apr}" data-p="${g.pend}">${
-            g.idx===null?'—':pctf(g.idx)}</td>`})() + '</tr>';
-    });
+  fis.forEach((o, n) => {
+    const g = DATA.cursos.map((c,i) => agg(porFil[o.fi], i));
+    body += `<tr><th><span class="rank">${n+1}.</span>${esc(o.nome)}</th>` +
+      g.map(x => `<td><span class="cellv" style="${heat(x.idx)}">${pct0(x.idx)}</span></td>`).join('') +
+      `<td><span class="cellv" style="${heat(o.tot.idx)};font-weight:700">${pct0(o.tot.idx)}</span></td></tr>`;
   });
-
-  if(!body) return emptyState('Nenhuma filial no filtro atual','Limpe ou amplie os filtros à esquerda.');
-
-  return `<section class="panel">
-    <header><h3>Índice de aprovação — filial × curso</h3>
-      <span class="sub">${fset.size} filiais · ${DATA.cursos.length} cursos</span></header>
-    <div class="scroller"><table id="mtx"><thead>${head}</thead><tbody>${body}</tbody></table></div>
-    <div class="legend">
-      <span class="ramp"><span>0%</span>
-        <i style="background:var(--h1)"></i><i style="background:var(--h2)"></i><i style="background:var(--h3)"></i><i style="background:var(--h4)"></i><i style="background:var(--h5)"></i><i style="background:var(--h6)"></i><i style="background:var(--h7)"></i>
-        <span>33%+</span></span>
-      <span>Célula branca = 0% com inscritos · <b>—</b> = curso sem inscritos na filial · clique no cabeçalho para selecionar o curso.</span>
-    </div>
+  return `<section class="card panel">
+    <h2>Matriz curso × filial</h2>
+    <p class="sub">Percentual de matrículas concluídas, do posto com melhor geral para o pior. Quanto mais escuro, melhor.</p>
+    <div class="scroller"><table>
+      <thead><tr><th>Filial</th>${DATA.cursosCurto.map(c => `<th>${esc(c)}</th>`).join('')}<th>Geral</th></tr></thead>
+      <tbody>${body}</tbody></table></div>
   </section>`;
 }
 
-/* colaboradores com pendência no filtro atual, cada um com seus cursos pendentes */
+/* colaboradores com pendência, com os cursos de cada um */
 function pendData(){
   const ci = CI(), out = [];
   for(const [n, fi, st] of scope()){
@@ -629,215 +356,155 @@ function pendData(){
       cursos.push({i, tipo});
     }
     if(!cursos.length) continue;
-    out.push({n, fi, f:DATA.filiais[fi][0], r:DATA.filiais[fi][1], cursos});
+    out.push({n, fi, f: DATA.filiais[fi][0], r: DATA.filiais[fi][1], cursos});
   }
-  return out.sort((a,b) => a.r - b.r || a.f.localeCompare(b.f,'pt-BR') || a.n.localeCompare(b.n,'pt-BR'));
+  return out.sort((a,b) => a.r - b.r ||
+    filLabel(a.f).localeCompare(filLabel(b.f),'pt-BR') || a.n.localeCompare(b.n,'pt-BR'));
 }
-
 function pagePend(){
-  const ci = CI(), rows = scope(), pend = pendData();
-  const a = agg(rows, ci);
-  const umCurso = ci !== null;
-  const alvo = umCurso ? DATA.cursosCurto[ci] : 'todos os cursos';
-  const tituloSit = S.sit === 'na' ? 'não foram aprovados' : S.sit === 'sr' ? 'não iniciaram' : 'faltam realizar';
-  const totalPend = pend.reduce((s,p) => s + p.cursos.length, 0);
+  const pend = pendData(), ci = CI();
+  const total = pend.reduce((s,p) => s + p.cursos.length, 0);
   const porFil = {};
   pend.forEach(p => porFil[p.f] = (porFil[p.f] || 0) + 1);
+
+  const seg = [['na','Não aprovados'],['sr','Sem registro'],['todos','Todos que faltam']]
+    .map(([k,t]) => `<button class="btn${S.sit===k?' primary':''}" data-sit="${k}" type="button">${t}</button>`).join('');
 
   let tb = '', lastF = '';
   for(const p of pend){
     if(p.f !== lastF){
-      const n = porFil[p.f];
       tb += `<tr class="grp"><td colspan="3">${esc(regLabel(DATA.regionais[p.r]))} › ${esc(filLabel(p.f))}</td>
-        <td class="num">${n} funcionário${n>1?'s':''}</td></tr>`;
+        <td class="num">${porFil[p.f]}</td></tr>`;
       lastF = p.f;
     }
-    tb += umCurso
-      ? `<tr><td>${esc(p.n)}</td><td>${esc(filLabel(p.f))}</td>
-          <td>${esc(regLabel(DATA.regionais[p.r]))}</td>
-          <td class="num"><span class="tag ${p.cursos[0].tipo}">${p.cursos[0].tipo==='na'?'Não aprovado':'Não iniciou'}</span></td></tr>`
-      : `<tr><td>${esc(p.n)}</td><td>${esc(filLabel(p.f))}</td>
-          <td class="num">${p.cursos.length}</td>
-          <td class="wrap">${p.cursos.map(c => `<span class="tag ${c.tipo}">${esc(DATA.cursosCurto[c.i])}</span>`).join('')}</td></tr>`;
+    tb += `<tr><td>${esc(p.n)}</td><td>${esc(filLabel(p.f))}</td><td class="num">${p.cursos.length}</td>
+      <td>${p.cursos.map(c => `<span class="tag ${c.tipo}">${esc(DATA.cursosCurto[c.i])}</span>`).join('')}</td></tr>`;
   }
 
-  const cabecalho = umCurso
-    ? `<th>Funcionário</th><th>Filial</th><th>Regional</th><th class="num">Situação</th>`
-    : `<th>Funcionário</th><th>Filial</th><th class="num">Pend.</th><th>Cursos pendentes</th>`;
-
   return `
-  <div class="pend-head">
-    <div class="pillrow">
-      <span class="pill">Curso <b>${esc(umCurso ? DATA.cursosCurto[ci] : 'Todos')}</b></span>
-      <button class="pill na" type="button" data-sit="na" aria-pressed="${S.sit==='na'}">Não aprovados <b>${fmt(a.nap)}</b></button>
-      <button class="pill sr" type="button" data-sit="sr" aria-pressed="${S.sit==='sr'}">Não iniciaram <b>${fmt(a.sem)}</b></button>
-      <span class="pill ok">Já aprovados <b>${fmt(a.apr)}</b></span>
-      ${S.sit!=='todos' ? `<button class="pill" type="button" data-sit="todos">Ver todos ×</button>` : ''}
-    </div>
-    <span style="flex:1"></span>
-    <button class="btn primary" type="button" id="dl">Baixar lista filtrada</button>
-    <button class="btn" type="button" id="copy">Copiar lista</button>
-    <button class="btn ghost" type="button" onclick="window.print()">Imprimir</button>
+  <div class="card toolbar">
+    <div class="seg">${seg}</div>
+    <button class="btn primary" id="btnDl" type="button">Baixar lista filtrada</button>
   </div>
-  <section class="panel">
-    <header><h3>Funcionários que ${tituloSit} — ${esc(alvo)}</h3>
-      <span class="sub">${fmt(pend.length)} de ${fmt(rows.length)} funcionários no escopo${umCurso ? '' : ` · ${fmt(totalPend)} pendências somadas`}</span></header>
+  <section class="card panel">
+    <h2>Quem ainda não fez${ci!==null ? ' — ' + esc(DATA.cursosCurto[ci]) : ''}</h2>
+    <p class="sub">${fmt(pend.length)} colaboradores · ${fmt(total)} pendências · use o filtro de filial acima para ver uma empresa só</p>
     ${pend.length ? `<div class="scroller"><table class="ptab">
-      <thead><tr>${cabecalho}</tr></thead>
+      <thead><tr><th>Colaborador</th><th>Filial</th><th>Pend.</th><th>Cursos pendentes</th></tr></thead>
       <tbody>${tb}</tbody></table></div>
-      <div class="legend"><b>Vermelho</b> — fez o curso e não foi aprovado. &nbsp;
-        <b>Amarelo</b> — não tem registro naquele curso. &nbsp;
-        Selecione uma filial no filtro à esquerda para isolar uma empresa.</div>`
-    : emptyState('Nenhum funcionário nesta situação','Ajuste o filtro de situação ou o escopo à esquerda.')}
+      <p class="note"><b>Não aprovado</b> — fez o curso e não foi aprovado. <b>Sem registro</b> — não tem matrícula naquele curso.</p>`
+    : '<p class="empty">Ninguém pendente com os filtros atuais.</p>'}
   </section>`;
 }
 
-const emptyState = (t,s) => `<div class="panel"><div class="empty"><strong>${esc(t)}</strong>${esc(s)}</div></div>`;
-
-/* ============================================================
-   4. RENDER
-   ============================================================ */
-function render(){
-  drawSlicers();
-
-  /* breadcrumb de filtros ativos */
-  const bits = [];
-  if(S.regs.size) [...S.regs].sort().forEach(i => bits.push(
-    `<span class="chip">${esc(regLabel(DATA.regionais[i]))}<button type="button" data-x="reg" data-i="${i}" aria-label="remover">×</button></span>`));
-  if(S.curso) bits.push(`<span class="chip">${esc(DATA.cursosCurto[DATA.cursos.indexOf(S.curso)])}<button type="button" data-x="cur" aria-label="remover">×</button></span>`);
-  if(S.sit !== 'todos') bits.push(`<span class="chip">${SITS.find(x=>x[0]===S.sit)[1]}<button type="button" data-x="sit" aria-label="remover">×</button></span>`);
-  if(S.fils.size) [...S.fils].sort().forEach(i => bits.push(
-    `<span class="chip">${esc(filLabel(DATA.filiais[i][0]))}<button type="button" data-x="fil" data-i="${i}" aria-label="remover">×</button></span>`));
-  document.getElementById('crumb').innerHTML = bits.length
-    ? 'Filtros ativos: ' + bits.join(' ')
-    : '<span>Sem filtros — exibindo toda a rede.</span>';
-
-  document.getElementById('page').innerHTML =
-    S.page === 'geral' ? pageGeral() : S.page === 'matriz' ? pageMatriz() : pagePend();
-
-  document.querySelectorAll('.ptabb').forEach(b => b.setAttribute('aria-selected', b.dataset.p === S.page));
-  const a = agg(scope(), CI());
-  document.getElementById('tabhint').textContent =
-    `${fmt(a.pessoas)} funcionários · ${fmt(a.ins)} inscrições · ${a.idx===null?'—':pctf(a.idx)} de aprovação`;
+function pageBase(){
+  return `
+  <section class="card up">
+    <h2 style="margin:0 0 4px;font-size:15px">Atualizar a base</h2>
+    <p class="sub" style="margin:0 0 16px;font-size:12.5px;color:var(--muted)">
+      Envie a planilha em <code>.xlsx</code> ou <code>.csv</code>. O cálculo é feito no seu navegador — nada é enviado para fora.</p>
+    <div class="drop" id="drop"><b>Arraste a planilha aqui</b><span>ou toque para escolher o arquivo</span></div>
+    <input type="file" id="file" accept=".xlsx,.csv,.txt" class="hide">
+    <p class="flab" style="margin:18px 0 6px">Colunas necessárias</p>
+    <ul>
+      <li><code>Participante</code> — nome do colaborador</li>
+      <li><code>Aprovação</code> — "Aprovado" ou "Não aprovado"</li>
+      <li><code>Empresa</code> — filial, como "Rede HG Posto Ferrari"</li>
+      <li><code>Curso</code> — nome do curso</li>
+    </ul>
+    <p class="note">A ordem das colunas não importa. Se o arquivo trouxer uma aba <b>Base de Regionais</b>,
+      o vínculo filial → regional é atualizado junto.</p>
+    <p class="note"><b>Ajustes fixos:</b> Posto Gurupi e Maracanã 2 entram na Regional 4 · Eucaliptos entra na Regional 3 · Papa Leguas I = Papa Leguas 1 ·
+      Planalto = Planalto II · PQ Coqueiros = PQ dos Coqueiros · Colonial = Colonial 101 ·
+      as duas grafias de "Aperfeiçoe Frentista" contam como um curso só · o prefixo "Rede HG Posto" é ignorado.</p>
+    <p style="margin-top:18px"><button class="btn" id="btnReset" type="button">Restaurar base original</button></p>
+  </section>`;
 }
 
-/* cliques dentro do relatório */
-document.getElementById('page').addEventListener('click', e=>{
-  const b = e.target.closest('button'); if(!b) return;
-  if(b.dataset.breg !== undefined){ const i=+b.dataset.breg; S.regs.has(i)?S.regs.delete(i):S.regs.add(i); return render(); }
-  if(b.dataset.bcur !== undefined){ const c=DATA.cursos[+b.dataset.bcur]; S.curso = S.curso===c?null:c; return render(); }
-  if(b.dataset.hcur !== undefined){ const c=DATA.cursos[+b.dataset.hcur]; S.curso = S.curso===c?null:c; return render(); }
-  if(b.dataset.sit !== undefined){ S.sit = (S.sit===b.dataset.sit && b.dataset.sit!=='todos') ? 'todos' : b.dataset.sit; return render(); }
-  if(b.id === 'copy') return copyList();
-  if(b.id === 'dl') return downloadList();
-});
-document.getElementById('crumb').addEventListener('click', e=>{
-  const b = e.target.closest('button'); if(!b) return;
-  if(b.dataset.x === 'reg'){ S.regs.delete(+b.dataset.i); }
-  if(b.dataset.x === 'cur'){ S.curso = null; }
-  if(b.dataset.x === 'fil'){ S.fils.delete(+b.dataset.i); }
-  if(b.dataset.x === 'sit'){ S.sit = 'todos'; }
-  render();
-});
-document.querySelector('.tabs').addEventListener('click', e=>{
-  const b = e.target.closest('.ptabb'); if(!b) return;
-  S.page = b.dataset.p; render();
+/* ============================================================
+   Render
+   ============================================================ */
+function render(){
+  drawFilters();
+  const rows = scope(), a = agg(rows, CI());
+  const nFil = new Set(rows.map(([,fi]) => fi)).size;
+  el('scopeName').textContent = S.fil !== null ? filLabel(DATA.filiais[S.fil][0])
+    : S.reg !== null ? regLabel(DATA.regionais[S.reg]) : 'Rede inteira';
+  el('scopeNums').textContent = `${fmt(nFil)} filiais · ${fmt(rows.length)} colaboradores · ${fmt(a.ins)} matrículas`;
+  [...el('tabs').children].forEach(b => b.classList.toggle('on', b.dataset.p === S.page));
+  el('main').innerHTML = S.page === 'geral' ? pageGeral()
+    : S.page === 'matriz' ? pageMatriz()
+    : S.page === 'pend' ? pagePend() : pageBase();
+  if(S.page === 'base') wireBase();
+  if(S.page === 'pend') el('btnDl').onclick = downloadList;
+  el('srcname').textContent = `${FONTE} · ${fmt(DATA.meta.linhas)} registros`;
+}
+
+let toastT;
+function toast(msg){
+  const t = el('toast'); t.textContent = msg; t.classList.add('on');
+  clearTimeout(toastT); toastT = setTimeout(()=> t.classList.remove('on'), 4200);
+}
+
+/* eventos */
+el('regPills').onclick = e => {
+  const b = e.target.closest('[data-r]'); if(!b) return;
+  S.reg = b.dataset.r === 'all' ? null : +b.dataset.r;
+  S.fil = null; render();
+};
+el('selFil').onchange = e => { S.fil = e.target.value === '' ? null : +e.target.value; render(); };
+el('selCurso').onchange = e => { S.curso = e.target.value || null; render(); };
+el('tabs').onclick = e => { const b = e.target.closest('[data-p]'); if(b){ S.page = b.dataset.p; render(); } };
+document.addEventListener('click', e => {
+  const b = e.target.closest('[data-sit]');
+  if(b){ S.sit = b.dataset.sit; render(); }
 });
 
-/* tooltip da matriz */
-const tip = document.getElementById('tip');
-document.getElementById('page').addEventListener('mouseover', e=>{
-  const td = e.target.closest('td.c'); if(!td) return;
-  const i = +td.dataset.i, a = +td.dataset.a, p = +td.dataset.p;
-  tip.innerHTML = `<b>${esc(filLabel(td.dataset.f))}</b><i>${esc(td.dataset.c)}</i><br>` +
-    (i ? `${fmt(a)} de ${fmt(i)} aprovados · <b style="display:inline">${pctf(a/i)}</b><br><i>${fmt(p)} pendentes</i>`
-       : 'sem inscritos');
-  tip.style.opacity = 1;
-});
-document.getElementById('page').addEventListener('mousemove', e=>{
-  if(tip.style.opacity != 1) return;
-  const w = tip.offsetWidth, h = tip.offsetHeight;
-  let x = e.clientX + 14, y = e.clientY + 14;
-  if(x + w > innerWidth - 8) x = e.clientX - w - 14;
-  if(y + h > innerHeight - 8) y = e.clientY - h - 14;
-  tip.style.left = x + 'px'; tip.style.top = y + 'px';
-});
-document.getElementById('page').addEventListener('mouseout', e=>{
-  if(!e.relatedTarget || !e.relatedTarget.closest('td.c')) tip.style.opacity = 0;
-});
-
-/* lista de pendentes em formato de tabela (usada para copiar e para baixar) */
+/* exportação */
 function pendTabela(){
   const cab = ['Regional','Empresa','Colaborador','Pendências','Cursos pendentes','Situação'];
   const linhas = pendData().map(p => [
-    regLabel(DATA.regionais[p.r]),
-    filLabel(p.f),
-    p.n,
-    p.cursos.length,
+    regLabel(DATA.regionais[p.r]), filLabel(p.f), p.n, p.cursos.length,
     p.cursos.map(c => DATA.cursosCurto[c.i]).join(' | '),
-    p.cursos.map(c => c.tipo === 'na' ? 'Não aprovado' : 'Não iniciou').join(' | ')
+    p.cursos.map(c => c.tipo === 'na' ? 'Não aprovado' : 'Sem registro').join(' | ')
   ]);
   return {cab, linhas};
-}
-/* nome de arquivo que reflete o filtro da tela */
-function nomeArquivo(){
-  const ci = CI();
-  const partes = ['pendentes'];
-  if(S.fils.size === 1) partes.push(filLabel(DATA.filiais[[...S.fils][0]][0]));
-  else if(S.regs.size === 1) partes.push(regLabel(DATA.regionais[[...S.regs][0]]));
-  if(ci !== null) partes.push(DATA.cursosCurto[ci]);
-  return partes.join('-').normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^\w-]+/g,'_') + '.csv';
-}
-function copyList(){
-  const {cab, linhas} = pendTabela();
-  if(!linhas.length) return toast('Não há pendências no filtro atual.');
-  const txt = [cab.join('\t'), ...linhas.map(l => l.join('\t'))].join('\n');
-  navigator.clipboard.writeText(txt)
-    .then(()=> toast(`${linhas.length} linhas copiadas — é só colar no Excel.`))
-    .catch(()=> toast('Não consegui copiar. Use Baixar lista filtrada.'));
 }
 function downloadList(){
   const {cab, linhas} = pendTabela();
   if(!linhas.length) return toast('Não há pendências no filtro atual.');
   const q = v => '"' + String(v).replace(/"/g,'""') + '"';
   const csv = '\ufeff' + [cab, ...linhas].map(l => l.map(q).join(';')).join('\r\n');
+  const partes = ['pendentes'];
+  if(S.fil !== null) partes.push(filLabel(DATA.filiais[S.fil][0]));
+  else if(S.reg !== null) partes.push(regLabel(DATA.regionais[S.reg]));
+  if(CI() !== null) partes.push(DATA.cursosCurto[CI()]);
+  const nome = partes.join('-').normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^\w-]+/g,'_') + '.csv';
   const url = URL.createObjectURL(new Blob([csv], {type:'text/csv;charset=utf-8'}));
   const a = document.createElement('a');
-  a.href = url; a.download = nomeArquivo();
+  a.href = url; a.download = nome;
   document.body.appendChild(a); a.click(); a.remove();
   setTimeout(()=> URL.revokeObjectURL(url), 2000);
   toast(`${linhas.length} colaboradores baixados em CSV.`);
 }
-let tmr;
-function toast(m){
-  const t = document.getElementById('toast');
-  t.textContent = m; t.classList.add('on');
-  clearTimeout(tmr); tmr = setTimeout(()=> t.classList.remove('on'), 4200);
+
+/* aba Atualizar base */
+function wireBase(){
+  const fileEl = el('file'), drop = el('drop');
+  drop.onclick = ()=> fileEl.click();
+  fileEl.onchange = ()=> { if(fileEl.files[0]) handleFile(fileEl.files[0]); fileEl.value = ''; };
+  ['dragenter','dragover'].forEach(ev => drop.addEventListener(ev, e => { e.preventDefault(); drop.classList.add('over'); }));
+  ['dragleave','drop'].forEach(ev => drop.addEventListener(ev, e => { e.preventDefault(); drop.classList.remove('over'); }));
+  drop.addEventListener('drop', e => { const f = e.dataTransfer.files[0]; if(f) handleFile(f); });
+  el('btnReset').onclick = ()=>{
+    DATA = clone(BASE_ORIGINAL);
+    S.reg = S.fil = S.curso = null; FONTE = FONTE_ORIG;
+    render(); toast('Base original restaurada.');
+  };
 }
 
-/* ============================================================
-   5. LEITURA DE PLANILHA (xlsx / csv) — 100% no navegador
-   ============================================================ */
-const dlgUp = document.getElementById('dlgUp'), dlgHelp = document.getElementById('dlgHelp');
-document.getElementById('btnUp').onclick = ()=> dlgUp.showModal();
-document.getElementById('btnHelp').onclick = ()=> dlgHelp.showModal();
-document.querySelectorAll('dialog [data-close]').forEach(b => b.onclick = ()=> b.closest('dialog').close());
-const fileEl = document.getElementById('file');
-document.getElementById('pick').onclick = ()=> fileEl.click();
-document.getElementById('drop').onclick = ()=> fileEl.click();
-fileEl.onchange = ()=> { if(fileEl.files[0]) handleFile(fileEl.files[0]); fileEl.value=''; };
-const drop = document.getElementById('drop');
-['dragenter','dragover'].forEach(ev => drop.addEventListener(ev, e=>{ e.preventDefault(); drop.classList.add('over'); }));
-['dragleave','drop'].forEach(ev => drop.addEventListener(ev, e=>{ e.preventDefault(); drop.classList.remove('over'); }));
-drop.addEventListener('drop', e=>{ const f = e.dataTransfer.files[0]; if(f) handleFile(f); });
-
-document.getElementById('btnReset').onclick = ()=>{
-  DATA = clone(BASE_ORIGINAL);
-  S.regs.clear(); S.fils.clear(); S.curso = null; S.q=''; document.getElementById('q').value='';
-  document.getElementById('srcname').textContent = `Base 09/2026 · ${fmt(BASE_ORIGINAL.meta.linhas)} registros`;
-  document.getElementById('btnReset').hidden = true;
-  render(); toast('Base original restaurada.');
-};
+const FONTE_ORIG = 'Base 09/2026';
+let FONTE = FONTE_ORIG;
 
 /* --- ZIP mínimo: lê as entradas de um .xlsx --- */
 async function unzip(buf){
@@ -946,7 +613,8 @@ const ALIAS = { 'PAPA LEGUAS I':'PAPA LEGUAS 1', 'PLANALTO':'PLANALTO II', 'PQ C
 const SEM_REG = 'SEM REGIONAL (ADMINISTRATIVO/OUTROS)';
 /* vinculos definidos manualmente - aplicados mesmo quando a planilha enviada nao os traz */
 const OVERRIDES = [ { fil:'GURUPI', nome:'GURUPI', reg:/^REGIONAL 4/ },
-                    { fil:'MARACANA 2', nome:'MARACANA 2', reg:/^REGIONAL 4/ } ];
+                    { fil:'MARACANA 2', nome:'MARACANA 2', reg:/^REGIONAL 4/ },
+                    { fil:'EUCALIPTOS', nome:'EUCALIPTOS', reg:/^REGIONAL 3/ } ];
 /* grafias diferentes do mesmo curso na exportacao da plataforma */
 const CURSO_ALIAS = { 'APERFEICOE FRENTISTA CAIXA':'APERFEIÇOE FRENTISTA',
                       'APERFEICOE FRENTISTACAIXA':'APERFEIÇOE FRENTISTA' };
@@ -1050,12 +718,10 @@ async function handleFile(file){
       : await readXlsx(await file.arrayBuffer());
     const novo = build(sheets);
     DATA = novo;
-    S.regs.clear(); S.fils.clear(); S.q = ''; document.getElementById('q').value = '';
+    S.reg = S.fil = null;
     if(S.curso && !DATA.cursos.includes(S.curso)) S.curso = null;
-    document.getElementById('srcname').textContent =
-      `${file.name} · ${fmt(novo.meta.linhas)} registros · ${fmt(novo.meta.pessoas)} funcionários`;
-    document.getElementById('btnReset').hidden = false;
-    dlgUp.close();
+    FONTE = file.name;
+    S.page = 'geral';
     render();
     toast(`Base atualizada: ${fmt(novo.meta.linhas)} registros, ${fmt(novo.filiais.length)} filiais, ${novo.cursos.length} cursos.`);
   } catch(err){
@@ -1066,3 +732,5 @@ async function handleFile(file){
 
 render();
 </script>
+</body>
+</html>
