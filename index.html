@@ -199,7 +199,7 @@ const filLabel = f => String(f).split(/\s+/).map((w,i)=>{
 const el = id => document.getElementById(id);
 
 /* estado */
-const S = { reg:null, fil:null, curso:null, page:'geral', sit:'na' };
+const S = { reg:null, fil:null, curso:null, page:'geral', sit:'todos' };
 
 function scope(){
   return DATA.funcionarios.filter(([,fi]) => {
@@ -367,9 +367,6 @@ function pagePend(){
   const porFil = {};
   pend.forEach(p => porFil[p.f] = (porFil[p.f] || 0) + 1);
 
-  const seg = [['na','Não aprovados'],['sr','Sem registro'],['todos','Todos que faltam']]
-    .map(([k,t]) => `<button class="btn${S.sit===k?' primary':''}" data-sit="${k}" type="button">${t}</button>`).join('');
-
   let tb = '', lastF = '';
   for(const p of pend){
     if(p.f !== lastF){
@@ -378,12 +375,12 @@ function pagePend(){
       lastF = p.f;
     }
     tb += `<tr><td>${esc(p.n)}</td><td>${esc(filLabel(p.f))}</td><td class="num">${p.cursos.length}</td>
-      <td>${p.cursos.map(c => `<span class="tag ${c.tipo}">${esc(DATA.cursosCurto[c.i])}</span>`).join('')}</td></tr>`;
+      <td>${p.cursos.map(c => `<span class="tag">${esc(DATA.cursosCurto[c.i])}</span>`).join('')}</td></tr>`;
   }
 
   return `
   <div class="card toolbar">
-    <div class="seg">${seg}</div>
+    <div class="seg"></div>
     <button class="btn primary" id="btnDl" type="button">Baixar lista filtrada</button>
   </div>
   <section class="card panel">
@@ -391,8 +388,7 @@ function pagePend(){
     <p class="sub">${fmt(pend.length)} colaboradores · ${fmt(total)} pendências · use o filtro de filial acima para ver uma empresa só</p>
     ${pend.length ? `<div class="scroller"><table class="ptab">
       <thead><tr><th>Colaborador</th><th>Filial</th><th>Pend.</th><th>Cursos pendentes</th></tr></thead>
-      <tbody>${tb}</tbody></table></div>
-      <p class="note"><b>Não aprovado</b> — fez o curso e não foi aprovado. <b>Sem registro</b> — não tem matrícula naquele curso.</p>`
+      <tbody>${tb}</tbody></table></div>`
     : '<p class="empty">Ninguém pendente com os filtros atuais.</p>'}
   </section>`;
 }
@@ -455,18 +451,13 @@ el('regPills').onclick = e => {
 el('selFil').onchange = e => { S.fil = e.target.value === '' ? null : +e.target.value; render(); };
 el('selCurso').onchange = e => { S.curso = e.target.value || null; render(); };
 el('tabs').onclick = e => { const b = e.target.closest('[data-p]'); if(b){ S.page = b.dataset.p; render(); } };
-document.addEventListener('click', e => {
-  const b = e.target.closest('[data-sit]');
-  if(b){ S.sit = b.dataset.sit; render(); }
-});
 
 /* exportação */
 function pendTabela(){
-  const cab = ['Regional','Empresa','Colaborador','Pendências','Cursos pendentes','Situação'];
+  const cab = ['Regional','Empresa','Colaborador','Pendências','Cursos pendentes'];
   const linhas = pendData().map(p => [
     regLabel(DATA.regionais[p.r]), filLabel(p.f), p.n, p.cursos.length,
-    p.cursos.map(c => DATA.cursosCurto[c.i]).join(' | '),
-    p.cursos.map(c => c.tipo === 'na' ? 'Não aprovado' : 'Sem registro').join(' | ')
+    p.cursos.map(c => DATA.cursosCurto[c.i]).join(' | ')
   ]);
   return {cab, linhas};
 }
