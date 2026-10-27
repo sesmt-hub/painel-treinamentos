@@ -84,6 +84,35 @@ tbody th{position:sticky;left:0;z-index:2;background:#fff;font-weight:600;border
 tbody td{border-bottom:1px solid #f1f5f9;text-align:center;font-family:var(--mono);font-size:11.5px}
 thead th:first-child{left:0;z-index:4}
 .cellv{display:block;padding:4px 0;border-radius:5px}
+/* matriz cabe na largura, sem rolagem lateral */
+table.mtab{table-layout:fixed;width:100%}
+table.mtab th,table.mtab td{padding:6px 4px}
+table.mtab thead th{white-space:normal;line-height:1.25;font-size:9.5px;letter-spacing:.03em;text-align:center;vertical-align:bottom}
+table.mtab thead th:first-child{text-align:left;width:170px}
+table.mtab tbody th .rank{display:inline-block;min-width:24px}
+table.mtab tbody th{white-space:normal;line-height:1.25;font-size:12px}
+table.mtab tbody td{font-size:11px}
+table.mtab col.cg{width:auto}
+.scroller.fit{overflow-x:hidden;overflow-y:auto}
+@media (max-width:760px){
+  .scroller.fit{overflow-x:auto}
+  table.mtab{min-width:720px}
+}
+/* impressão: página em paisagem, matriz inteira na folha */
+@page{size:A4 landscape;margin:10mm}
+@media print{
+  body{background:#fff;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .wrap{max-width:none;padding:0}
+  .tabs,#toast,.toolbar .btn,#btnDl{display:none!important}
+  .card{border:0;box-shadow:none}
+  .scroller,.scroller.fit{overflow:visible!important;max-height:none!important}
+  table.mtab{min-width:0}
+  table.mtab thead th{position:static;font-size:8.5px}
+  table.mtab tbody th{position:static;font-size:10px}
+  table.mtab tbody td{font-size:9.5px}
+  table.mtab th,table.mtab td{padding:3px 2px}
+  tr{break-inside:avoid}
+}
 tr.grp th,tr.grp td{background:#f7f9fc;font-size:11px;letter-spacing:.06em;text-transform:uppercase;
   color:var(--muted);font-weight:600}
 
@@ -336,7 +365,7 @@ function pageMatriz(){
   return `<section class="card panel">
     <h2>Matriz curso × filial</h2>
     <p class="sub">Percentual de matrículas concluídas, do posto com melhor geral para o pior. Quanto mais escuro, melhor.</p>
-    <div class="scroller"><table>
+    <div class="scroller fit"><table class="mtab">
       <thead><tr><th>Filial</th>${DATA.cursosCurto.map(c => `<th>${esc(c)}</th>`).join('')}<th>Geral</th></tr></thead>
       <tbody>${body}</tbody></table></div>
   </section>`;
