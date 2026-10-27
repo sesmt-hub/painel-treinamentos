@@ -199,7 +199,7 @@ const filLabel = f => String(f).split(/\s+/).map((w,i)=>{
 const el = id => document.getElementById(id);
 
 /* estado */
-const S = { reg:null, fil:null, curso:null, page:'geral', sit:'todos' };
+const S = { reg:null, fil:null, curso:null, page:'geral', sit:'na' };
 
 function scope(){
   return DATA.funcionarios.filter(([,fi]) => {
@@ -367,7 +367,7 @@ function pagePend(){
   const porFil = {};
   pend.forEach(p => porFil[p.f] = (porFil[p.f] || 0) + 1);
 
-  const seg = [['todos','Todos que faltam']]
+  const seg = [['na','Todos que faltam']]
     .map(([k,t]) => `<button class="btn${S.sit===k?' primary':''}" data-sit="${k}" type="button">${t}</button>`).join('');
 
   let tb = '', lastF = '';
@@ -392,7 +392,7 @@ function pagePend(){
     ${pend.length ? `<div class="scroller"><table class="ptab">
       <thead><tr><th>Colaborador</th><th>Filial</th><th>Pend.</th><th>Cursos pendentes</th></tr></thead>
       <tbody>${tb}</tbody></table></div>
-      <p class="note"><b>Não aprovado</b> — fez o curso e não foi aprovado. <b>Sem registro</b> — não tem matrícula naquele curso.</p>`
+      <p class="note">Mostra só quem está matriculado no curso e ainda não foi aprovado. Quem não tem matrícula no curso não aparece na lista.</p>`
     : '<p class="empty">Ninguém pendente com os filtros atuais.</p>'}
   </section>`;
 }
